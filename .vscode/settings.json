@@ -1,0 +1,15 @@
+{
+  "conventionalCommits.scopes": [
+    "yarn",
+    "docker",
+    "node",
+    "git",
+    "fnm",
+    "dotenv",
+    "nx",
+    "pnpm",
+    "prettier",
+    "vry",
+    "serve"
+  ]
+}

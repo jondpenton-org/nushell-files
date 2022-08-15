@@ -1,0 +1,8 @@
+# Custom
+scripts/custom.nu
+
+# Mac
+.DS_Store
+
+# Nu
+history.txt
