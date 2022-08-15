@@ -1,5 +1,23 @@
 ## Commands
 
+export def fnm-alias-bin-path [
+  alias: string
+] {
+  let aliases-dir = (
+    fnm-dir | path join aliases
+  )
+  let alias-dir = (
+    $aliases-dir
+      | ls $in
+      | where name ends-with $alias
+      | get --ignore-errors name.0
+  )
+
+  if not ($alias-dir | empty?) {
+    $alias-dir | path join bin
+  }
+}
+
 export def fnm-dir [] {
   fnm env --shell bash
     | lines
@@ -38,7 +56,12 @@ export def with-node [
 ## Aliases
 
 export alias fnm-default-bin-path = (
-  fnm-dir | path join aliases/default/bin
+  fnm-alias-bin-path nushell
+    | if ($in | empty?) {
+        fnm-alias-bin-path default
+      } else {
+        $in
+      }
 )
 
 ## Completions
