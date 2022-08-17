@@ -64,12 +64,44 @@ let-env config = {
   footer_mode: "20" # always, never, number_of_rows, auto
   quick_completions: true  # set this to false to prevent auto-selecting completions when only one remains
   partial_completions: true  # set this to false to prevent partial filling of the prompt
+  completion_algorithm: "prefix"  # prefix, fuzzy
   float_precision: 2
+  # buffer_editor: "emacs" # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
   use_ansi_coloring: true
   filesize_format: "auto" # b, kb, kib, mb, mib, gb, gib, tb, tib, pb, pib, eb, eib, zb, zib, auto
   edit_mode: emacs # emacs, vi
   max_history_size: 10000 # Session has to be reloaded for this to take effect
   sync_history_on_enter: true # Enable to share the history between multiple sessions, else you have to close the session to persist history to file
+  history_file_format: "plaintext" # "sqlite" or "plaintext"
+  shell_integration: true # enables terminal markers and a workaround to arrow keys stop working issue
+  disable_table_indexes: false # set to true to remove the index column from tables
+  cd_with_abbreviations: false # set to true to allow you to do things like cd s/o/f and nushell expand it to cd some/other/folder
+  case_sensitive_completions: false # set to true to enable case-sensitive completions
+  enable_external_completion: true # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up my be very slow
+  max_external_completion_results: 100 # setting it lower can improve completion performance at the cost of omitting some options
+  # A strategy of managing table view in case of limited space.
+  table_trim: {
+    methodology: wrapping, # truncating
+    # A strategy which will be used by 'wrapping' methodology
+    wrapping_try_keep_words: true,
+    # A suffix which will be used with 'truncating' methodology
+    # truncating_suffix: "..."
+  }
+  show_banner: true # true or false to enable or disable the banner
+
+  hooks: {
+    pre_prompt: [{
+      $nothing  # replace with source code to run before the prompt is shown
+    }]
+    pre_execution: [{
+      $nothing  # replace with source code to run before the repl input is run
+    }]
+    env_change: {
+      PWD: [{|before, after|
+        $nothing  # replace with source code to run if the PWD environment is different since the last repl input
+      }]
+    }
+  }
   menus: [
       # Configuration for default nushell menus
       # Note the lack of souce parameter
@@ -212,17 +244,19 @@ let-env config = {
     {
       name: history_menu
       modifier: control
-      keycode: char_x
+      keycode: char_r
       mode: emacs
-      event: {
-        until: [
-          { send: menu name: history_menu }
-          { send: menupagenext }
-        ]
-      }
+      event: { send: menu name: history_menu }
     }
     {
-      name: history_previous
+      name: next_page
+      modifier: control
+      keycode: char_x
+      mode: emacs
+      event: { send: menupagenext }
+    }
+    {
+      name: undo_or_previous_page
       modifier: control
       keycode: char_z
       mode: emacs
@@ -230,6 +264,39 @@ let-env config = {
         until: [
           { send: menupageprevious }
           { edit: undo }
+        ]
+       }
+    }
+    {
+      name: yank
+      modifier: control
+      keycode: char_y
+      mode: emacs
+      event: {
+        until: [
+          {edit: pastecutbufferafter}
+        ]
+      }
+    }
+    {
+      name: unix-line-discard
+      modifier: control
+      keycode: char_u
+      mode: [emacs, vi_normal, vi_insert]
+      event: {
+        until: [
+          {edit: cutfromlinestart}
+        ]
+      }
+    }
+    {
+      name: kill-line
+      modifier: control
+      keycode: char_k
+      mode: [emacs, vi_normal, vi_insert]
+      event: {
+        until: [
+          {edit: cuttolineend}
         ]
       }
     }
@@ -243,10 +310,17 @@ let-env config = {
     }
     {
       name: vars_menu
-      modifier: control
-      keycode: char_y
+      modifier: alt
+      keycode: char_o
       mode: [emacs, vi_normal, vi_insert]
       event: { send: menu name: vars_menu }
+    }
+    {
+      name: commands_with_description
+      modifier: control
+      keycode: char_s
+      mode: [emacs, vi_normal, vi_insert]
+      event: { send: menu name: commands_with_description }
     }
     # {
     #   name: commands_with_description
