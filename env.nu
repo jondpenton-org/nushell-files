@@ -30,12 +30,12 @@ let-env PROMPT_MULTILINE_INDICATOR = "::: "
 # Note: The conversions happen *after* config.nu is loaded
 let-env ENV_CONVERSIONS = {
   "PATH": {
-    from_string: { |str| $str | split row (char esep) }
-    to_string: { |list| $list | str collect (char esep) }
+    from_string: { |str| $str | split row (char esep) | path expand --no-symlink }
+    to_string: { |list| $list | path expand --no-symlink | str collect (char esep) }
   }
   "Path": {
-    from_string: { |str| $str | split row (char esep) }
-    to_string: { |list| $list | str collect (char esep) }
+    from_string: { |str| $str | split row (char esep) | path expand --no-symlink }
+    to_string: { |list| $list | path expand --no-symlink | str collect (char esep) }
   }
 }
 
@@ -43,6 +43,7 @@ let-env NU_DIR = (
   $nu.config-path | path dirname
 )
 
+# Must come after $env.NU_DIR
 let-env NU_CUSTOM_SCRIPT = (
   $env.NU_DIR | path join scripts/custom.nu
 )
