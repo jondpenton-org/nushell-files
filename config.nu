@@ -344,21 +344,16 @@ do {
 alias nu-config-update = do { cd $env.NU_DIR; git pull }
 
 ## Modules
-use fnm.nu *
-use git.nu *
-use helpers.nu *
-use node.nu *
-use nx.nu *
-use prettier.nu *
-use ssh.nu *
-use vry.nu *
+overlay add git.nu
+overlay add helpers.nu
+overlay add ssh.nu
 
-use docker.nu * # Depends on modules: helpers
-use dotenv.nu * # Depends on modules: git, helpers
-use gpg.nu * # Depends on modules: helpers
-use pivotal-story-branch.nu * # Depends on modules: git
-use pnpm.nu * # Depends on modules: git
-use rush.nu * # Depends on modules: git, helpers
-use yarn.nu * # Depends on modules: helpers
+overlay add docker.nu # Depends on modules: helpers
+overlay add dotenv.nu # Depends on modules: git, helpers
+overlay add gpg.nu # Depends on modules: helpers
+overlay add pivotal-story-branch.nu # Depends on modules: git
+overlay add pnpm.nu # Depends on modules: git
+overlay add rush.nu # Depends on modules: git, helpers
+overlay add yarn.nu # Depends on modules: helpers
 
-use custom.nu *
+overlay add custom.nu
