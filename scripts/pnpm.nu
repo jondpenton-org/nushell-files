@@ -23,24 +23,24 @@ export def pnpm-outdated [
   --workspace-root (-w)                                           # Run the command on the root workspace project
 ] {
   let flags = build-flags {
-    aggregate-output: $aggregate-output
+    aggregate-output: $aggregate_output
     color: $color
     compatible: $compatible
     dev: $dev
     dir: $dir
     filter: $filter
-    global-dir: $global-dir
+    global-dir: $global_dir
     help: $help
     loglevel: $loglevel
     long: $long
-    no-color: $no-color
-    no-optional: $no-optional
-    no-table: $no-table
+    no-color: $no_color
+    no-optional: $no_optional
+    no-table: $no_table
     prod: $prod
     recursive: $recursive
     stream: $stream
-    use-stderr: $use-stderr
-    workspace-root: $workspace-root
+    use-stderr: $use_stderr
+    workspace-root: $workspace_root
   }
 
   ^pnpm outdated $flags
@@ -52,26 +52,26 @@ export def pnpm-outdated [
     | str trim
     | headers
     | where --block { |it|
-        let current-parts = ($it.Current | split row .)
-        let latest-parts = ($it.Latest | split row .)
+        let current_parts = ($it.Current | split row .)
+        let latest_parts = ($it.Latest | split row .)
         let assertions = (
           if $severity == "major" {
-            [(($current-parts | get 0) != ($latest-parts | get 0))]
+            [(($current_parts | get 0) != ($latest_parts | get 0))]
           } else if $severity == "minor" {
             [
-              (($current-parts | get 0) == ($latest-parts | get 0)),
-              (($current-parts | get 1) != ($latest-parts | get 1)),
+              (($current_parts | get 0) == ($latest_parts | get 0)),
+              (($current_parts | get 1) != ($latest_parts | get 1)),
             ]
           } else if $severity == "patch" {
             [
-              (($current-parts | get 0) == ($latest-parts | get 0)),
-              (($current-parts | get 1) == ($latest-parts | get 1)),
+              (($current_parts | get 0) == ($latest_parts | get 0)),
+              (($current_parts | get 1) == ($latest_parts | get 1)),
             ]
           }
         )
 
         $assertions
-          | append (($current-parts | get 0) != "0")
+          | append (($current_parts | get 0) != "0")
           | where not $it
           | empty?
       }

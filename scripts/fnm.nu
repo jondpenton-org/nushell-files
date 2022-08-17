@@ -3,18 +3,18 @@
 export def fnm-alias-bin-path [
   alias: string
 ] {
-  let aliases-dir = (
+  let aliases_dir = (
     fnm-dir | path join aliases
   )
-  let alias-dir = (
-    $aliases-dir
+  let alias_dir = (
+    $aliases_dir
       | ls $in
       | where name ends-with $alias
       | get --ignore-errors name.0
   )
 
-  if not ($alias-dir | empty?) {
-    $alias-dir | path join bin
+  if not ($alias_dir | empty?) {
+    $alias_dir | path join bin
   }
 }
 
@@ -35,22 +35,22 @@ export def with-node [
   version: string@"nu-complete with-node versions",
   block: block
 ] {
-  let node-path = (
+  let node_path = (
     node-versions-dir
       | path expand
       | path join $version
       | path join 'installation/bin'
   )
-  let new-path = (
+  let new_path = (
     $env.PATH
-      | prepend $node-path
+      | prepend $node_path
       | do $env.ENV_CONVERSIONS.PATH.to_string $in
   )
-  let env-record = {
-    PATH: $new-path
+  let env_record = {
+    PATH: $new_path
   }
 
-  with-env $env-record $block
+  with-env $env_record $block
 }
 
 ## Aliases

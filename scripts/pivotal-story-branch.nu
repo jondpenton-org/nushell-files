@@ -1,13 +1,13 @@
 ## Commands
 
 export def psb-s [
-  branch-or-story-link: string@"nu-complete git branches"
+  branch_or_story_link: string@"nu-complete git branches"
 ] {
-  psb switch $branch-or-story-link
+  psb switch $branch_or_story_link
 }
 
 ## Externs
 
 export extern "psb switch" [
-  branch-or-story-link: string@"nu-complete git branches"
+  branch_or_story_link: string@"nu-complete git branches"
 ]

@@ -13,7 +13,7 @@ export def rush-add [
     caret: $caret,
     dev: $dev,
     exact: $exact,
-    make-consistent: $make-consistent,
+    make-consistent: $make_consistent,
     package: $package,
   }
 
@@ -27,7 +27,7 @@ export def rush-build [
   let flags = build-flags {
     parallelism: 'max',
     to: $to,
-    to-except: $to-except,
+    to-except: $to_except,
     verbose: true,
   }
 
@@ -39,7 +39,7 @@ export def rush-install [
   --purge (-p): bool                # Perform "rush purge" before starting the installation
 ] {
   let flags = build-flags {
-    max-install-attempts: $max-install-attempts,
+    max-install-attempts: $max_install_attempts,
     purge: $purge,
   }
 
@@ -56,8 +56,8 @@ export def rush-update [
 ] {
   let flags = build-flags {
     full: $full,
-    ignore-hooks: $ignore-hooks,
-    max-install-attempts: $max-install-attempts,
+    ignore-hooks: $ignore_hooks,
+    max-install-attempts: $max_install_attempts,
     purge: $purge,
     recheck: $recheck,
   }

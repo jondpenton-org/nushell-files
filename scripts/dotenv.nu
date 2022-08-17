@@ -73,77 +73,77 @@ export def with-envrc [
 ## Completions
 
 def "nu-complete open-env file" [] {
-  let git-root = git-root
-  let envs-relative-to-git-root = (
-    do { cd $git-root; glob --depth 3 **/*.env }
+  let git_root = git-root
+  let envs_relative_to_git_root = (
+    do { cd $git_root; glob --depth 3 **/*.env }
       | where not ($it =~ example || (open-env $it | empty?))
-      | path relative-to $git-root
+      | path relative-to $git_root
   )
-  let pwd-relative-to-git-root = (
-    if $git-root == $env.PWD {
+  let pwd_relative_to_git_root = (
+    if $git_root == $env.PWD {
       ''
     } else {
-      $env.PWD | path relative-to $git-root
+      $env.PWD | path relative-to $git_root
     }
   )
 
-  $envs-relative-to-git-root | par-each { |it|
-    if ($it | str starts-with $pwd-relative-to-git-root) {
-      let dirs-diff-length = (
-        $pwd-relative-to-git-root | path split | length
+  $envs_relative_to_git_root | par-each { |it|
+    if ($it | str starts-with $pwd_relative_to_git_root) {
+      let dirs_diff_length = (
+        $pwd_relative_to_git_root | path split | length
       )
 
       $it
         | path split
-        | range ($dirs-diff-length)..
+        | range ($dirs_diff_length)..
         | path join
     } else {
-      let git-root-relative-to-pwd = (
-        $pwd-relative-to-git-root
+      let git_root_relative_to_pwd = (
+        $pwd_relative_to_git_root
           | path split
           | par-each { '..' }
           | path join
       )
 
-      [$git-root-relative-to-pwd, $it] | path join
+      [$git_root_relative_to_pwd, $it] | path join
     }
   }
 }
 
 def "nu-complete open-envrc file" [] {
-  let git-root = git-root
-  let envrcs-relative-to-git-root = (
-    do { cd $git-root; glob --depth 3 **/*.envrc }
+  let git_root = git-root
+  let envrcs_relative_to_git_root = (
+    do { cd $git_root; glob --depth 3 **/*.envrc }
       | where not ($it =~ example || (open-envrc $it | empty?))
-      | path relative-to $git-root
+      | path relative-to $git_root
   )
-  let pwd-relative-to-git-root = (
-    if $git-root == $env.PWD {
+  let pwd_relative_to_git_root = (
+    if $git_root == $env.PWD {
       ''
     } else {
-      $env.PWD | path relative-to $git-root
+      $env.PWD | path relative-to $git_root
     }
   )
 
-  $envrcs-relative-to-git-root | par-each { |it|
-    if ($it | str starts-with $pwd-relative-to-git-root) {
-      let dirs-diff-length = (
-        $pwd-relative-to-git-root | path split | length
+  $envrcs_relative_to_git_root | par-each { |it|
+    if ($it | str starts-with $pwd_relative_to_git_root) {
+      let dirs_diff_length = (
+        $pwd_relative_to_git_root | path split | length
       )
 
       $it
         | path split
-        | range ($dirs-diff-length)..
+        | range ($dirs_diff_length)..
         | path join
     } else {
-      let git-root-relative-to-pwd = (
-        $pwd-relative-to-git-root
+      let git_root_relative_to_pwd = (
+        $pwd_relative_to_git_root
           | path split
           | each { '..' }
           | path join
       )
 
-      [$git-root-relative-to-pwd, $it] | path join
+      [$git_root_relative_to_pwd, $it] | path join
     }
   }
 }

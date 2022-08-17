@@ -22,16 +22,16 @@ export def do-when [
   --on-success (-s): block    # Runs on $block success
   --on-failure (-f): block    # Runs on $block failure
 ] {
-  let block-exit-code = do { do $block; $env.LAST_EXIT_CODE }
+  let block_exit_code = do { do $block; $env.LAST_EXIT_CODE }
 
-  if (not ($on-success | empty?)) && $block-exit-code == 0 {
-    do $on-success
-  } else if ($block-exit-code != 0) {
-    if (not ($on-failure | empty?)) {
-      do $on-failure
+  if (not ($on_success | empty?)) && $block_exit_code == 0 {
+    do $on_success
+  } else if ($block_exit_code != 0) {
+    if (not ($on_failure | empty?)) {
+      do $on_failure
     }
 
-    sh -c $'exit ($block-exit-code)'
+    sh -c $'exit ($block_exit_code)'
   }
 }
 
@@ -46,13 +46,13 @@ export def do-blocks [
 export def do-blocks-list [
   blocks: any   # List of blocks
 ] {
-  let chained-blocks = (
+  let chained_blocks = (
     $blocks | reduce { |it, acc|
       { do-when $acc --on-success $it }
     }
   )
 
-  do $chained-blocks
+  do $chained_blocks
 }
 
 # Kills all nu shells
@@ -69,9 +69,9 @@ export def nu-ko [] {
 }
 
 export def nu-reload [] {
-  let nu-path = (which nu | get path.0)
+  let nu_path = (which nu | get path.0)
 
-  exec $nu-path '-c' $'cd "($env.PWD)"; ($nu-path)'
+  exec $nu_path '-c' $'cd "($env.PWD)"; ($nu_path)'
 }
 
 # Repeat block # of times
@@ -87,14 +87,14 @@ export def sleep-while [
   condition: block
   sleep: duration = 100ms
 ] {
-  let original-in = $in
+  let original_in = $in
 
   if do $condition {
     sleep $sleep;
     sleep-while $condition $sleep;
   }
 
-  $original-in
+  $original_in
 }
 
 export def table-into-record [

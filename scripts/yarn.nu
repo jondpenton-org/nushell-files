@@ -17,7 +17,7 @@ export def yarn-outdated [
       | parse -r '➤ YN0000: (?P<package>\S+)\s+(?P<currentVersion>(?:\d+\.?)+)\s+(?P<latestVersion>(?:\d+\.?)+)\s+\w*[dD]ependencies'
   )
 
-  if $print-latest {
+  if $print_latest {
     $table | par-each { |it|
         $'($it.package)@^($it.latestVersion)'
           | if ($in | str contains ^0) {

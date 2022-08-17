@@ -1,6 +1,6 @@
-def color-string [ansi-code: any, text: string] {
+def color-string [ansi_code: any, text: string] {
   [
-    (ansi $ansi-code),
+    (ansi $ansi_code),
     $text,
     (ansi reset)
   ] | str collect

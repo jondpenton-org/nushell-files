@@ -1,6 +1,6 @@
 # Calculates ELO of match teams. $in should be the full VRY table.
 export def vry-match-elo [] {
-  let match-table = (
+  let match_table = (
     $in
       | lines
       | skip 2
@@ -12,15 +12,15 @@ export def vry-match-elo [] {
   )
   let ranks = ["Iron", "Bronze", "Silver", "Gold", "Platinum", "Diamond", "Ascendant", "Immortal"]
   for $team in [1, 2] {
-    let team-ranks-total-rr = (
+    let team_ranks_total_rr = (
       if $team == 1 {
-        $match-table | take 5
+        $match_table | take 5
       } else {
-        $match-table | skip 6
+        $match_table | skip 6
       }
         | select Rank RR "Peak Rank"
         | par-each { |it|
-            let rank-to-parse = if $it.Rank == "Unranked" && it."Peak Rank" != "Unranked" {
+            let rank_to_parse = if $it.Rank == "Unranked" && it."Peak Rank" != "Unranked" {
               $it."Peak Rank"
             } else {
               $it.Rank
@@ -29,10 +29,10 @@ export def vry-match-elo [] {
               $it.RR | into int
             )
   
-            if not ($rank-to-parse in ["Iron 1", "Unranked"]) {
-              let rank-parts = ($rank-to-parse | split row " ")
-              let rank = ($rank-parts | get 0)
-              let rank-index = (
+            if not ($rank_to_parse in ["Iron 1", "Unranked"]) {
+              let rank_parts = ($rank_to_parse | split row " ")
+              let rank = ($rank_parts | get 0)
+              let rank_index = (
                 $ranks
                   | par-each -n { |x|
                       if $x.item == $rank {
@@ -41,34 +41,34 @@ export def vry-match-elo [] {
                     }
                   | get 0
               )
-              let rank-base-rr = $rank-index * 300
-              let tier = ($rank-parts | get 1 | into int)
-              let total-rr = $rank-base-rr + (($tier - 1) * 100) + $rr
+              let rank_base_rr = $rank_index * 300
+              let tier = ($rank_parts | get 1 | into int)
+              let total_rr = $rank_base_rr + (($tier - 1) * 100) + $rr
   
-              $total-rr
+              $total_rr
             } else {
               $rr
             }
           }
     )  
-    let average-rr = (
-      $team-ranks-total-rr | math avg
+    let average_rr = (
+      $team_ranks_total_rr | math avg
     )
-    let rank-division-result = $average-rr / 300
-    let rank-index = (
-      $rank-division-result | math floor | into int
+    let rank_division_result = $average_rr / 300
+    let rank_index = (
+      $rank_division_result | math floor | into int
     )
     let rank = (
-      $ranks | get $rank-index
+      $ranks | get $rank_index
     )
-    let tier-division-result = (
-      ($rank-division-result - $rank-index) * 300 / 100
+    let tier_division_result = (
+      ($rank_division_result - $rank_index) * 300 / 100
     )
     let tier = (
-      ($tier-division-result | math floor) + 1
+      ($tier_division_result | math floor) + 1
     )
     let rr = (
-      ($tier-division-result - ($tier - 1)) * 100 | into int
+      ($tier_division_result - ($tier - 1)) * 100 | into int
     )
   
     {
