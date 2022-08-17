@@ -10,6 +10,7 @@
     "pnpm",
     "prettier",
     "vry",
-    "serve"
+    "serve",
+    "helpers"
   ]
 }

@@ -55,6 +55,16 @@ export def do-blocks-list [
   do $chained_blocks
 }
 
+export def external-command-exists [
+  command_name: string
+] {
+  not (
+    which --all $command_name
+      | where path != 'Nushell custom command'
+      | empty?
+  )
+}
+
 # Kills all nu shells
 export def nu-ko [] {
   ps | par-each { |it|
