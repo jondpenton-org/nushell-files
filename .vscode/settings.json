@@ -12,6 +12,7 @@
     "vry",
     "serve",
     "helpers",
-    "gpg"
+    "gpg",
+    "pivotal-story-branch"
   ]
 }

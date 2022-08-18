@@ -1,3 +1,5 @@
+# Depends on overlays: git
+
 ## Commands
 
 export def psb-s [
