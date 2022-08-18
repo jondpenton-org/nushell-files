@@ -11,6 +11,7 @@
     "prettier",
     "vry",
     "serve",
-    "helpers"
+    "helpers",
+    "gpg"
   ]
 }

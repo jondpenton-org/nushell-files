@@ -349,7 +349,6 @@ overlay add helpers.nu
 overlay add ssh.nu
 
 overlay add dotenv.nu # Depends on modules: git, helpers
-overlay add gpg.nu # Depends on modules: helpers
 overlay add pivotal-story-branch.nu # Depends on modules: git
 overlay add pnpm.nu # Depends on modules: git
 overlay add rush.nu # Depends on modules: git, helpers

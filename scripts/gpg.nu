@@ -1,3 +1,5 @@
+# Depends on overlays: helpers
+
 ## Commands
 # Decrypts encrypted GPG input
 export def gpg-decrypt [
