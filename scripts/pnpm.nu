@@ -1,3 +1,5 @@
+# Depends on overlays: git
+
 ## Commands
 
 # Check for outdated packages. The check can be limited to a subset of the installed packages by providing arguments (patterns are supported).
