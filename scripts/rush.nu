@@ -1,3 +1,5 @@
+# Depends on overlays: git, helpers
+
 ## Commands
 
 export def rush-add [

@@ -13,6 +13,7 @@
     "serve",
     "helpers",
     "gpg",
-    "pivotal-story-branch"
+    "pivotal-story-branch",
+    "rush"
   ]
 }

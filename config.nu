@@ -349,7 +349,6 @@ overlay add helpers.nu
 overlay add ssh.nu
 
 overlay add dotenv.nu # Depends on modules: git, helpers
-overlay add rush.nu # Depends on modules: git, helpers
 overlay add yarn.nu # Depends on modules: helpers
 
 overlay add custom.nu
