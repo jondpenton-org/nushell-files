@@ -84,6 +84,35 @@ export def nu-reload [] {
   exec $nu_path '-c' $'cd "($env.PWD)"; ($nu_path)'
 }
 
+# List and filter all overlays
+export def overlay-list [
+  --filter: string@"nu-complete overlay-list filters" = 'active'   # Filter what overlays are shown
+] {
+  let active_overlays = overlay list
+
+  if $filter == 'active' {
+    $active_overlays
+  } else {
+    let all_overlays = (
+      $env.NU_DIR
+        | path join scripts
+        | path expand
+        | ls $in
+        | get name
+        | path basename
+        | str replace --string .nu ''
+    )
+
+    if $filter == 'all' {
+      $all_overlays
+    } else if $filter == 'inactive' {
+      $all_overlays | each { |overlay| 
+        if not $overlay in $active_overlays { $overlay }
+      }
+    }
+  }
+}
+
 # Repeat block # of times
 export def repeat [
   times: int    # Times to repeat $block
@@ -117,4 +146,9 @@ export def table-into-record [
 # Returns record with no duplicate keys
 export def uniq-record [] {
   flatten | get 0
+}
+
+## Completions
+def "nu-complete overlay-list filters" [] {
+  ['active', 'all', 'inactive']
 }
