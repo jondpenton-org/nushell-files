@@ -81,7 +81,7 @@ export def nu-ko [] {
 export def nu-reload [] {
   let nu_path = (which nu | get path.0)
 
-  exec $nu_path '-c' $'cd "($env.PWD)"; ($nu_path)'
+  exec $nu_path '--commands' $'cd "($env.PWD)"; ($nu_path) --login'
 }
 
 # List and filter all overlays
