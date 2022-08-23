@@ -1,10 +1,10 @@
 ## Commands
 
 export def fnm-alias-bin-path [
-  alias: string
+  alias: string@"nu-complete fnm aliases"
 ] {
   let aliases_dir = (
-    fnm-dir | path join aliases
+    fnm-dir | path join aliases | path expand
   )
   let alias_dir = (
     $aliases_dir
@@ -14,7 +14,7 @@ export def fnm-alias-bin-path [
   )
 
   if not ($alias_dir | empty?) {
-    $alias_dir | path join bin
+    $alias_dir | path join bin | path expand
   }
 }
 
@@ -65,6 +65,16 @@ export alias fnm-default-bin-path = (
 )
 
 ## Completions
+
+def "nu-complete fnm aliases" [] {
+  fnm-dir
+    | path join aliases
+    | path expand
+    | ls $in
+    | get name
+    | path basename
+    | sort
+}
 
 def "nu-complete with-node versions" [] {
   ls (node-versions-dir) | get name | path basename
