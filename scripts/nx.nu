@@ -15,6 +15,7 @@ export extern "pnpm exec nx run" [
   --output-style: string@"nu-complete nx output-style"    # Defines how Nx emits outputs tasks logs
   --prod                                                  # Use the production configuration
   --project: string@"nu-complete nx projects"             # Target project
+  --skip-nx-cache                                         # Don't use cache
   --version                                               # Show version number
 ]
 
