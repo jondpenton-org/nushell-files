@@ -140,7 +140,14 @@ export def table-into-record [
   key: string = "key"
   value: string = "value"
 ] {
-  select $key $value | transpose -r | get 0
+  select $key $value
+    | transpose --header-row
+    | get --ignore-errors 0
+    | if ($in | empty?) {
+        {}
+      } else {
+        $in
+      }
 }
 
 # Returns record with no duplicate keys
