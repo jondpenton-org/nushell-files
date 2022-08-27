@@ -12,6 +12,7 @@ export def pnpm-outdated [
   --filter: string@"nu-complete pnpm projects"
   --global-dir: path                                              # Specify a custom directory to store global packages
   --help (-h)                                                     # Output usage information
+  --list (-l)                                                     # Returns list of package version selectors to pass to `pnpm add`
   --loglevel: string@"nu-complete pnpm log level"                 # What level of logs to report. Any logs at or higher than the given level will be shown. Or use "--silent" to turn off all logging.
   --long                                                          # By default, details about the outdated packages (such as a link to the repo) are not displayed. To display
   --no-color                                                      # Controls colors in the output. By default, output is always colored when it goes directly to a terminal the details, pass this option.
@@ -44,43 +45,116 @@ export def pnpm-outdated [
     use-stderr: $use_stderr
     workspace-root: $workspace_root
   }
-
-  ^pnpm outdated $flags
-    | lines
-    | str trim --char "│"
-    | str replace --string " (dev)" ""
-    | split column " │ "
-    | where ("column2" in $it)
-    | str trim
-    | headers
-    | where --block { |it|
-        let current_parts = ($it.Current | split row .)
-        let latest_parts = ($it.Latest | split row .)
-        let assertions = (
-          if $severity == "major" {
-            [(($current_parts | get 0) != ($latest_parts | get 0))]
-          } else if $severity == "minor" {
-            [
-              (($current_parts | get 0) == ($latest_parts | get 0)),
-              (($current_parts | get 1) != ($latest_parts | get 1)),
-            ]
-          } else if $severity == "patch" {
-            [
-              (($current_parts | get 0) == ($latest_parts | get 0)),
-              (($current_parts | get 1) == ($latest_parts | get 1)),
-            ]
+  let outdated_table = (
+    ^pnpm outdated $flags
+      | lines
+      | skip 1
+      | drop 1
+      | str trim --char `│`
+      | if $recursive {
+          split list `├────────────────────┼──────────┼─────────┼────────────────────────────────┤`
+        } else {
+          split list `├───────────────────┼──────────┼─────────┤`
+        }
+      | each --numbered { |it|
+          if $it.index == 0 {
+            $it.item.0 | str downcase
+          } else {
+            $it.item
+              | str replace `^(\s+│)+\s+` ``
+              | str trim
+              | str collect
           }
-        )
+        }
+      | split column `│`
+      | str trim
+      | headers
+      | par-each { |row|
+          $row
+            | if `dependents` in $row {
+                update `dependents` ($row.dependents | split row `,`)
+              } else {
+                $in
+              }
+            | insert `dev` ($row.package ends-with ` (dev)`)
+            | update `package` ($row.package | str replace --string ` (dev)` ``)
+        }
+      | move `dev` --after `package`
+      | if ($severity | empty?) {
+          $in
+        } else {
+          let old_in = $in
+          let check_parts = (
+            (nu-complete pnpm severity)
+              | par-each --numbered { |it|
+                  if $it.item == $severity {
+                    $it.index
+                  }
+                }
+              | $in.0
+          )
 
-        $assertions
-          | append (($current_parts | get 0) != "0")
-          | where not $it
-          | empty?
-      }
-    | par-each { |it| $"($it.Package)@^($it.Latest)" }
-    | if not ($in | empty?) {
-        sort
-      }
+          $old_in
+            | where --block { |row|
+                let current_parts = ($row.current | split row `.`)
+                let latest_parts = ($row.latest | split row `.`)
+                let check_parts = (
+                  $check_parts
+                    | if $current_parts.0 != `0` {
+                        $in
+                      } else {
+                        $in + 1
+                      }
+                    | if $in <= 2 {
+                        $in
+                      } else {
+                        2
+                      }
+                )
+                let assertions = (
+                  if $check_parts == 0 {
+                    [($current_parts.0 != $latest_parts.0)]
+                  } else if $check_parts == 1 {
+                    [
+                      ($current_parts.0 == $latest_parts.0),
+                      ($current_parts.1 != $latest_parts.1),
+                    ]
+                  } else if $check_parts == 2 {
+                    [
+                      ($current_parts.0 == $latest_parts.0),
+                      ($current_parts.1 == $latest_parts.1),
+                    ]
+                  }
+                )
+
+                $assertions
+                  | where not $it
+                  | empty?
+              }
+        }
+  )
+
+  if not $list {
+    $outdated_table
+  } else {
+    $outdated_table
+      | par-each { |it|
+          let range = (
+            if $it.package starts-with `@types/` {
+              $nothing
+            } else if $it.latest starts-with `0` {
+              `~`
+            } else {
+              `^`
+            }
+          )
+
+          $'($it.package)@($range)($it.latest)'
+        }
+      | if not ($in | empty?) {
+          uniq | sort
+        }
+  }
 }
 
 ## Externs
