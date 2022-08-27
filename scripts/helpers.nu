@@ -1,4 +1,22 @@
 ## Commands
+
+# Runs benchmark number of $times and averages them together
+export def benchmark-repeat [
+  times: int = 100    # Number of times benchmark is ran
+  block: block    # Block passed to `benchmark`
+] {
+  let benchmarks = (
+    repeat $times { benchmark $block }
+  )
+
+  $benchmarks
+    | each { |it| $it / 1ns } # Duration to int
+    | math avg
+    | math ceil
+    | into int
+    | $in * 1ns # Int to duration
+}
+
 # Builds list of flag strings to pass to command
 export def build-flags [
   flags: record   # Record with key of flag to its value
