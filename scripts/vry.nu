@@ -117,11 +117,11 @@ export def vry-teams [] {
             | str replace -a `(\w)\s(\w)` `${1}_${2}`
         }
       }
-    | where $it != `┡━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━╇━━━━━━━━━╇━━━━━━╇━━━━━━━┩` # Remove headers and players divider
+    | where not ($it | str contains `━`) # Remove header/players divider
     | str replace --all --string `┃` `│` # Clean rows
     | str trim --char `│`
     | split column `│` # Parse rows
     | str trim # Clean cells
     | headers # Finalize table
-    | select agent name rank rr peak_rank hs wr kd
+    | select `agent` `name` `rank` `rr` `peak_rank` `hs` `wr` `kd`
 }
