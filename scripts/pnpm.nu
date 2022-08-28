@@ -51,11 +51,7 @@ export def pnpm-outdated [
       | skip 1
       | drop 1
       | str trim --char `│`
-      | if $recursive {
-          split list `├────────────────────┼──────────┼─────────┼────────────────────────────────┤`
-        } else {
-          split list `├───────────────────┼──────────┼─────────┤`
-        }
+      | split list ($in | where $it starts-with `├─` | $in.0)
       | each --numbered { |it|
           if $it.index == 0 {
             $it.item.0 | str downcase
