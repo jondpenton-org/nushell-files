@@ -4,32 +4,33 @@
 export def from-envrc [] {
   $in
     | lines
+    | str replace --all --string `"` `'`
+    | str replace --all `=(\w\S+)` `='${1}'`
     | reduce --fold {} { |it, acc|
-        $acc | merge {
-          if ($it | str starts-with 'export ') {
-            $it
-              | parse --regex "export (?P<key>[\\w_]+)='?(?P<value>[^']+)"
-              | table-into-record
-          } else if ($it | str starts-with 'source_env') {
-            $it
-              | parse --regex "source_env(?:_if_exists)? (?P<name>.*)"
-              | get -i name.0
-              | if ($in | empty?) {
-                  {}
-                } else {
-                  open-envrc $in
-                }
-          } else if ($it | str starts-with 'dotenv ') {
-            $it
-              | parse "dotenv {name}"
-              | get name.0
-              | open-env $in
-          } else {
-            {}
-          }
-        }
+        $acc 
+          | merge {
+              if $it starts-with `export ` {
+                $it
+                  | parse --regex `^export\s+(?P<key>[\w_]+)='(?P<value>.*)'`
+                  | table-into-record
+              } else if $it starts-with `source_env` {
+                $it
+                  | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
+                  | get --ignore-errors name.0
+                  | if ($in | empty?) {
+                      {}
+                    } else {
+                      open-envrc $in
+                    }
+              } else if $it starts-with `dotenv ` {
+                $it
+                  | parse `dotenv {name}`
+                  | open-env $in.name.0
+              } else {
+                {}
+              }
+            }
       }
-    | uniq-record
 }
 
 # Converts .env file into record
