@@ -168,11 +168,6 @@ export def table-into-record [
       }
 }
 
-# Returns record with no duplicate keys
-export def uniq-record [] {
-  flatten | get 0
-}
-
 ## Completions
 def "nu-complete overlay-list filters" [] {
   ['active', 'all', 'inactive']
