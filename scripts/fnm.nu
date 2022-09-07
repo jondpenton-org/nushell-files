@@ -13,7 +13,7 @@ export def fnm-alias-bin-path [
       | get --ignore-errors name.0
   )
 
-  if not ($alias_dir | empty?) {
+  if not ($alias_dir | is-empty) {
     $alias_dir | path join bin | path expand
   }
 }
@@ -57,7 +57,7 @@ export def with-node [
 
 export alias fnm-default-bin-path = (
   fnm-alias-bin-path nushell
-    | if ($in | empty?) {
+    | if ($in | is-empty) {
         fnm-alias-bin-path default
       } else {
         $in

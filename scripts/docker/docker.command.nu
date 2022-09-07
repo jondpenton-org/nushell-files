@@ -6,14 +6,14 @@ export def docker-restart [] {
 
   osascript -e 'tell application "Docker" to quit';
   sleep-while {
-    not (ps | where name =~ Docker | empty?)
+    not (ps | where name =~ Docker | is-empty)
   };
 
   echo 'Starting Docker...';
   
   ^open -a Docker;
   sleep-while {
-    run-external --redirect-stdout --redirect-stderr docker ps | empty?
+    run-external --redirect-stdout --redirect-stderr docker ps | is-empty
   };
 
   echo 'Docker restarted.'

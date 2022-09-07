@@ -77,7 +77,7 @@ export def pnpm-outdated [
             | update `package` ($row.package | str replace --string ` (dev)` ``)
         }
       | move `dev` --after `package`
-      | if ($severity | empty?) {
+      | if ($severity | is-empty) {
           $in
         } else {
           let old_in = $in
@@ -126,7 +126,7 @@ export def pnpm-outdated [
 
                 $assertions
                   | where not $it
-                  | empty?
+                  | is-empty
               }
         }
   )
@@ -148,7 +148,7 @@ export def pnpm-outdated [
 
           $'($it.package)@($range)($it.latest)'
         }
-      | if not ($in | empty?) {
+      | if not ($in | is-empty) {
           uniq | sort
         }
   }

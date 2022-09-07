@@ -17,7 +17,7 @@ export def from-envrc [] {
                 $it
                   | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
                   | get --ignore-errors name.0
-                  | if ($in | empty?) {
+                  | if ($in | is-empty) {
                       {}
                     } else {
                       open-envrc $in
@@ -77,7 +77,7 @@ def "nu-complete open-env file" [] {
   let git_root = git-root
   let envs_relative_to_git_root = (
     do { cd $git_root; glob --depth 3 **/*.env }
-      | where not ($it =~ example || (open-env $it | empty?))
+      | where not ($it =~ example || (open-env $it | is-empty))
       | path relative-to $git_root
   )
   let pwd_relative_to_git_root = (
@@ -115,7 +115,7 @@ def "nu-complete open-envrc file" [] {
   let git_root = git-root
   let envrcs_relative_to_git_root = (
     do { cd $git_root; glob --depth 3 **/*.envrc }
-      | where not ($it =~ example || (open-envrc $it | empty?))
+      | where not ($it =~ example || (open-envrc $it | is-empty))
       | path relative-to $git_root
   )
   let pwd_relative_to_git_root = (

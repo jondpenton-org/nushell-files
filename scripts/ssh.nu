@@ -12,7 +12,7 @@ def "nu-complete ssh destination" [] {
     | where ($it | str starts-with 'Host ')
     | parse 'Host {destination}'
     | get -i destination
-    | if ($in | empty?) {
+    | if ($in | is-empty) {
         []
       } else {
         $in

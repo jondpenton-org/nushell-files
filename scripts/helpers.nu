@@ -42,10 +42,10 @@ export def do-when [
 ] {
   let block_exit_code = do { do $block; $env.LAST_EXIT_CODE }
 
-  if (not ($on_success | empty?)) && $block_exit_code == 0 {
+  if (not ($on_success | is-empty)) && $block_exit_code == 0 {
     do $on_success
   } else if ($block_exit_code != 0) {
-    if (not ($on_failure | empty?)) {
+    if (not ($on_failure | is-empty)) {
       do $on_failure
     }
 
@@ -79,7 +79,7 @@ export def external-command-exists [
   not (
     which --all $command_name
       | where path != 'Nushell custom command'
-      | empty?
+      | is-empty
   )
 }
 
@@ -161,7 +161,7 @@ export def table-into-record [
   select $key $value
     | transpose --header-row
     | get --ignore-errors 0
-    | if ($in | empty?) {
+    | if ($in | is-empty) {
         {}
       } else {
         $in
