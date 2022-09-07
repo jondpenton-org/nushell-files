@@ -1,4 +1,4 @@
-# Depends on overlays: git
+use git.nu ["nu-complete git branches"]
 
 ## Commands
 

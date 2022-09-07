@@ -344,10 +344,8 @@ do {
 alias nu-config-update = do { cd $env.NU_DIR; git pull }
 
 ## Modules
+overlay add custom.nu
+overlay add dotenv.nu
 overlay add git.nu
 overlay add helpers.nu
 overlay add ssh.nu
-
-overlay add dotenv.nu # Depends on modules: git, helpers
-
-overlay add custom.nu

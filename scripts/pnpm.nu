@@ -1,4 +1,5 @@
-# Depends on overlays: git
+use git.nu git-root
+use helpers.nu build-flags
 
 ## Commands
 

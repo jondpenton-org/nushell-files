@@ -1,4 +1,4 @@
-# Depends on overlays: helpers
+use helpers.nu build-flags
 
 ## Commands
 # View outdated dependencies

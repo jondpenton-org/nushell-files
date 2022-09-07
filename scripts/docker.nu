@@ -1,4 +1,4 @@
-# Depends on overlays: helpers
+use helpers.nu sleep-while
 
 ## Commands
 # Can only be used on Mac
