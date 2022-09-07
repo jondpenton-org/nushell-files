@@ -114,7 +114,6 @@ export def overlay-list [
     let all_overlays = (
       $env.NU_DIR
         | path join scripts
-        | path expand
         | ls $in
         | get name
         | path basename

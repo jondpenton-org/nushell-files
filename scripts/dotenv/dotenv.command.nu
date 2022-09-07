@@ -39,7 +39,6 @@ export def open-env [
   file: path@"nu-complete open-env file"   # .env file
 ] {
   $file
-    | path expand
     | open $in
     | lines
     | parse --regex "^(?P<key>[\\w_]+)='(?P<value>.*)'"
@@ -51,7 +50,6 @@ export def open-envrc [
   file: path@"nu-complete open-envrc file"   # .envrc file
 ] {
   $file
-    | path expand
     | open $in
     | from-envrc
 }

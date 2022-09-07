@@ -44,7 +44,6 @@ def "nu-complete nx project targets" [] {
     | par-each { |row|
         $row.path
           | path join project.json
-          | path expand
           | open $in
           | get targets
           | transpose key
