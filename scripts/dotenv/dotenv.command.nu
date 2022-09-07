@@ -1,3 +1,4 @@
+use ../git.nu git-root
 use ../helpers.nu table-into-record
 
 # Parse text as .envrc and create record
