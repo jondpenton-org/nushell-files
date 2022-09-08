@@ -1,4 +1,5 @@
-use helpers.nu build-flags
+use ../helpers.nu build-flags
+use gpg.completion.nu "nu-complete gpg recipients"
 
 # Decrypts encrypted GPG input
 export def gpg-decrypt [

@@ -1,4 +1,4 @@
-def "nu-complete gpg recipients" [] {
+export def "nu-complete gpg recipients" [] {
   gpg `--keyid-format` `long` `--list-secret-keys`
     | lines
     | parse `sec   {algorithm}/{recipient} {rest}`
