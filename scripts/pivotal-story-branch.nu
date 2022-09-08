@@ -1,4 +1,4 @@
-use git.nu ["nu-complete git branches"]
+use git/git.completion.nu "nu-complete git branches"
 
 ## Commands
 
