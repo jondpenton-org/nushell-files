@@ -5,8 +5,7 @@ export def fnm-alias-bin-path [
     fnm-dir | path join `aliases`
   )
   let alias_dir = (
-    $aliases_dir
-      | ls $in
+    ls $aliases_dir
       | where name ends-with $alias
       | get --ignore-errors name.0
   )
@@ -19,7 +18,7 @@ export def fnm-alias-bin-path [
 export def fnm-dir [] {
   fnm `env` `--shell` `bash`
     | lines
-    | where ($it | str contains `FNM_DIR`)
+    | where (`FNM_DIR` in $it)
     | parse `export FNM_DIR="{path}"`
     | $in.path.0
 }

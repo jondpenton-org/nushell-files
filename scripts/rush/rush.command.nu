@@ -22,7 +22,7 @@ export def rush-add [
     package: $package,
   }
 
-  rush --debug add ($flags)
+  rush `--debug` `add` ($flags)
 }
 
 export def rush-build [
@@ -30,13 +30,13 @@ export def rush-build [
   --to-except (-T): string@"nu-complete rush projects"    # Builds project's dependencies
 ] {
   let flags = build-flags {
-    parallelism: 'max',
+    parallelism: `max`,
     to: $to,
     to-except: $to_except,
     verbose: true,
   }
 
-  rush --debug build ($flags)
+  rush `--debug` `build` ($flags)
 }
 
 export def rush-install [
@@ -48,7 +48,7 @@ export def rush-install [
     purge: $purge,
   }
 
-  rush --debug install ($flags)
+  rush `--debug` `install` ($flags)
 }
 
 # The "rush update" command installs the dependencies described in your package. json files, and updates the shrinkwrap file as needed. (This "shrinkwrap" file stores a central inventory of all dependencies and versions for projects in your repo. It is found in the "common/config/rush" folder.) Note that Rush always performs a single install for all projects in your repo. You should run "rush update" whenever you start working in a Rush repo, after you pull from Git, and after you modify a package.json file. If there is nothing to do, "rush update" is instantaneous. NOTE: In certain cases "rush install" should be used instead of "rush update" -- for details, see the command help for "rush install".
@@ -67,7 +67,7 @@ export def rush-update [
     recheck: $recheck,
   }
 
-  rush --debug update ($flags)
+  rush `--debug` `update` ($flags)
 }
 
 export def rush-update-autoinstaller [
@@ -77,5 +77,5 @@ export def rush-update-autoinstaller [
     name: $name,
   }
 
-  rush update-autoinstaller ($flags)
+  rush `update-autoinstaller` ($flags)
 }

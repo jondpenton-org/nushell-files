@@ -38,10 +38,9 @@ export def from-envrc [] {
 export def open-env [
   file: path@"nu-complete open-env file"   # .env file
 ] {
-  $file
-    | open $in
+  open $file
     | lines
-    | parse --regex "^(?P<key>[\\w_]+)='(?P<value>.*)'"
+    | parse --regex `^(?P<key>[\w_]+)='(?P<value>.*)'`
     | table-into-record
 }
 
@@ -49,9 +48,7 @@ export def open-env [
 export def open-envrc [
   file: path@"nu-complete open-envrc file"   # .envrc file
 ] {
-  $file
-    | open $in
-    | from-envrc
+  open $file | from-envrc
 }
 
 # Like `with-env`, but pass .env file instead of environment variable set
@@ -88,7 +85,7 @@ def "nu-complete open-env file" [] {
   )
 
   $envs_relative_to_git_root | par-each { |it|
-    if ($it | str starts-with $pwd_relative_to_git_root) {
+    if $it starts-with $pwd_relative_to_git_root {
       let dirs_diff_length = (
         $pwd_relative_to_git_root | path split | length
       )
@@ -126,7 +123,7 @@ def "nu-complete open-envrc file" [] {
   )
 
   $envrcs_relative_to_git_root | par-each { |it|
-    if ($it | str starts-with $pwd_relative_to_git_root) {
+    if $it starts-with $pwd_relative_to_git_root {
       let dirs_diff_length = (
         $pwd_relative_to_git_root | path split | length
       )
@@ -139,7 +136,7 @@ def "nu-complete open-envrc file" [] {
       let git_root_relative_to_pwd = (
         $pwd_relative_to_git_root
           | path split
-          | each { '..' }
+          | par-each { '..' }
           | path join
       )
 
