@@ -148,9 +148,9 @@ export def pnpm-outdated [
 
           $'($it.package)@($range)($it.latest)'
         }
-      | if not ($in | is-empty) {
-          uniq | sort
-        }
+      | uniq
+      | default []
+      | sort
   }
 }
 

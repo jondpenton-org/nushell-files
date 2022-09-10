@@ -18,11 +18,10 @@ export def from-envrc [] {
                 $it
                   | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
                   | get --ignore-errors name.0
-                  | if ($in | is-empty) {
-                      {}
-                    } else {
+                  | if not ($in | is-empty) {
                       open-envrc $in
                     }
+                  | default {}
               } else if $it starts-with `dotenv ` {
                 $it
                   | parse `dotenv {name}`

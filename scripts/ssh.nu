@@ -9,12 +9,8 @@ export extern "ssh" [
 def "nu-complete ssh destination" [] {
   open ~/.ssh/config
     | lines
-    | where ($it | str starts-with 'Host ')
-    | parse 'Host {destination}'
-    | get -i destination
-    | if ($in | is-empty) {
-        []
-      } else {
-        $in
-      }
+    | where $it starts-with `Host `
+    | parse `Host {destination}`
+    | get --ignore-errors destination
+    | default []
 }
