@@ -25,7 +25,9 @@ export def from-envrc [] {
               } else if $it starts-with `dotenv ` {
                 $it
                   | parse `dotenv {name}`
-                  | open-env $in.name.0
+                  | $in.name.0
+                  | path expand
+                  | open-env $in
               } else {
                 {}
               }
