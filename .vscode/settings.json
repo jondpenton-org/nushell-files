@@ -15,6 +15,7 @@
     "gpg",
     "pivotal-story-branch",
     "rush",
-    "vscode"
+    "vscode",
+    "postgres"
   ]
 }
