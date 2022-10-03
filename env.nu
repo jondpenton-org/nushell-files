@@ -3,7 +3,7 @@ def color-string [ansi_code: any, text: string] {
     (ansi $ansi_code),
     $text,
     (ansi reset)
-  ] | str collect
+  ] | str join
 }
 
 let-env STARSHIP_SHELL = "nu"
@@ -31,11 +31,19 @@ let-env PROMPT_MULTILINE_INDICATOR = "::: "
 let-env ENV_CONVERSIONS = {
   "PATH": {
     from_string: { |str| $str | split row (char esep) | path expand --no-symlink }
-    to_string: { |list| $list | path expand --no-symlink | str collect (char esep) }
+    to_string: { |list|
+      $list
+        | path expand --no-symlink
+        | str join (char esep)
+    }
   }
   "Path": {
     from_string: { |str| $str | split row (char esep) | path expand --no-symlink }
-    to_string: { |list| $list | path expand --no-symlink | str collect (char esep) }
+    to_string: { |list|
+      $list
+        | path expand --no-symlink
+        | str join (char esep)
+    }
   }
 }
 

@@ -60,7 +60,7 @@ export def pnpm-outdated [
             $it.item
               | str replace `^(\s+│)+\s+` ``
               | str trim
-              | str collect
+              | str join
           }
         }
       | split column `│`
