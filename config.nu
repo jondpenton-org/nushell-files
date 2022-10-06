@@ -350,7 +350,7 @@ let-env config = {
 do {
   cd $env.NU_DIR; git fetch --quiet; git status
 }
-  | if $in contains `Your branch is behind` {
+  | if `Your branch is behind` in $in {
       echo $"There is an update to the config. Run `nu-config-update` to update.(char newline)"
     }
 
