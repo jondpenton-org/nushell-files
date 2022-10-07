@@ -1,3 +1,5 @@
+use helpers.completion.nu ["nu-complete overlay-list filters"]
+
 # Runs benchmark number of $times and averages them together
 export def benchmark-repeat [
   times: int      # Number of times benchmark is ran
@@ -123,7 +125,7 @@ export def overlay-list [
       $all_overlays
     } else if $filter == `inactive` {
       $all_overlays
-        | par-each { |overlay| 
+        | par-each { |overlay|
             if $overlay not-in $active_overlays {
               $overlay
             }
