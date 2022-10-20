@@ -93,19 +93,16 @@ let-env config = {
   }
   show_banner: false, # true or false to enable or disable the banner
 
-  # hooks: {
-  #   pre_prompt: [{
-  #     $nothing  # replace with source code to run before the prompt is shown
-  #   }]
-  #   pre_execution: [{
-  #     $nothing  # replace with source code to run before the repl input is run
-  #   }]
-  #   env_change: {
-  #     PWD: [{ |before, after|
-  #       $nothing  # replace with source code to run if the PWD environment is different since the last repl input
-  #     }]
-  #   }
-  # }
+  hooks: {
+    pre_prompt: [
+      {
+        let direnv = (direnv export json | from json)
+        let direnv = if ($direnv | is-empty) { {} } else { $direnv }
+
+        $direnv | load-env
+      },
+    ],
+  },
   menus: [
     # Configuration for default nushell menus
     # Note the lack of souce parameter
