@@ -9,7 +9,7 @@ export def from-envrc [] {
     | str replace --all `=(\w\S+)` `='${1}'`
     | reduce --fold {} { |it, acc|
         $acc
-          | merge {
+          | merge (
               if $it starts-with `export ` {
                 $it
                   | parse --regex `^export\s+(?P<key>[\w_]+)='(?P<value>.*)'`
@@ -31,7 +31,7 @@ export def from-envrc [] {
               } else {
                 {}
               }
-            }
+            )
       }
 }
 
