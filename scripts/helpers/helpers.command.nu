@@ -3,7 +3,7 @@ use helpers.completion.nu ["nu-complete overlay-list filters"]
 # Runs benchmark number of $times and averages them together
 export def benchmark-repeat [
   times: int      # Number of times benchmark is ran
-  block: block    # Block passed to `benchmark`
+  block: closure    # Block passed to `benchmark`
 ] {
   let benchmarks = (
     repeat $times { benchmark $block }
@@ -37,9 +37,9 @@ export def build-flags [
 
 # Run a block and specify a block to run on success or failure
 export def do-when [
-  block: block
-  --on-success (-s): block    # Runs on $block success
-  --on-failure (-f): block    # Runs on $block failure
+  block: closure
+  --on-success (-s): closure    # Runs on $block success
+  --on-failure (-f): closure    # Runs on $block failure
 ] {
   let block_exit_code = do { do $block; $env.LAST_EXIT_CODE }
 
@@ -56,7 +56,7 @@ export def do-when [
 
 # Run a series of blocks
 export def do-blocks [
-  ...blocks: block    # Blocks to run in succession. If one fails, later blocks will not run.
+  ...blocks: closure    # Blocks to run in succession. If one fails, later blocks will not run.
 ] {
   do-blocks-list $blocks
 }
@@ -138,14 +138,14 @@ export def overlay-list [
 # Repeat block # of times
 export def repeat [
   times: int    # Times to repeat $block
-  block: block
+  block: closure
 ] {
   for it in 1..$times $block
 }
 
 # Sleep while condition true
 export def sleep-while [
-  condition: block
+  condition: closure
   sleep: duration = 100ms
 ] {
   let original_in = $in

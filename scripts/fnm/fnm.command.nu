@@ -30,7 +30,7 @@ export def node-versions-dir [] {
 # Execute block with Node version
 export def with-node [
   version: string@"nu-complete with-node versions",
-  block: block
+  block: closure
 ] {
   let node_path = (
     node-versions-dir
