@@ -6,7 +6,7 @@ export def benchmark-repeat [
   block: closure    # Block passed to `benchmark`
 ] {
   let benchmarks = (
-    repeat $times { benchmark $block }
+    repeat $times { benchmark { do $block } }
   )
 
   $benchmarks
@@ -140,7 +140,7 @@ export def repeat [
   times: int    # Times to repeat $block
   block: closure
 ] {
-  for it in 1..$times $block
+  for it in 1..$times { do $block }
 }
 
 # Sleep while condition true
