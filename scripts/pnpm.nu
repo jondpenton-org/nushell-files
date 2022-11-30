@@ -92,7 +92,7 @@ export def pnpm-outdated [
           )
 
           $old_in
-            | where --block { |row|
+            | where --closure { |row|
                 let current_parts = ($row.current | split row `.`)
                 let latest_parts = ($row.latest | split row `.`)
                 let check_parts = (

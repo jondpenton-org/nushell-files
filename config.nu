@@ -55,42 +55,57 @@ let default_theme = {
 
 # The default config record. This is where much of your global configuration is setup.
 let-env config = {
-  external_completer: { |spans|
-    if not (which carapace | is-empty) {
-      carapace $spans.0 nushell $spans | from json
-    }
+  cd: {
+    abbreviations: true, # allows `cd s/o/f` to expand to `cd some/other/folder`
   },
-  filesize_metric: false,
-  table_mode: `compact`, # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other
-  use_ls_colors: true,
-  rm_always_trash: true,
+  completions: {
+    algorithm: `fuzzy`, # prefix or fuzzy
+    case_sensitive: false, # set to true to enable case-sensitive completions
+    external: {
+      completer: { |spans|
+        if not (which carapace | is-empty) {
+          carapace $spans.0 nushell $spans | from json
+        }
+      },
+      enable: true, # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up my be very slow
+      max_results: 100, # setting it lower can improve completion performance at the cost of omitting some options
+    },
+    partial: true, # set this to false to prevent partial filling of the prompt
+    quick: true, # set this to false to prevent auto-selecting completions when only one remains
+  },
+  filesize: {
+    format: `auto`, # b, kb, kib, mb, mib, gb, gib, tb, tib, pb, pib, eb, eib, zb, zib, auto
+    metric: true, # true => KB, MB, GB (ISO standard), false => KiB, MiB, GiB (Windows standard)
+  },
+  history: {
+    file_format: `plaintext`, # "sqlite" or "plaintext"
+    max_size: 10000, # Session has to be reloaded for this to take effect
+    sync_on_enter: true, # Enable to share history between multiple sessions, else you have to close the session to write history to file
+  },
+  ls: {
+    clickable_links: true # enable or disable clickable links. Your terminal has to support links.
+    use_ls_colors: true # use the LS_COLORS environment variable to colorize output
+  },
+  rm: {
+    always_trash: true, # always act as if -t was given. Can be overridden with -p
+  },
+  table: {
+    index_mode: `always`, # "always" show indexes, "never" show indexes, "auto" = show indexes when a table has "index" column
+    mode: `compact`, # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other
+    trim: {
+      methodology: `wrapping`, # wrapping or truncating
+      truncating_suffix: `...`, # A suffix used by the 'truncating' methodology
+      wrapping_try_keep_words: true, # A strategy used by the 'wrapping' methodology
+    },
+  },
   color_config: $default_theme,
   use_grid_icons: true,
   footer_mode: `20`, # always, never, number_of_rows, auto
-  quick_completions: true , # set this to false to prevent auto-selecting completions when only one remains
-  partial_completions: true , # set this to false to prevent partial filling of the prompt
-  completion_algorithm: `fuzzy` , # prefix, fuzzy
   float_precision: 2,
   # buffer_editor: `emacs` # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
   use_ansi_coloring: true,
-  filesize_format: `auto`, # b, kb, kib, mb, mib, gb, gib, tb, tib, pb, pib, eb, eib, zb, zib, auto
   edit_mode: emacs, # emacs, vi
-  max_history_size: 10000, # Session has to be reloaded for this to take effect
-  sync_history_on_enter: true, # Enable to share the history between multiple sessions, else you have to close the session to persist history to file
-  history_file_format: `plaintext`, # `sqlite` or `plaintext`
   shell_integration: true, # enables terminal markers and a workaround to arrow keys stop working issue
-  cd_with_abbreviations: true, # set to true to allow you to do things like cd s/o/f and nushell expand it to cd some/other/folder
-  case_sensitive_completions: false, # set to true to enable case-sensitive completions
-  enable_external_completion: true, # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up my be very slow
-  max_external_completion_results: 100, # setting it lower can improve completion performance at the cost of omitting some options
-  # A strategy of managing table view in case of limited space.
-  table_trim: {
-    methodology: `wrapping`, # truncating
-    # A strategy which will be used by 'wrapping' methodology
-    wrapping_try_keep_words: true
-    # A suffix which will be used with 'truncating' methodology
-    # truncating_suffix: `...`
-  }
   show_banner: false, # true or false to enable or disable the banner
 
   hooks: {
