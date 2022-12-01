@@ -21,7 +21,7 @@ export def rush-add [
     exact: $exact,
     make-consistent: $make_consistent,
     package: $package,
-    skip-update: $skip-update,
+    skip-update: $skip_update,
   }
 
   rush `--debug` `add` ($flags)
