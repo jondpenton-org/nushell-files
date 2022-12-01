@@ -12,6 +12,7 @@ export def rush-add [
   --dev (-d): bool                # If specified, the package will be added to the "devDependencies" section of the package.json
   --exact (-e): bool              # If specified, the SemVer specifier added to the package.json will be an exact version (e.g. without tilde or caret).
   --make-consistent (-m): bool    # If specified, other packages with this dependency will have their package.json files updated to use the same version of the dependency.
+  --skip-update (-s): bool        # If specified, the "rush update" command will not be run after updating the package.json files.
 ] {
   let flags = build-flags {
     all: $all,
@@ -20,6 +21,7 @@ export def rush-add [
     exact: $exact,
     make-consistent: $make_consistent,
     package: $package,
+    skip-update: $skip-update,
   }
 
   rush `--debug` `add` ($flags)
