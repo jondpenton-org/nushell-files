@@ -111,8 +111,21 @@ let-env config = {
   hooks: {
     pre_prompt: [
       {
-        let direnv = (direnv export json | from json)
-        let direnv = if ($direnv | is-empty) { {} } else { $direnv }
+        if (which direnv | is-empty) {
+          return
+        }
+
+        mut direnv = (direnv export json | from json)
+
+        if ($direnv | is-empty) {
+          return
+        }
+
+        if `PATH` in $direnv && (($direnv.PATH | describe) == `string`) {
+          $direnv.PATH = (
+            do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH
+          )
+        }
 
         $direnv | load-env
       },
