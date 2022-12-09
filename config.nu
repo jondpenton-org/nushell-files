@@ -123,7 +123,7 @@ let-env config = {
 
         if `PATH` in $direnv && (($direnv.PATH | describe) == `string`) {
           $direnv.PATH = (
-            do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH
+            do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH | uniq
           )
         }
 
