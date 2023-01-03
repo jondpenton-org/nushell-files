@@ -26,7 +26,7 @@ export def build-flags [
     | par-each { |it|
         $it.value
           | describe
-          | if $in == `bool` && $it.value {
+          | if $in == `bool` and $it.value {
               $"--($it.key)"
             } else if $in in [`string`, `int`] {
               [$"--($it.key)", $it.value]
@@ -43,7 +43,7 @@ export def do-when [
 ] {
   let block_exit_code = do { do $block; $env.LAST_EXIT_CODE }
 
-  if (not ($on_success | is-empty)) && $block_exit_code == 0 {
+  if (not ($on_success | is-empty)) and $block_exit_code == 0 {
     do $on_success
   } else if ($block_exit_code != 0) {
     if (not ($on_failure | is-empty)) {

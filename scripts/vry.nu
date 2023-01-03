@@ -33,7 +33,7 @@ export def vry-match-elo [] {
                   $it.peak_rank | str replace `\s\(e\da\d\)` ``
                 )
                 let rank_to_parse = (
-                  if $it.rank != `Unranked` || $peak_rank == `Unranked` {
+                  if $it.rank != `Unranked` or $peak_rank == `Unranked` {
                     $it.rank
                   } else {
                     $peak_rank
@@ -42,7 +42,7 @@ export def vry-match-elo [] {
                 let rr = (
                   $it.rr | into int
                 )
-      
+
                 if $rank_to_parse in [`Iron 1`, `Unranked`] {
                   $rr
                 } else {
@@ -65,7 +65,7 @@ export def vry-match-elo [] {
                   let tier = (
                     $rank_parts.1 | into int
                   )
-      
+
                   $rank_base_rr + (($tier - 1) * 100) + $rr
                 }
               }
@@ -93,7 +93,7 @@ export def vry-match-elo [] {
         let rr = (
           ($tier_division_result - ($tier - 1)) * 100 | into int
         )
-      
+
         {
           index: ($team - 1),
           rank_tier: $'($rank) ($tier)',
