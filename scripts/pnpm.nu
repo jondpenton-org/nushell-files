@@ -253,10 +253,11 @@ def "nu-complete pnpm log level" [] {
 
 def "nu-complete pnpm projects" [] {
   do { cd (git-root); open pnpm-workspace.yaml }
-    | get packages
-    | each { |it| glob --depth 3 $'($it)/package.json' }
+    | $in.packages
+    | par-each { |it| glob --depth 3 $'($it)/package.json' }
     | flatten
-    | each { |it| open $it | get name }
+    | par-each { |it| open $it | $in.name }
+    | sort
 }
 
 def "nu-complete pnpm severity" [] {

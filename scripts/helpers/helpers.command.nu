@@ -3,14 +3,14 @@ use helpers.completion.nu ["nu-complete overlay-list filters"]
 # Runs benchmark number of $times and averages them together
 export def benchmark-repeat [
   times: int      # Number of times benchmark is ran
-  block: closure    # Block passed to `benchmark`
+  block: block    # Block passed to `benchmark`
 ] {
   let benchmarks = (
-    repeat $times { benchmark { do $block } }
+    repeat $times { benchmark $block }
   )
 
   $benchmarks
-    | each { |it| $it / 1ns } # Duration to int
+    | par-each { |it| $it / 1ns } # Duration to int
     | math avg
     | math ceil
     | into int
@@ -140,7 +140,7 @@ export def repeat [
   times: int    # Times to repeat $block
   block: closure
 ] {
-  for it in 1..$times { do $block }
+  1..$times | each { do $block }
 }
 
 # Sleep while condition true
