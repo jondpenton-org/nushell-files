@@ -140,7 +140,7 @@ export def pnpm-outdated [
       | par-each { |it|
           let range = (
             if $it.package starts-with `@types/` {
-              $nothing
+              null
             } else if $it.latest starts-with `0` {
               `~`
             } else {
