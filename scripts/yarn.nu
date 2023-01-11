@@ -12,7 +12,7 @@ export def yarn-outdated [
     type: $type,
   }
   let table = (
-    ^yarn outdated ($flags)
+    yarn outdated $flags
       | lines
       | skip 4
       | drop 3

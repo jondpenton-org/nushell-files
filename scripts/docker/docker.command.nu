@@ -10,7 +10,7 @@ export def docker-restart [] {
   };
 
   echo `Starting Docker...`;
-  
+
   ^open -a Docker;
   sleep-while {
     run-external --redirect-stdout --redirect-stderr docker ps | is-empty

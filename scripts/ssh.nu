@@ -12,5 +12,6 @@ def "nu-complete ssh destination" [] {
     | where $it starts-with `Host `
     | parse `Host {destination}`
     | get --ignore-errors destination
+    | where not ($it | is-empty)
     | default []
 }

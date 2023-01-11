@@ -47,7 +47,7 @@ export def pnpm-outdated [
     workspace-root: $workspace_root
   }
   let outdated_table = (
-    ^pnpm outdated $flags
+    pnpm outdated $flags
       | lines
       | skip 1
       | drop 1
