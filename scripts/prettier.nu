@@ -69,7 +69,11 @@ def "nu-complete prettier loglevel" [] {
 }
 
 def "nu-complete prettier parser" [] {
-  [angular, babel, babel-flow, babel-ts, css, espree, flow, glimmer, graphql, html, json, json-stringify, json5, less, lwc, markdown, mdx, meriyah, scss, typescript, vue, yaml]
+  [
+    angular, babel, babel-flow, babel-ts, css, espree, flow, glimmer, graphql,
+    html, json, json-stringify, json5, less, lwc, markdown, mdx, meriyah, scss,
+    typescript, vue, yaml,
+  ]
 }
 
 def "nu-complete prettier prose-wrap" [] {

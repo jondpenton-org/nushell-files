@@ -2,7 +2,7 @@
 export def vry-match-elo [] {
   let match_table = (
     $in
-      | vry-teams
+      | from vry
       | where name != ``
   )
   let ranks = [
@@ -103,25 +103,57 @@ export def vry-match-elo [] {
     | sort-by index
 }
 
-export def vry-teams [] {
-  $in
-    | lines
-    | skip 1
-    | drop 1
-    | each --numbered { |it| # Normalize column names
-        if $it.index != 0 {
-          $it.item
-        } else {
-          $it.item
+export def "from vry" [] {
+  let table = (
+    $in
+      | lines
+      | skip 1
+      | drop 1
+      | each { |row, index| # Normalize column names
+          if $index != 0 {
+            return $row
+          }
+
+          $row
             | str downcase
             | str replace -a `(\w)\s(\w)` `${1}_${2}`
         }
+      | where (`━` not-in $it) # Remove header/players divider
+      | str replace --all --string `┃` `│` # Clean rows
+      | str trim --char `│`
+      | split column `│` # Parse rows
+      | str trim # Clean cells
+      | headers
+      | filter { |row|
+          let row_is_empty = (
+            $row | values | all { |value| $value | is-empty }
+          )
+
+          not $row_is_empty
+        }
+  )
+  let table = do {
+    let int_keys = [rr, hs, level]
+
+    $table | each { |row|
+      $int_keys | reduce --fold $row { |key, row|
+        mut value = ($row | get --ignore-errors $key)
+
+        if ($value | is-empty) {
+          $value = null
+        } else {
+          $value = ($value | into int)
+        }
+
+        $row | update $key $value
       }
-    | where not ($it | str contains `━`) # Remove header/players divider
-    | str replace --all --string `┃` `│` # Clean rows
-    | str trim --char `│`
-    | split column `│` # Parse rows
-    | str trim # Clean cells
-    | headers # Finalize table
-    | select `agent` `name` `rank` `rr` `peak_rank` `hs` `wr` `kd`
+    }
+  }
+  let table = (
+    $table | each { |row|
+      $row | update party ($row.party == `■`)
+    }
+  )
+
+  $table
 }
