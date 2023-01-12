@@ -10,9 +10,11 @@ export def fnm-alias-bin-path [
       | get --ignore-errors name.0
   )
 
-  if not ($alias_dir | is-empty) {
-    $alias_dir | path join `bin`
+  if ($alias_dir | is-empty) {
+    return
   }
+
+  $alias_dir | path join `bin`
 }
 
 export def fnm-dir [] {

@@ -2,7 +2,7 @@ export def "nu-complete git branches" [] {
   git branch
     | lines
     | par-each { |line|
-        $line | str replace '[\*\+] ' '' | str trim
+        $line | str replace `[*+] ` `` | str trim
       }
 }
 

@@ -1,20 +1,11 @@
-use helpers.completion.nu ["nu-complete overlay-list filters"]
+use helpers.completion.nu [`nu-complete overlay-list filters`]
 
 # Runs benchmark number of $times and averages them together
 export def benchmark-repeat [
   times: int      # Number of times benchmark is ran
   block: block    # Block passed to `benchmark`
 ] {
-  let benchmarks = (
-    repeat $times { benchmark $block }
-  )
-
-  $benchmarks
-    | par-each { |it| $it / 1ns } # Duration to int
-    | math avg
-    | math ceil
-    | into int
-    | $in * 1ns # Int to duration
+  repeat $times { benchmark $block } | math avg
 }
 
 # Builds list of flag strings to pass to command
@@ -23,74 +14,32 @@ export def build-flags [
 ] {
   $flags
     | transpose key value
-    | par-each { |it|
-        $it.value
-          | describe
-          | if $in == `bool` and $it.value {
-              $"--($it.key)"
-            } else if $in in [`string`, `int`] {
-              [$"--($it.key)", $it.value]
-            }
+    | par-each { |flag|
+        let formatted_key = $'--($flag.key)'
+        let type = ($flag.value | describe)
+
+        if $type == `bool` and $flag.value {
+          $formatted_key
+        } else if $type in [`float`, `string`, `int`] {
+          [$formatted_key, $flag.value]
+        }
       }
     | flatten
-}
-
-# Run a block and specify a block to run on success or failure
-export def do-when [
-  block: closure
-  --on-success (-s): closure    # Runs on $block success
-  --on-failure (-f): closure    # Runs on $block failure
-] {
-  let block_exit_code = do { do $block; $env.LAST_EXIT_CODE }
-
-  if (not ($on_success | is-empty)) and $block_exit_code == 0 {
-    do $on_success
-  } else if ($block_exit_code != 0) {
-    if (not ($on_failure | is-empty)) {
-      do $on_failure
-    }
-
-    sh `-c` $"exit ($block_exit_code)"
-  }
-}
-
-# Run a series of blocks
-export def do-blocks [
-  ...blocks: closure    # Blocks to run in succession. If one fails, later blocks will not run.
-] {
-  do-blocks-list $blocks
-}
-
-# Run a list of blocks
-export def do-blocks-list [
-  blocks: any   # List of blocks
-] {
-  let chained_blocks = (
-    $blocks | reduce { |it, acc|
-      { do-when $acc --on-success $it }
-    }
-  )
-
-  do $chained_blocks
 }
 
 export def external-command-exists [
   command_name: string
 ] {
-  not (
-    which --all $command_name
-      | where path != `Nushell custom command`
-      | is-empty
-  )
+  which --all $command_name | any { |row| $row.path starts-with `/` }
 }
 
 # Kills all nu shells
-export def nu-ko [] {
-  ps | par-each { |it|
-    $it.name
+export def nu-kill-all [] {
+  ps | par-each { |process|
+    $process.name
       | path parse
       | if $in.stem == `nu` {
-          kill --force $it.pid
+          kill --force $process.pid
         }
   }
 }
@@ -100,7 +49,7 @@ export def nu-reload [] {
     which `nu` | $in.path.0
   )
 
-  exec $nu_path `--commands` $"cd ($env.PWD | to json); ($nu_path) --login"
+  exec $nu_path `--commands` $'cd ($env.PWD | to json); ($nu_path) --login'
 }
 
 # List and filter all overlays
@@ -110,28 +59,36 @@ export def overlay-list [
   let active_overlays = overlay list
 
   if $filter == `active` {
-    $active_overlays
-  } else {
-    let all_overlays = (
-      $env.NU_DIR
-        | path join `scripts`
-        | ls $in
-        | $in.name
-        | path basename
-        | str replace --string `.nu` ``
-    )
+    return $active_overlays
+  }
 
-    if $filter == `all` {
-      $all_overlays
-    } else if $filter == `inactive` {
-      $all_overlays
-        | par-each { |overlay|
-            if $overlay not-in $active_overlays {
-              $overlay
-            }
+  let all_overlays = (
+    $env.NU_DIR
+      | path join `scripts`
+      | ls $in
+      | par-each { |row|
+          if $row.type != file or (not ($row.name ends-with .nu)) {
+            return
           }
-        | sort
-    }
+
+          $row.name | path basename | str replace --string `.nu` ``
+        }
+  )
+
+  if $filter == `all` {
+    return ($all_overlays | sort)
+  }
+
+  if $filter == `inactive` {
+    $all_overlays
+      | par-each { |overlay|
+          if $overlay in $active_overlays {
+            return
+          }
+
+          $overlay
+        }
+      | sort
   }
 }
 
@@ -140,22 +97,16 @@ export def repeat [
   times: int    # Times to repeat $block
   block: closure
 ] {
-  1..$times | each { do $block }
+  1..$times | each $block
 }
 
 # Sleep while condition true
 export def sleep-while [
-  condition: closure
-  sleep: duration = 100ms
+  condition: closure              # Condition to check
+
+  --interval: duration = 100ms    # How often `condition` is checked
 ] {
-  let original_in = $in
-
-  if do $condition {
-    sleep $sleep;
-    sleep-while $condition $sleep;
-  }
-
-  $original_in
+  while (do $condition) { sleep $interval }
 }
 
 export def table-into-record [

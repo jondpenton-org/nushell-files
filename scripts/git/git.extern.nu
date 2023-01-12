@@ -1,4 +1,4 @@
-use git.completion.nu ["nu-complete git branches", "nu-complete git remotes"]
+use git.completion.nu [`nu-complete git branches`, `nu-complete git remotes`]
 
 export extern "git checkout" [
   branch?: string@"nu-complete git branches"    # name of the branch to checkout

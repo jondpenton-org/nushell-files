@@ -1,5 +1,5 @@
 use ../helpers.nu build-flags
-use gpg.completion.nu "nu-complete gpg recipients"
+use gpg.completion.nu `nu-complete gpg recipients`
 
 # Decrypts encrypted GPG input
 export def gpg-decrypt [
@@ -16,8 +16,9 @@ export def gpg-decrypt [
 
 # Encrypts input for GPG recipient
 export def gpg-encrypt [
-  recipient: string@"nu-complete gpg recipients"
   --verbose (-v)
+
+  recipient: string@"nu-complete gpg recipients"
 ] {
   let initial_in = $in
   let flags = build-flags {

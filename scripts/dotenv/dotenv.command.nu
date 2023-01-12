@@ -8,30 +8,31 @@ export def from-envrc [] {
     | str replace --all --string `"` `'`
     | str replace --all `=(\w\S+)` `='${1}'`
     | reduce --fold {} { |it, acc|
-        $acc
-          | merge (
-              if $it starts-with `export ` {
-                $it
-                  | parse --regex `^export\s+(?P<key>[\w_]+)='(?P<value>.*)'`
-                  | table-into-record
-              } else if $it starts-with `source_env` {
-                $it
-                  | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
-                  | get --ignore-errors name.0
-                  | if not ($in | is-empty) {
-                      open-envrc $in
-                    }
-                  | default {}
-              } else if $it starts-with `dotenv ` {
-                $it
-                  | parse `dotenv {name}`
-                  | $in.name.0
-                  | path expand
-                  | open-env $in
-              } else {
-                {}
-              }
-            )
+        let variables = (
+          if $it starts-with `export ` {
+            $it
+              | parse --regex `^export\s+(?P<key>[\w_]+)='(?P<value>.*)'`
+              | table-into-record
+          } else if $it starts-with `source_env` {
+            $it
+              | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
+              | $in.name.0
+              | path expand
+              | open-envrc $in
+          } else if $it starts-with `dotenv ` {
+            $it
+              | parse `dotenv {name}`
+              | $in.name.0
+              | path expand
+              | open-env $in
+          }
+        )
+
+        if ($variables | is-empty) {
+          return $acc
+        }
+
+        $acc | merge $variables
       }
 }
 
@@ -79,7 +80,7 @@ def "nu-complete open-env file" [] {
   )
   let pwd_relative_to_git_root = (
     if $git_root == $env.PWD {
-      ''
+      ``
     } else {
       $env.PWD | path relative-to $git_root
     }
@@ -117,7 +118,7 @@ def "nu-complete open-envrc file" [] {
   )
   let pwd_relative_to_git_root = (
     if $git_root == $env.PWD {
-      ''
+      ``
     } else {
       $env.PWD | path relative-to $git_root
     }
