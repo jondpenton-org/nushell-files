@@ -14,14 +14,14 @@ export def build-flags [
 ] {
   $flags
     | transpose key value
-    | par-each { |flag|
-        let formatted_key = $'--($flag | get key)'
-        let type = ($flag | get value | describe)
+    | par-each { |it|
+        let formatted_key = $'--($it | get key)'
+        let type = ($it | get value | describe)
 
-        if $type == `bool` and ($flag | get value) {
+        if $type == `bool` and ($it | get value) {
           $formatted_key
         } else if $type in [`float`, `string`, `int`] {
-          [$formatted_key, ($flag | get value)]
+          [$formatted_key, ($it | get value)]
         }
       }
     | flatten
@@ -30,18 +30,18 @@ export def build-flags [
 export def external-command-exists [
   command_name: string
 ] {
-  which --all $command_name | any { |row| ($row | get path) starts-with `/` }
+  which --all $command_name | any { |it| ($it | get path) starts-with `/` }
 }
 
 # Kills all nu shells
 export def nu-kill-all [] {
-  ps | par-each { |process|
-    $process
+  ps | par-each { |it|
+    $it
       | get name
       | path parse
       | get stem
       | if $in == `nu` {
-          kill --force ($process | get pid)
+          kill --force ($it | get pid)
         }
   }
 }
@@ -69,13 +69,13 @@ export def overlay-list [
       | get NU_DIR
       | path join `scripts`
       | ls $in
-      | par-each { |row|
-          if ($row | get type) != file or (
-            not (($row | get name) ends-with .nu)
+      | par-each { |it|
+          if ($it | get type) != file or (
+            not (($it | get name) ends-with .nu)
           ) {
             null
           } else {
-            $row
+            $it
               | get name
               | path basename
               | str replace --string `.nu` ``
@@ -89,12 +89,10 @@ export def overlay-list [
 
   if $filter == `inactive` {
     $all_overlays
-      | par-each { |overlay|
-          if $overlay in $active_overlays {
-            return
+      | par-each { |it|
+          if not ($it in $active_overlays) {
+            $it
           }
-
-          $overlay
         }
       | sort
   }

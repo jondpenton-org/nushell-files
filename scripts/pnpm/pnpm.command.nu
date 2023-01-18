@@ -68,16 +68,15 @@ export def pnpm-outdated [
       | split column `│`
       | str trim
       | headers
-      | par-each { |row|
-          $row
-            | if `dependents` in $row {
-                update `dependents` ($row | get dependents | split row `,`)
-              } else {
-                $in
-              }
-            | insert `dev` (($row | get package) ends-with ` (dev)`)
+      | par-each { |it|
+          if `dependents` in $it {
+            $it | update `dependents` ($it | get dependents | split row `,`)
+          } else {
+            $it
+          }
+            | insert `dev` (($it | get package) ends-with ` (dev)`)
             | update `package` (
-                $row | get package | str replace --string ` (dev)` ``
+                $it | get package | str replace --string ` (dev)` ``
               )
         }
       | move `dev` --after `package`
@@ -96,9 +95,9 @@ export def pnpm-outdated [
           )
 
           $old_in
-            | filter { |row|
-                let current_parts = ($row | get current | split row `.`)
-                let latest_parts = ($row | get latest | split row `.`)
+            | filter { |it|
+                let current_parts = ($it | get current | split row `.`)
+                let latest_parts = ($it | get latest | split row `.`)
                 let check_parts = (
                   $check_parts
                     | if ($current_parts | first) != `0` {

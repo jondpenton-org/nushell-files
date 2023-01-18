@@ -8,15 +8,15 @@ export def "nu-complete nx project targets" [] {
     | open $in
     | get projects
     | transpose project path
-    | par-each { |row|
-        $row
+    | par-each { |it|
+        $it
           | get path
           | path join project.json
           | open $in
           | get targets
           | transpose key
           | get key
-          | par-each { |target| $"($row | get project):($target)" }
+          | par-each { |target| $"($it | get project):($target)" }
       }
     | sort
 }

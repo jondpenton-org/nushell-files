@@ -9,15 +9,14 @@ export def pg-restore [
   file_prefix: string
 ] {
   ls $"($file_prefix)-*.sql"
-    | par-each { |row|
-        $row
-          | update modified (
-              $row
-                | get name
-                | parse --regex `(?P<time>\d+)`
-                | get time.0
-                | into datetime
-            )
+    | par-each { |it|
+        $it | update modified (
+          $it
+            | get name
+            | parse --regex `(?P<time>\d+)`
+            | get time.0
+            | into datetime
+        )
       }
     | sort-by --reverse `modified`
     | get name.0

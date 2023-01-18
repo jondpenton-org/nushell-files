@@ -20,9 +20,9 @@ export def vry-match-elo [] {
   )
 
   1..$teams_num
-    | par-each { |team|
+    | par-each { |team_num|
         let team_ranks_total_rr = (
-          if $team == 1 {
+          if $team_num == 1 {
             $match_table | take 5
           } else {
             $match_table | skip 5
@@ -95,7 +95,7 @@ export def vry-match-elo [] {
         )
 
         {
-          index: ($team - 1),
+          index: ($team_num - 1),
           rank_tier: $'($rank) ($tier)',
           rr: $rr,
         }
@@ -109,14 +109,14 @@ export def "from vry" [] {
       | lines
       | skip 1
       | drop 1
-      | each { |row, index| # Normalize column names
+      | each { |it, index| # Normalize column names
           if $index != 0 {
-            return $row
+            $it
+          } else {
+            $it
+              | str downcase
+              | str replace -a `(\w)\s(\w)` `${1}_${2}`
           }
-
-          $row
-            | str downcase
-            | str replace -a `(\w)\s(\w)` `${1}_${2}`
         }
       | where (`━` not-in $it) # Remove header/players divider
       | str replace --all --string `┃` `│` # Clean rows
@@ -124,9 +124,9 @@ export def "from vry" [] {
       | split column `│` # Parse rows
       | str trim # Clean cells
       | headers
-      | filter { |row|
+      | filter { |it|
           let row_is_empty = (
-            $row | values | all { |value| $value | is-empty }
+            $it | values | all { |value| $value | is-empty }
           )
 
           not $row_is_empty
@@ -135,8 +135,8 @@ export def "from vry" [] {
   let table = do {
     let int_keys = [rr, hs, level]
 
-    $table | each { |row|
-      $int_keys | reduce --fold $row { |key, row|
+    $table | each { |it|
+      $int_keys | reduce --fold $it { |key, row|
         mut value = ($row | get --ignore-errors $key)
 
         if ($value | is-empty) {
@@ -150,8 +150,8 @@ export def "from vry" [] {
     }
   }
   let table = (
-    $table | each { |row|
-      $row | update party (($row | get party) == `■`)
+    $table | each { |it|
+      $it | update party (($it | get party) == `■`)
     }
   )
 
