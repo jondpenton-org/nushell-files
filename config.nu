@@ -64,7 +64,7 @@ let-env config = {
     external: {
       completer: { |spans|
         if not (which carapace | is-empty) {
-          carapace $spans.0 nushell $spans | from json
+          carapace ($spans | first) nushell $spans | from json
         }
       },
       enable: true, # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up my be very slow
@@ -121,9 +121,11 @@ let-env config = {
           return
         }
 
-        if `PATH` in $direnv and (($direnv.PATH | describe) == `string`) {
+        if `PATH` in $direnv and (($direnv | get PATH | describe) == `string`) {
           $direnv.PATH = (
-            do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH | uniq
+            do ($env | get ENV_CONVERSIONS.PATH.from_string) (
+              $direnv | get PATH
+            ) | uniq
           )
         }
 
@@ -201,10 +203,11 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu.scope.commands
+        $nu
+          | get scope.commands
           | where command =~ $buffer
           | each { |it|
-              { value: $it.command, description: $it.usage }
+              { value: ($it | get command), description: ($it | get usage) }
             }
       }
     },
@@ -222,11 +225,12 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu.scope.vars
+        $nu
+          | get scope.vars
           | where name =~ $buffer
           | sort-by name
           | each { |it|
-              { value: $it.name, description: $it.type }
+              { value: ($it | get name), description: ($it | get type) }
             }
       }
     },
@@ -248,10 +252,11 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu.scope.commands
+        $nu
+          | get scope.commands
           | where command =~ $buffer
           | each { |it|
-              { value: $it.command, description: $it.usage }
+              { value: ($it | get command), description: ($it | get usage) }
             }
       }
     }
@@ -372,14 +377,18 @@ let-env config = {
 
 ## Repository Updates
 do {
-  cd $env.NU_DIR; git fetch --quiet; git status
+  cd ($env | get NU_DIR)
+  git fetch --quiet
+
+  if `Your branch is behind` in (git status) {
+    echo $'There is an update to the config. Run `nu-config-update` to update.(
+      char newline
+    )'
+  }
 }
-  | if `Your branch is behind` in $in {
-      echo $"There is an update to the config. Run `nu-config-update` to update.(char newline)"
-    }
 
 ### Aliases
-alias nu-config-update = do { cd $env.NU_DIR; git pull }
+alias nu-config-update = do { cd ($env | get NU_DIR); git pull }
 
 ## Modules
 overlay use dotenv.nu

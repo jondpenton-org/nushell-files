@@ -6,16 +6,17 @@ export def "nu-complete nx project targets" [] {
   git-root
     | path join workspace.json
     | open $in
-    | $in.projects
+    | get projects
     | transpose project path
     | par-each { |row|
-        $row.path
+        $row
+          | get path
           | path join project.json
           | open $in
-          | $in.targets
+          | get targets
           | transpose key
-          | $in.key
-          | par-each { |target| $"($row.project):($target)" }
+          | get key
+          | par-each { |target| $"($row | get project):($target)" }
       }
     | sort
 }
@@ -24,8 +25,8 @@ export def "nu-complete nx projects" [] {
   git-root
     | path join workspace.json
     | open $in
-    | $in.projects
+    | get projects
     | transpose project
-    | $in.project
+    | get project
     | sort
 }

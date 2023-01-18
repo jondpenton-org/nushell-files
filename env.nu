@@ -9,7 +9,9 @@ def color-string [ansi_code: any, text: string] {
 let-env STARSHIP_SHELL = `nu`
 
 def create_left_prompt [] {
-  starship prompt --cmd-duration $env.CMD_DURATION_MS $"--status=($env.LAST_EXIT_CODE)"
+  starship prompt --cmd-duration (
+    $env | get CMD_DURATION_MS
+  ) $'--status=($env | get LAST_EXIT_CODE)'
 }
 
 # Use nushell functions to define your right and left prompt
@@ -57,19 +59,19 @@ let-env ENV_CONVERSIONS = {
 }
 
 let-env NU_DIR = (
-  $nu.config-path | path dirname
+  $nu | get config-path | path dirname
 )
 
 # Directories to search for scripts when calling source or use
 #
 # By default, <nushell-config-dir>/scripts is added
 let-env NU_LIB_DIRS = [
-  ($env.NU_DIR | path join `scripts`)
+  ($env | get NU_DIR | path join `scripts`)
 ]
 
 # Directories to search for plugin binaries when calling register
 #
 # By default, <nushell-config-dir>/plugins is added
 let-env NU_PLUGIN_DIRS = [
-  ($env.NU_DIR | path join `plugins`)
+  ($env | get NU_DIR | path join `plugins`)
 ]

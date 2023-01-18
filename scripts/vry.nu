@@ -30,17 +30,17 @@ export def vry-match-elo [] {
             | select rank rr peak_rank
             | par-each { |it|
                 let peak_rank = (
-                  $it.peak_rank | str replace `\s\(e\da\d\)` ``
+                  $it | get peak_rank | str replace `\s\(e\da\d\)` ``
                 )
                 let rank_to_parse = (
-                  if $it.rank != `Unranked` or $peak_rank == `Unranked` {
-                    $it.rank
+                  if ($it | get rank) != `Unranked` or $peak_rank == `Unranked` {
+                    ($it | get rank)
                   } else {
                     $peak_rank
                   }
                 )
                 let rr = (
-                  $it.rr | into int
+                  $it | get rr | into int
                 )
 
                 if $rank_to_parse in [`Iron 1`, `Unranked`] {
@@ -49,7 +49,7 @@ export def vry-match-elo [] {
                   let rank_parts = (
                     $rank_to_parse | split row ` `
                   )
-                  let rank = $rank_parts.0
+                  let rank = ($rank_parts | first)
                   let rank_index = (
                     $ranks
                       | par-each { |it, index|
@@ -57,13 +57,13 @@ export def vry-match-elo [] {
                             $index
                           }
                         }
-                      | $in.0
+                      | first
                   )
                   let rank_base_rr = (
                     $rank_index * 300
                   )
                   let tier = (
-                    $rank_parts.1 | into int
+                    $rank_parts | get 1 | into int
                   )
 
                   $rank_base_rr + (($tier - 1) * 100) + $rr
@@ -151,7 +151,7 @@ export def "from vry" [] {
   }
   let table = (
     $table | each { |row|
-      $row | update party ($row.party == `■`)
+      $row | update party (($row | get party) == `■`)
     }
   )
 

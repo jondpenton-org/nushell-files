@@ -54,10 +54,10 @@ export def pnpm-outdated [
       | skip 1
       | drop 1
       | str trim --char `│`
-      | split list ($in | where $it starts-with `├─` | $in.0)
+      | split list ($in | where $it starts-with `├─` | first)
       | each { |it, index|
           if $index == 0 {
-            $it.0 | str downcase
+            $it | first | str downcase
           } else {
             $it
               | str replace `^(\s+│)+\s+` ``
@@ -71,12 +71,14 @@ export def pnpm-outdated [
       | par-each { |row|
           $row
             | if `dependents` in $row {
-                update `dependents` ($row.dependents | split row `,`)
+                update `dependents` ($row | get dependents | split row `,`)
               } else {
                 $in
               }
-            | insert `dev` ($row.package ends-with ` (dev)`)
-            | update `package` ($row.package | str replace --string ` (dev)` ``)
+            | insert `dev` (($row | get package) ends-with ` (dev)`)
+            | update `package` (
+                $row | get package | str replace --string ` (dev)` ``
+              )
         }
       | move `dev` --after `package`
       | if ($severity | is-empty) {
@@ -90,16 +92,16 @@ export def pnpm-outdated [
                     $index
                   }
                 }
-              | $in.0
+              | first
           )
 
           $old_in
             | filter { |row|
-                let current_parts = ($row.current | split row `.`)
-                let latest_parts = ($row.latest | split row `.`)
+                let current_parts = ($row | get current | split row `.`)
+                let latest_parts = ($row | get latest | split row `.`)
                 let check_parts = (
                   $check_parts
-                    | if $current_parts.0 != `0` {
+                    | if ($current_parts | first) != `0` {
                         $in
                       } else {
                         $in + 1
@@ -112,16 +114,16 @@ export def pnpm-outdated [
                 )
                 let assertions = (
                   if $check_parts == 0 {
-                    [($current_parts.0 != $latest_parts.0)]
+                    [(($current_parts | first) != ($latest_parts | first))]
                   } else if $check_parts == 1 {
                     [
-                      ($current_parts.0 == $latest_parts.0),
-                      ($current_parts.1 != $latest_parts.1),
+                      (($current_parts | first) == ($latest_parts | first)),
+                      (($current_parts | get 1) != ($latest_parts | get 1)),
                     ]
                   } else if $check_parts == 2 {
                     [
-                      ($current_parts.0 == $latest_parts.0),
-                      ($current_parts.1 == $latest_parts.1),
+                      (($current_parts | first) == ($latest_parts | first)),
+                      (($current_parts | get 1) == ($latest_parts | get 1)),
                     ]
                   }
                 )
@@ -139,16 +141,16 @@ export def pnpm-outdated [
     $outdated_table
       | par-each { |it|
           let range = (
-            if $it.package starts-with `@types/` {
+            if ($it | get package) starts-with `@types/` {
               null
-            } else if $it.latest starts-with `0` {
+            } else if ($it | get latest) starts-with `0` {
               `~`
             } else {
               `^`
             }
           )
 
-          $'($it.package)@($range)($it.latest)'
+          $'($it |get package)@($range)($it | get latest)'
         }
       | uniq
       | default []

@@ -12,13 +12,15 @@ export def pg-restore [
     | par-each { |row|
         $row
           | update modified (
-              $row.name
+              $row
+                | get name
                 | parse --regex `(?P<time>\d+)`
-                | $in.time.0
+                | get time.0
                 | into datetime
             )
       }
     | sort-by --reverse `modified`
-    | open $in.name.0
+    | get name.0
+    | open $in
     | docker exec -i demo-postgres psql -U postgres
 }

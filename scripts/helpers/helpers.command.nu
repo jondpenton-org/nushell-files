@@ -15,13 +15,13 @@ export def build-flags [
   $flags
     | transpose key value
     | par-each { |flag|
-        let formatted_key = $'--($flag.key)'
-        let type = ($flag.value | describe)
+        let formatted_key = $'--($flag | get key)'
+        let type = ($flag | get value | describe)
 
-        if $type == `bool` and $flag.value {
+        if $type == `bool` and ($flag | get value) {
           $formatted_key
         } else if $type in [`float`, `string`, `int`] {
-          [$formatted_key, $flag.value]
+          [$formatted_key, ($flag | get value)]
         }
       }
     | flatten
@@ -30,26 +30,28 @@ export def build-flags [
 export def external-command-exists [
   command_name: string
 ] {
-  which --all $command_name | any { |row| $row.path starts-with `/` }
+  which --all $command_name | any { |row| ($row | get path) starts-with `/` }
 }
 
 # Kills all nu shells
 export def nu-kill-all [] {
   ps | par-each { |process|
-    $process.name
+    $process
+      | get name
       | path parse
-      | if $in.stem == `nu` {
-          kill --force $process.pid
+      | get stem
+      | if $in == `nu` {
+          kill --force ($process | get pid)
         }
   }
 }
 
 export def nu-reload [] {
   let nu_path = (
-    which `nu` | $in.path.0
+    which `nu` | get path.0
   )
 
-  exec $nu_path `--commands` $'cd ($env.PWD | to json); ($nu_path) --login'
+  exec $nu_path `--commands` $'cd ($env | get PWD | to json); ($nu_path) --login'
 }
 
 # List and filter all overlays
@@ -63,15 +65,21 @@ export def overlay-list [
   }
 
   let all_overlays = (
-    $env.NU_DIR
+    $env
+      | get NU_DIR
       | path join `scripts`
       | ls $in
       | par-each { |row|
-          if $row.type != file or (not ($row.name ends-with .nu)) {
-            return
+          if ($row | get type) != file or (
+            not (($row | get name) ends-with .nu)
+          ) {
+            null
+          } else {
+            $row
+              | get name
+              | path basename
+              | str replace --string `.nu` ``
           }
-
-          $row.name | path basename | str replace --string `.nu` ``
         }
   )
 

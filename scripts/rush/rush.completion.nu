@@ -2,7 +2,7 @@ export def "nu-complete rush autoinstallers" [] {
   git-root
     | path join `common/autoinstallers`
     | ls $in
-    | $in.name
+    | get name
     | path basename
 }
 
@@ -12,6 +12,6 @@ export def "nu-complete rush projects" [] {
     | if not ($in | path exists) {
         []
       } else {
-        open $in | $in.projects.packageName
+        open $in | get projects.packageName
       }
 }
