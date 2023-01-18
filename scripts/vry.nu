@@ -52,9 +52,9 @@ export def vry-match-elo [] {
                   let rank = $rank_parts.0
                   let rank_index = (
                     $ranks
-                      | par-each --numbered { |x|
-                          if $x.item == $rank {
-                            $x.index
+                      | par-each { |it, index|
+                          if $it == $rank {
+                            $index
                           }
                         }
                       | $in.0

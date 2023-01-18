@@ -55,11 +55,11 @@ export def pnpm-outdated [
       | drop 1
       | str trim --char `│`
       | split list ($in | where $it starts-with `├─` | $in.0)
-      | each --numbered { |it|
-          if $it.index == 0 {
-            $it.item.0 | str downcase
+      | each { |it, index|
+          if $index == 0 {
+            $it.0 | str downcase
           } else {
-            $it.item
+            $it
               | str replace `^(\s+│)+\s+` ``
               | str trim
               | str join
@@ -85,9 +85,9 @@ export def pnpm-outdated [
           let old_in = $in
           let check_parts = (
             (nu-complete pnpm severity)
-              | par-each --numbered { |it|
-                  if $it.item == $severity {
-                    $it.index
+              | par-each { |it, index|
+                  if $it == $severity {
+                    $index
                   }
                 }
               | $in.0
