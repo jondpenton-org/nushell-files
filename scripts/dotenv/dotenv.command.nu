@@ -18,7 +18,7 @@ export def open-envrc [
   open $file
     | lines
     | str replace --all --string `"` `'`
-    | str replace --all `=([\w\S]+)` `='${1}'`
+    | str replace --all `=([\w\d]+)` `='${1}'`
     | reduce --fold {} { |it, acc|
         let variables = (
           if $it starts-with `export ` {
