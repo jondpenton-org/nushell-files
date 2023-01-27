@@ -7,6 +7,9 @@ export def open-env [
 ] {
   open $file
     | lines
+    | where ($it !~ `^\w+=".*\$[A-Z].*"`) # Exclude lines like `PATH="<path>:$PATH"`
+    | str replace --all `^(\w+)=([^'"]+)` `${1}='${2}'` # `PORT=3000` to `PORT='3000'`
+    | str replace --all `^(\w+)="(.*)"` `${1}='${2}'` # `PORT="3000"` to `PORT='3000'`
     | parse --regex `^(?P<key>[\w_]+)='(?P<value>.*)'`
     | table-into-record
 }
