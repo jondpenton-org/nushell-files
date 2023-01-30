@@ -16,6 +16,7 @@
     "pivotal-story-branch",
     "rush",
     "vscode",
-    "postgres"
+    "postgres",
+    "ssh"
   ]
 }
