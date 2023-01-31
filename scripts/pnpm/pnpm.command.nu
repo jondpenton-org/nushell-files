@@ -70,16 +70,16 @@ export def pnpm-outdated [
       | headers
       | par-each { |it|
           if `dependents` in $it {
-            $it | update `dependents` ($it | get dependents | split row `,`)
+            $it | update dependents ($it | get dependents | split row ,)
           } else {
             $it
           }
-            | insert `dev` (($it | get package) ends-with ` (dev)`)
-            | update `package` (
+            | insert dev (($it | get package) ends-with ` (dev)`)
+            | update package (
                 $it | get package | str replace --string ` (dev)` ``
               )
         }
-      | move `dev` --after `package`
+      | move dev --after package
       | if ($severity | is-empty) {
           $in
         } else {
@@ -96,8 +96,8 @@ export def pnpm-outdated [
 
           $old_in
             | filter { |it|
-                let current_parts = ($it | get current | split row `.`)
-                let latest_parts = ($it | get latest | split row `.`)
+                let current_parts = ($it | get current | split row .)
+                let latest_parts = ($it | get latest | split row .)
                 let check_parts = (
                   $check_parts
                     | if ($current_parts | first) != `0` {
@@ -140,7 +140,7 @@ export def pnpm-outdated [
     $outdated_table
       | par-each { |it|
           let range = (
-            if ($it | get package) starts-with `@types/` {
+            if ($it | get package) starts-with @types/ {
               null
             } else if ($it | get latest) starts-with `0` {
               `~`

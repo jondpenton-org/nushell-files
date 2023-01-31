@@ -18,7 +18,7 @@ export def build-flags [
         let formatted_key = $'--($it | get key)'
         let type = ($it | get value | describe)
 
-        if $type == `bool` and ($it | get value) {
+        if $type == bool and ($it | get value) {
           $formatted_key
         } else if $type in [`float`, `string`, `int`] {
           [$formatted_key, ($it | get value)]
@@ -30,7 +30,7 @@ export def build-flags [
 export def external-command-exists [
   command_name: string
 ] {
-  which --all $command_name | any { |it| ($it | get path) starts-with `/` }
+  which --all $command_name | any { |it| ($it | get path) starts-with / }
 }
 
 # Kills all nu shells
@@ -40,7 +40,7 @@ export def nu-kill-all [] {
       | get name
       | path parse
       | get stem
-      | if $in == `nu` {
+      | if $in == nu {
           kill --force ($it | get pid)
         }
   }
@@ -48,7 +48,7 @@ export def nu-kill-all [] {
 
 export def nu-reload [] {
   let nu_path = (
-    which `nu` | get path.0
+    which nu | get path.0
   )
 
   exec $nu_path `--commands` $'cd ($env | get PWD | to json); ($nu_path) --login'
@@ -60,14 +60,14 @@ export def overlay-list [
 ] {
   let active_overlays = overlay list
 
-  if $filter == `active` {
+  if $filter == active {
     return $active_overlays
   }
 
   let all_overlays = (
     $env
       | get NU_DIR
-      | path join `scripts`
+      | path join scripts
       | ls $in
       | par-each { |it|
           if ($it | get type) != file or (
@@ -78,16 +78,16 @@ export def overlay-list [
             $it
               | get name
               | path basename
-              | str replace --string `.nu` ``
+              | str replace --string .nu ``
           }
         }
   )
 
-  if $filter == `all` {
+  if $filter == all {
     return ($all_overlays | sort)
   }
 
-  if $filter == `inactive` {
+  if $filter == inactive {
     $all_overlays
       | par-each { |it|
           if not ($it in $active_overlays) {

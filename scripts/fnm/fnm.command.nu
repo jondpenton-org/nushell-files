@@ -2,7 +2,7 @@ export def fnm-alias-bin-path [
   alias: string@"nu-complete fnm aliases"
 ] {
   let aliases_dir = (
-    fnm-dir | path join `aliases`
+    fnm-dir | path join aliases
   )
   let alias_dir = (
     ls $aliases_dir
@@ -14,11 +14,11 @@ export def fnm-alias-bin-path [
     return
   }
 
-  $alias_dir | path join `bin`
+  $alias_dir | path join bin
 }
 
 export def fnm-dir [] {
-  fnm `env` `--shell` `bash`
+  fnm env --shell bash
     | lines
     | where (`FNM_DIR` in $it)
     | parse `export FNM_DIR="{path}"`
@@ -26,7 +26,7 @@ export def fnm-dir [] {
 }
 
 export def node-versions-dir [] {
-  fnm-dir | path join `node-versions`
+  fnm-dir | path join node-versions
 }
 
 # Execute block with Node version
@@ -37,7 +37,7 @@ export def with-node [
   let node_path = (
     node-versions-dir
       | path join $version
-      | path join `installation/bin`
+      | path join installation/bin
   )
   let new_path = (
     $env
@@ -56,7 +56,7 @@ export def with-node [
 
 def "nu-complete fnm aliases" [] {
   fnm-dir
-    | path join `aliases`
+    | path join aliases
     | ls $in
     | get name
     | path basename

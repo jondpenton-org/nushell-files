@@ -5,7 +5,9 @@
 let default_theme = {
   # color for nushell primitives
   separator: `white`,
-  leading_trailing_space_bg: { attr: `n` } # no fg, no bg, attr none effectively turns this off,
+
+  # no fg, no bg, attr none effectively turns this off,
+  leading_trailing_space_bg: { attr: `n`, },
   header: `green_bold`,
   empty: `blue`,
   bool: `white`,
@@ -26,7 +28,7 @@ let default_theme = {
   hints: `dark_gray`,
 
   # shapes are used to change the cli syntax highlighting
-  shape_garbage: { fg: `#FFFFFF` bg: `#FF0000` attr: `b` },
+  shape_garbage: { fg: `#FFFFFF`, bg: `#FF0000`, attr: `b`, },
   shape_binary: `purple_bold`,
   shape_bool: `light_cyan`,
   shape_int: `purple_bold`,
@@ -53,7 +55,8 @@ let default_theme = {
   shape_nothing: `light_cyan`
 }
 
-# The default config record. This is where much of your global configuration is setup.
+# The default config record. This is where much of your global configuration
+# is setup.
 let-env config = {
   cd: {
     abbreviations: true, # allows `cd s/o/f` to expand to `cd some/other/folder`
@@ -67,30 +70,53 @@ let-env config = {
           carapace ($spans | first) nushell $spans | from json
         }
       },
-      enable: true, # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up my be very slow
-      max_results: 100, # setting it lower can improve completion performance at the cost of omitting some options
+
+      # set to false to prevent nushell looking into $env.PATH to find more
+      # suggestions, `false` recommended for WSL users as this look up my be
+      # very slow
+      enable: true,
+
+      # setting it lower can improve completion performance at the cost of
+      # omitting some options
+      max_results: 100,
     },
     partial: true, # set this to false to prevent partial filling of the prompt
-    quick: true, # set this to false to prevent auto-selecting completions when only one remains
+
+    # set this to false to prevent auto-selecting completions when only
+    # one remains
+    quick: true,
   },
   filesize: {
-    format: `auto`, # b, kb, kib, mb, mib, gb, gib, tb, tib, pb, pib, eb, eib, zb, zib, auto
-    metric: true, # true => KB, MB, GB (ISO standard), false => KiB, MiB, GiB (Windows standard)
+    # b, kb, kib, mb, mib, gb, gib, tb, tib, pb, pib, eb, eib, zb, zib, auto
+    format: `auto`,
+
+    # true => KB, MB, GB (ISO standard),
+    # false => KiB, MiB, GiB (Windows standard)
+    metric: true,
   },
   history: {
     file_format: `plaintext`, # "sqlite" or "plaintext"
     max_size: 10000, # Session has to be reloaded for this to take effect
-    sync_on_enter: true, # Enable to share history between multiple sessions, else you have to close the session to write history to file
+
+    # Enable to share history between multiple sessions, else you have to close
+    # the session to write history to file
+    sync_on_enter: true,
   },
   ls: {
-    clickable_links: true # enable or disable clickable links. Your terminal has to support links.
-    use_ls_colors: true # use the LS_COLORS environment variable to colorize output
+    # enable or disable clickable links. Your terminal has to support links.
+    clickable_links: true,
+
+    # use the LS_COLORS environment variable to colorize output
+    use_ls_colors: true,
   },
   rm: {
-    always_trash: true, # always act as if -t was given. Can be overridden with -p
+    # always act as if `-t` was given. Can be overridden with `-p`
+    always_trash: true,
   },
   table: {
-    index_mode: `always`, # "always" show indexes, "never" show indexes, "auto" = show indexes when a table has "index" column
+    # "always" show indexes, "never" show indexes, "auto" = show indexes when a
+    # table has "index" column
+    index_mode: `always`,
     mode: `compact`, # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other
     trim: {
       methodology: `wrapping`, # wrapping or truncating

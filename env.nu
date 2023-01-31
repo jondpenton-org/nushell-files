@@ -66,12 +66,12 @@ let-env NU_DIR = (
 #
 # By default, <nushell-config-dir>/scripts is added
 let-env NU_LIB_DIRS = [
-  ($env | get NU_DIR | path join `scripts`)
+  ($env | get NU_DIR | path join scripts)
 ]
 
 # Directories to search for plugin binaries when calling register
 #
 # By default, <nushell-config-dir>/plugins is added
 let-env NU_PLUGIN_DIRS = [
-  ($env | get NU_DIR | path join `plugins`)
+  ($env | get NU_DIR | path join plugins)
 ]

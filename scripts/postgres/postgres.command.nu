@@ -18,7 +18,7 @@ export def pg-restore [
             | into datetime
         )
       }
-    | sort-by --reverse `modified`
+    | sort-by --reverse modified
     | get name.0
     | open $in
     | docker exec -i demo-postgres psql -U postgres

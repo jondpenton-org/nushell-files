@@ -24,17 +24,17 @@ export def open-envrc [
     | str replace --all `=([\w\d]+)` `='${1}'`
     | reduce --fold {} { |it, acc|
         let variables = (
-          if $it starts-with `export ` {
+          if $it starts-with export {
             $it
               | parse --regex `^export\s+(?P<key>[\w_]+)='(?P<value>.*)'`
               | table-into-record
-          } else if $it starts-with `source_env` {
+          } else if $it starts-with source_env {
             $it
               | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
               | get name.0
               | path expand
               | open-envrc $in
-          } else if $it starts-with `dotenv ` {
+          } else if $it starts-with dotenv {
             $file
               | path dirname
               | path join (
