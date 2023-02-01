@@ -1,7 +1,7 @@
 ## Externs
 
 # Static file serving and directory listing
-export extern serve [
+export extern main [
   --config (-c): path     # Specify custom path to `serve.json`
   --cors (-C)             # Enable CORS, sets `Access-Control-Allow-Origin` to `*`
   --debug (-d)            # Show debugging information
