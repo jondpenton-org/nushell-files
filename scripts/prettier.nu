@@ -1,6 +1,6 @@
 # By default, output is written to stdout.
 # Stdin is read if it is piped to Prettier and no files are given.
-export extern prettier [
+export extern main [
   --arrow-parens: string@"nu-complete prettier arrow-parens"                                    # Include parentheses around a sole arrow function parameter. Defaults to always.
   --check (-c)                                                                                  # Check if the given files are formatted, print a human-friendly summary message and paths to unformatted files (see also --list-different).
   --config: path                                                                                # Path to a Prettier configuration file (.prettierrc, package.json, prettier.config.js).

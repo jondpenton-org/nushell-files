@@ -1,6 +1,6 @@
 ## Externs
 
-export extern "ssh" [
+export extern main [
   destination: string@"nu-complete ssh destination"
 ]
 

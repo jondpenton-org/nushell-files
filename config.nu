@@ -86,6 +86,11 @@ let-env config = {
     # one remains
     quick: true,
   },
+  cursor_shape: {
+    emacs: `block`, # block, underscore, line (line is the default)
+    vi_insert: `block`, # block, underscore, line (block is the default)
+    vi_normal: `underscore`, # block, underscore, line  (underscore is the default)
+  },
   filesize: {
     # b, kb, kib, mb, mib, gb, gib, tb, tib, pb, pib, eb, eib, zb, zib, auto
     format: `auto`,
