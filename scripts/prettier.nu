@@ -45,45 +45,45 @@ export extern main [
 ]
 
 def "nu-complete prettier arrow-parens" [] {
-  [always, avoid]
+  [`always`, `avoid`]
 }
 
 def "nu-complete prettier config-precedence" [] {
-  [cli-override, file-override, prefer-file]
+  [`cli-override`, `file-override`, `prefer-file`]
 }
 
 def "nu-complete prettier embedded-language-formatting" [] {
-  [auto, off]
+  [`auto`, `off`]
 }
 
 def "nu-complete prettier end-of-line" [] {
-  [auto, cr, crlf, lf]
+  [`auto`, `cr`, `crlf`, `lf`]
 }
 
 def "nu-complete prettier html-whitespace-sensitivity" [] {
-  [css, ignore, strict]
+  [`css`, `ignore`, `strict`]
 }
 
 def "nu-complete prettier loglevel" [] {
-  [debug, error, log, silent, warn]
+  [`debug`, `error`, `log`, `silent`, `warn`]
 }
 
 def "nu-complete prettier parser" [] {
   [
-    angular, babel, babel-flow, babel-ts, css, espree, flow, glimmer, graphql,
-    html, json, json-stringify, json5, less, lwc, markdown, mdx, meriyah, scss,
-    typescript, vue, yaml,
+    `angular`, `babel`, babel-`flow`, babel-`ts`, `css`, `espree`, `flow`,
+    `glimmer`, `graphql`, `html`, `json`, `json-stringify`, `json5`, `less`,
+    `lwc`, `markdown`, `mdx`, `meriyah`, `scss`, `typescript`, `vue`, `yaml`,
   ]
 }
 
 def "nu-complete prettier prose-wrap" [] {
-  [always, never, preserve]
+  [`always`, `never`, `preserve`]
 }
 
 def "nu-complete prettier quote-props" [] {
-  [as-needed, consistent, preserve]
+  [`as-needed`, `consistent`, `preserve`]
 }
 
 def "nu-complete prettier trailing-comma" [] {
-  [all, es5, none]
+  [`all`, `es5`, `none`]
 }

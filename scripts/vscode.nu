@@ -40,9 +40,9 @@ export extern code [
 ## Completions
 
 def "nu-complete vscode log levels" [] {
-  ['critical', 'error', 'warn', 'info', 'debug', 'trace', 'off']
+  [`critical`, `error`, `warn`, `info`, `debug`, `trace`, `off`]
 }
 
 def "nu-complete vscode sync" [] {
-  ['on', 'off'] | sort
+  [`on`, `off`] | sort
 }

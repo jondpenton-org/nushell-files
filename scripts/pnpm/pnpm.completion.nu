@@ -1,7 +1,7 @@
 use ../git.nu git-root
 
 export def "nu-complete pnpm log level" [] {
-  [debug, info, warn, error]
+  [`debug`, `info`, `warn`, `error`]
 }
 
 export def "nu-complete pnpm projects" [] {
@@ -10,10 +10,12 @@ export def "nu-complete pnpm projects" [] {
     | get packages
     | par-each { |it| glob --depth 3 $'($it)/package.json' }
     | flatten
-    | par-each { |it| open $it | get name }
+    | par-each { |it|
+        { value: (open $it | get name), description: ($it | path dirname) }
+      }
     | sort
 }
 
 export def "nu-complete pnpm severity" [] {
-  [major, minor, patch]
+  [`major`, `minor`, `patch`]
 }

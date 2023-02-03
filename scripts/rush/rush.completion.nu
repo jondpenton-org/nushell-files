@@ -1,7 +1,5 @@
 export def "nu-complete rush autoinstallers" [] {
-  git-root
-    | path join common/autoinstallers
-    | ls $in
+  ls (git-root | path join `common/autoinstallers`)
     | get name
     | path basename
 }
