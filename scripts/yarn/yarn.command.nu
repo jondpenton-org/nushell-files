@@ -21,8 +21,8 @@ export def yarn-outdated [
 
   if $print_latest {
     $table | par-each { |it|
-      $'($it | get package)@^($it | get latestVersion)'
-        | if ($in | str contains ^0) {
+      $'($it | get name)@^($it | get latest)'
+        | if $in =~ \^0 {
             $in | str replace \^0 ~0
           } else {
             $in
