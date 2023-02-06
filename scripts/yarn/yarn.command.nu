@@ -16,7 +16,7 @@ export def yarn-outdated [
     type: $type,
   }
   let table = (
-    yarn outdated $flags
+    yarn outdated $flags | from json
   )
 
   if $print_latest {
