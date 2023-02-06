@@ -115,7 +115,7 @@ export def "from vry" [] {
           } else {
             $it
               | str downcase
-              | str replace -a `(\w)\s(\w)` `${1}_${2}`
+              | str replace --all `(\w)\s(\w)` `${1}_${2}`
           }
         }
       | where (`━` not-in $it) # Remove header/players divider
