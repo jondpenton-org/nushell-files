@@ -19,16 +19,11 @@ export def yarn-outdated [
     yarn outdated $flags | from json
   )
 
-  if $print_latest {
-    $table | par-each { |it|
-      $'($it | get name)@^($it | get latest)'
-        | if $in =~ \^0 {
-            $in | str replace \^0 ~0
-          } else {
-            $in
-          }
-    }
-  } else {
-    $table
+  if not $print_latest {
+    return $table
+  }
+
+  $table | par-each { |it|
+    $'($it | get name)@^($it | get latest)'
   }
 }
