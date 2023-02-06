@@ -11,15 +11,12 @@ export def yarn-outdated [
   --type (-t): string@"nu-complete yarn outdated type"            # Filter results based on the dependency type
 ] {
   let flags = build-flags {
+    json: true,
     severity: $severity,
     type: $type,
   }
   let table = (
     yarn outdated $flags
-      | lines
-      | skip 4
-      | drop 3
-      | parse -r `➤ YN0000: (?P<package>\S+)\s+(?P<currentVersion>(?:\d+\.?)+)\s+(?P<latestVersion>(?:\d+\.?)+)\s+\w*[dD]ependencies`
   )
 
   if $print_latest {
