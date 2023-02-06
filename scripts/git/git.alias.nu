@@ -1,5 +1,5 @@
 export alias git-reset = git reset --hard
-export alias git-reset-origin = git-reset $'origin/(git branch --show current)'
+export alias git-reset-origin = git-reset $'origin/(git branch --show-current)'
 export alias git-root = (
   git rev-parse --show-toplevel | str trim
 )
