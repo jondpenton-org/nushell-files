@@ -127,8 +127,8 @@ export def table-into-record [
 
 # When predicate evaluates to `true`, returns consequent or `do $consequent`
 export def when [
-  predicate: closure    # Closure that returns `bool`. Input is passed to `$in` or `$it` in `do { |it| ... }`
-  consequent: any       # Any value; If closure, passed to `do`
+  predicate: closure    # Closure that returns `bool`. Evaluated as a `do` closure with input passed as parameter and input.
+  consequent: any       # Any value; If closure, evaluated as a `do` closure with input passed as parameter and input.
 ] {
   let input = $in
 
@@ -137,7 +137,7 @@ export def when [
   }
 
   if ($consequent | describe) == `closure` {
-    return (do $consequent)
+    return ($input | do $consequent $input)
   }
 
   return $consequent
