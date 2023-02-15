@@ -9,8 +9,7 @@ export def "nu-complete nx project targets" [] {
     | get projects
     | transpose project path
     | par-each { |it|
-        $it
-          | get path
+        get path
           | path join project.json
           | open $in
           | get targets

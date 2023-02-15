@@ -68,16 +68,14 @@ export def pnpm-outdated [
       | split column `│`
       | str trim
       | headers
-      | par-each { |it|
-          if `dependents` in $it {
-            $it | update dependents ($it | get dependents | split row ,)
-          } else {
-            $it
+      | par-each {
+          when { $in =~ dependents } {
+            update dependents { get dependents | split row , }
           }
-            | insert dev (($it | get package) ends-with ` (dev)`)
-            | update package (
-                $it | get package | str replace --string ` (dev)` ``
-              )
+            | insert dev { get package | str ends-with ` (dev)` }
+            | update package {
+                get package | str replace --string ` (dev)` ``
+              }
         }
       | move dev --after package
       | if ($severity | is-empty) {
@@ -100,14 +98,10 @@ export def pnpm-outdated [
                 let latest_parts = ($it | get latest | split row .)
                 let check_parts = (
                   $check_parts
-                    | if ($current_parts | first) != `0` {
-                        $in
-                      } else {
+                    | when { ($current_parts | first) == `0` } {
                         $in + 1
                       }
-                    | if $in <= 2 {
-                        $in
-                      } else {
+                    | when { $in > 2 } {
                         2
                       }
                 )
@@ -135,24 +129,24 @@ export def pnpm-outdated [
   )
 
   if not $list {
-    $outdated_table
-  } else {
-    $outdated_table
-      | par-each { |it|
-          let range = (
-            if ($it | get package) starts-with @types/ {
-              null
-            } else if ($it | get latest) starts-with `0` {
-              `~`
-            } else {
-              `^`
-            }
-          )
-
-          $'($it |get package)@($range)($it | get latest)'
-        }
-      | uniq
-      | default []
-      | sort
+    return $outdated_table
   }
+
+  $outdated_table
+    | par-each { |it|
+        let range = (
+          if ($it | get package) starts-with @types/ {
+            null
+          } else if ($it | get latest) starts-with `0` {
+            `~`
+          } else {
+            `^`
+          }
+        )
+
+        $'($it | get package)@($range)($it | get latest)'
+      }
+    | uniq
+    | default []
+    | sort
 }

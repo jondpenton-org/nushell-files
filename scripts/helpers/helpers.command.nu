@@ -30,14 +30,13 @@ export def build-flags [
 export def external-command-exists [
   command_name: string
 ] {
-  which --all $command_name | any { |it| ($it | get path) starts-with / }
+  which --all $command_name | any { get path | str starts-with / }
 }
 
 # Kills all nu shells
 export def nu-kill-all [] {
   ps | par-each { |it|
-    $it
-      | get name
+    get name
       | path parse
       | get stem
       | if $in == nu {
@@ -70,13 +69,8 @@ export def overlay-list [
       | path join scripts
       | ls $in
       | par-each { |it|
-          if ($it | get type) != file or (
-            not (($it | get name) ends-with .nu)
-          ) {
-            null
-          } else {
-            $it
-              | get name
+          if ($it | get type) == file and (($it | get name) ends-with .nu) {
+            get name
               | path basename
               | str replace --string .nu ``
           }

@@ -5,11 +5,13 @@ export def "nu-complete rush autoinstallers" [] {
 }
 
 export def "nu-complete rush projects" [] {
-  git-root
-    | path join rush.json
-    | if not ($in | path exists) {
-        []
-      } else {
-        open $in | get projects.packageName
-      }
+  let config_path = (
+    git-root | path join rush.json
+  )
+
+  if not ($config_path | path exists) {
+    return []
+  }
+
+  open $in | get projects.packageName
 }
