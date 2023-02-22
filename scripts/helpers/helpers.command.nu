@@ -1,11 +1,11 @@
 use helpers.completion.nu [`nu-complete overlay-list filters`]
 
-# Runs benchmark number of $times and averages them together
-export def benchmark-repeat [
-  times: int      # Number of times benchmark is ran
-  block: block    # Block passed to `benchmark`
+# Runs timeit number of $times and averages them together
+export def timeit-repeat [
+  times: int          # Number of times timeit is ran
+  closure: closure    # Closure passed to `timeit`
 ] {
-  repeat $times { benchmark $block } | math avg
+  repeat $times { timeit $closure } | math avg
 }
 
 # Builds list of flag strings to pass to command

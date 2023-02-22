@@ -142,7 +142,7 @@ let-env config = {
   hooks: {
     pre_prompt: [
       {
-        if (which direnv | is-empty) or (not (`.envrc` | path exists)) {
+        if (which direnv | is-empty) or (not ('.envrc' | path exists)) {
           return
         }
 
@@ -411,7 +411,7 @@ do {
   cd ($env | get NU_DIR)
   git fetch --quiet
 
-  if `Your branch is behind` in (git status) {
+  if 'Your branch is behind' in (git status) {
     echo $'There is an update to the config. Run `nu-config-update` to update.(
       char newline
     )'
@@ -426,3 +426,6 @@ overlay use dotenv.nu
 overlay use git.nu
 overlay use helpers.nu
 overlay use ssh.nu
+
+## Starship
+source ~/.cache/starship/init.nu
