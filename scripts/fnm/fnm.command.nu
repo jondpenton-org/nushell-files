@@ -20,7 +20,7 @@ export def fnm-alias-bin-path [
 export def fnm-dir [] {
   fnm env --shell bash
     | lines
-    | where (`FNM_DIR` in $it)
+    | where ('FNM_DIR' in $it)
     | parse `export FNM_DIR="{path}"`
     | get path.0
 }

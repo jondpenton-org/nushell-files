@@ -138,9 +138,9 @@ export def pnpm-outdated [
           if ($it | get package) starts-with @types/ {
             null
           } else if ($it | get latest) starts-with `0` {
-            `~`
+            '~'
           } else {
-            `^`
+            '^'
           }
         )
 
