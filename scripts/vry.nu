@@ -77,9 +77,7 @@ export def vry-match-elo [] {
           $average_rr / 300
         )
         let rank_index = (
-          $rank_division_result
-            | math floor
-            | into int
+          $rank_division_result | math floor
         )
         let rank = (
           $ranks | get $rank_index
@@ -91,7 +89,7 @@ export def vry-match-elo [] {
           ($tier_division_result | math floor) + 1
         )
         let rr = (
-          ($tier_division_result - ($tier - 1)) * 100 | into int
+          ($tier_division_result - ($tier - 1)) * 100
         )
 
         {
