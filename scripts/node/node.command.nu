@@ -4,7 +4,8 @@ export def node-print-packages [
   $packages
     | lines
     | uniq
-    | parse --regex `"(?P<package>.+)": "(?P<version>.+)",`
+    | par-each { parse --regex `"(?P<package>.+)": "(?P<version>.+)",` }
+    | flatten
     | par-each { |it| $"- ($it | get package)@($it | get version)" }
     | sort
     | to md

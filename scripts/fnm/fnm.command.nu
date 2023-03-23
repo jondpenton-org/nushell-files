@@ -21,7 +21,8 @@ export def fnm-dir [] {
   fnm env --shell bash
     | lines
     | where ('FNM_DIR' in $it)
-    | parse `export FNM_DIR="{path}"`
+    | each { parse `export FNM_DIR="{path}"` }
+    | flatten
     | get path.0
 }
 
