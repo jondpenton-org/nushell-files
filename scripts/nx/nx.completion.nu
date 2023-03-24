@@ -3,29 +3,73 @@ export def "nu-complete nx output-style" [] {
 }
 
 export def "nu-complete nx project targets" [] {
-  git-root
-    | path join workspace.json
-    | open $in
-    | get projects
-    | transpose project path
-    | par-each { |it|
-        get path
-          | path join project.json
+  let project_targets = do {
+    let workspace_path = (git-root | path join workspace.json)
+
+    if ($workspace_path | path exists) {
+      open $workspace_path
+        | get projects
+        | transpose project path
+        | par-each { |it|
+            get path
+              | path join project.json
+              | open $in
+              | get targets
+              | columns
+              | par-each { |target| $'($it | get project):($target)' }
+          }
+    } else {
+      let search_folders = (
+        git-root
+          | path join nx.json
           | open $in
-          | get targets
-          | transpose key
-          | get key
-          | par-each { |target| $"($it | get project):($target)" }
-      }
-    | sort
+          | get workspaceLayout
+          | values
+      )
+
+      pnpm exec nx show projects
+        | lines
+        | par-each { |project|
+            $search_folders
+              | par-each { |search_folder|
+                  git-root
+                    | path join $search_folder
+                    | path join $project
+                    | path join project.json
+                    | when { path exists | not $in } null
+                }
+              | first
+              | open $in
+              | get targets
+              | columns
+              | par-each { |target| $'($project):($target)' }
+          }
+    }
+  }
+
+  $project_targets | sort
 }
 
 export def "nu-complete nx projects" [] {
-  git-root
-    | path join workspace.json
-    | open $in
-    | get projects
-    | transpose project
-    | get project
-    | sort
+  let projects = do {
+    let workspace_path = (git-root | path join workspace.json)
+
+    if ($workspace_path | path exists) {
+      open $workspace_path
+        | get projects
+        | columns
+    } else {
+      let projects_raw = (
+        if (git-root | path join pnpm-workspace.yaml | path exists) {
+          pnpm exec nx show projects
+        } else {
+          nx show projects
+        }
+      )
+
+      $projects_raw | lines
+    }
+  }
+
+  $projects | sort
 }
