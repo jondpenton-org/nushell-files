@@ -33,9 +33,7 @@ export def "nu-complete nx project targets" [] {
             $search_folders
               | par-each { |search_folder|
                   git-root
-                    | path join $search_folder
-                    | path join $project
-                    | path join project.json
+                    | path join $search_folder $project project.json
                     | when { path exists | not $in } null
                 }
               | first
