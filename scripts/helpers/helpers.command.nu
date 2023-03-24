@@ -134,5 +134,5 @@ export def when [
     return ($input | do $consequent $input)
   }
 
-  return $consequent
+  $consequent
 }
