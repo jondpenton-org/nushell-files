@@ -152,11 +152,9 @@ let-env config = {
           return
         }
 
-        if 'PATH' in $direnv and (($direnv | get PATH | describe) == `string`) {
+        if 'PATH' in $direnv and (($direnv.PATH | describe) == `string`) {
           $direnv.PATH = (
-            do ($env | get ENV_CONVERSIONS.PATH.from_string) (
-              $direnv | get PATH
-            ) | uniq
+            do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH | uniq
           )
         }
 
@@ -234,8 +232,7 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu
-          | get scope.commands
+        $nu.scope.commands
           | where command =~ $buffer
           | each { |it|
               { value: ($it | get command), description: ($it | get usage) }
@@ -256,8 +253,7 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu
-          | get scope.vars
+        $nu.scope.vars
           | where name =~ $buffer
           | sort-by name
           | each { |it|
@@ -283,8 +279,7 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu
-          | get scope.commands
+        $nu.scope.commands
           | where command =~ $buffer
           | each { |it|
               { value: ($it | get command), description: ($it | get usage) }
@@ -408,7 +403,7 @@ let-env config = {
 
 ## Repository Updates
 do {
-  cd ($env | get NU_DIR)
+  cd $env.NU_DIR
   git fetch --quiet
 
   if 'Your branch is behind' in (git status) {
@@ -419,7 +414,7 @@ do {
 }
 
 ### Aliases
-alias nu-config-update = do { cd ($env | get NU_DIR); git pull }
+alias nu-config-update = do { cd $env.NU_DIR; git pull }
 
 ## Modules
 overlay use dotenv.nu

@@ -2,10 +2,10 @@
 
 def create_left_prompt [] {
   if (is-admin) {
-    return $'(ansi red_bold)($env | get PWD)'
+    return $'(ansi red_bold)($env.PWD)'
   }
 
-  $'(ansi green_bold)($env | get PWD)'
+  $'(ansi green_bold)($env.PWD)'
 }
 
 def create_right_prompt [] {
@@ -57,21 +57,21 @@ let-env ENV_CONVERSIONS = {
 }
 
 let-env NU_DIR = (
-  $nu | get config-path | path dirname
+  $nu.config-path | path dirname
 )
 
 # Directories to search for scripts when calling source or use
 #
 # By default, <nushell-config-dir>/scripts is added
 let-env NU_LIB_DIRS = [
-  ($nu | get config-path | path dirname | path join scripts)
+  ($nu.config-path | path dirname | path join scripts)
 ]
 
 # Directories to search for plugin binaries when calling register
 #
 # By default, <nushell-config-dir>/plugins is added
 let-env NU_PLUGIN_DIRS = [
-  ($nu | get config-path | path dirname | path join plugins)
+  ($nu.config-path | path dirname | path join plugins)
 ]
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
