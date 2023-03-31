@@ -1,3 +1,11 @@
+use rush.command.nu [
+  rush-add,
+  rush-build,
+  rush-install,
+  rush-update,
+  rush-update-autoinstaller
+]
+
 export alias r-a = rush-add
 export alias r-b = rush-build
 export alias r-i = rush-install
