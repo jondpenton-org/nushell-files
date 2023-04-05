@@ -108,7 +108,7 @@ export def "from vry" [] {
       | skip 1
       | drop 1
       | each { |it, index| # Normalize column names
-          when { $index == 0 } {
+          when { || $index == 0 } { ||
             str downcase | str replace --all `(\w)\s(\w)` `${1}_${2}`
           }
         }
@@ -118,8 +118,8 @@ export def "from vry" [] {
       | split column `│` # Parse rows
       | str trim # Clean cells
       | headers
-      | filter {
-          values | any { is-empty | not $in }
+      | filter { ||
+          values | any { || is-empty | not $in }
         }
   )
   let table = (
@@ -142,7 +142,7 @@ export def "from vry" [] {
     }
   )
   let table = (
-    $table | update party { get party | $in == `■` }
+    $table | update party { || get party | $in == `■` }
   )
 
   $table

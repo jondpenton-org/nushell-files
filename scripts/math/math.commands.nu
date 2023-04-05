@@ -24,7 +24,7 @@ export def "math format" [
     | reverse
     | group 3
     | reverse
-    | each {
+    | each { ||
         reverse | str join
       }
     | str join $separator

@@ -9,8 +9,8 @@ export def pg-restore [
   file_prefix: string
 ] {
   ls $'($file_prefix)-*.sql'
-    | par-each {
-        update modified {
+    | par-each { ||
+        update modified { ||
           get name
             | parse --regex `(?P<time>\d+)`
             | get time.0
