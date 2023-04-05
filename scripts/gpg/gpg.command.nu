@@ -6,10 +6,12 @@ export def gpg-decrypt [
   --verbose (-v)
 ] {
   let initial_in = $in
-  let flags = build-flags {
-    decrypt: true,
-    quiet: (not $verbose),
-  }
+  let flags = (
+    build-flags {
+      decrypt: true,
+      quiet: (not $verbose),
+    }
+  )
 
   $initial_in | gpg $flags
 }
@@ -21,12 +23,14 @@ export def gpg-encrypt [
   recipient: string@"nu-complete gpg recipients"
 ] {
   let initial_in = $in
-  let flags = build-flags {
-    armor: true,
-    encrypt: true,
-    quiet: (not $verbose),
-    recipient: $recipient,
-  }
+  let flags = (
+    build-flags {
+      armor: true,
+      encrypt: true,
+      quiet: (not $verbose),
+      recipient: $recipient,
+    }
+  )
 
   $initial_in | gpg $flags
 }

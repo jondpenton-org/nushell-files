@@ -10,11 +10,13 @@ export def yarn-outdated [
   --severity (-s): string@"nu-complete yarn outdated severity"    # Filter results based on the severity of the update
   --type (-t): string@"nu-complete yarn outdated type"            # Filter results based on the dependency type
 ] {
-  let flags = build-flags {
-    json: true,
-    severity: $severity,
-    type: $type,
-  }
+  let flags = (
+    build-flags {
+      json: true,
+      severity: $severity,
+      type: $type,
+    }
+  )
   let table = (
     yarn outdated $flags | from json
   )

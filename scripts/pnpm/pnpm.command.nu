@@ -28,26 +28,28 @@ export def pnpm-outdated [
   --use-stderr                                                    # Divert all output to stderr
   --workspace-root (-w)                                           # Run the command on the root workspace project
 ] {
-  let flags = build-flags {
-    aggregate-output: $aggregate_output
-    color: $color
-    compatible: $compatible
-    dev: $dev
-    dir: $dir
-    filter: $filter
-    global-dir: $global_dir
-    help: $help
-    loglevel: $loglevel
-    long: $long
-    no-color: $no_color
-    no-optional: $no_optional
-    no-table: $no_table
-    prod: $prod
-    recursive: $recursive
-    stream: $stream
-    use-stderr: $use_stderr
-    workspace-root: $workspace_root
-  }
+  let flags = (
+    build-flags {
+      aggregate-output: $aggregate_output
+      color: $color
+      compatible: $compatible
+      dev: $dev
+      dir: $dir
+      filter: $filter
+      global-dir: $global_dir
+      help: $help
+      loglevel: $loglevel
+      long: $long
+      no-color: $no_color
+      no-optional: $no_optional
+      no-table: $no_table
+      prod: $prod
+      recursive: $recursive
+      stream: $stream
+      use-stderr: $use_stderr
+      workspace-root: $workspace_root
+    }
+  )
   let outdated_table = (
     pnpm outdated $flags
       | lines
@@ -68,12 +70,12 @@ export def pnpm-outdated [
       | split column `│`
       | str trim
       | headers
-      | par-each {
-          when { $in =~ dependents } {
-            update dependents { get dependents | split row , }
+      | par-each { ||
+          when { || $in =~ dependents } { ||
+            update dependents { || get dependents | split row , }
           }
-            | insert dev { get package | str ends-with ` (dev)` }
-            | update package {
+            | insert dev { || get package | str ends-with ` (dev)` }
+            | update package { ||
                 get package | str replace --string ` (dev)` ``
               }
         }
@@ -98,10 +100,10 @@ export def pnpm-outdated [
                 let latest_parts = ($it | get latest | split row .)
                 let check_parts = (
                   $check_parts
-                    | when { ($current_parts | first) == `0` } {
+                    | when { || ($current_parts | first) == `0` } { ||
                         $in + 1
                       }
-                    | when { $in > 2 } {
+                    | when { || $in > 2 } { ||
                         2
                       }
                 )

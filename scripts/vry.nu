@@ -122,23 +122,25 @@ export def "from vry" [] {
           values | any { is-empty | not $in }
         }
   )
-  let table = do {
-    let int_keys = [rr, hs, level]
+  let table = (
+    do {
+      let int_keys = [rr, hs, level]
 
-    $table | each { |it|
-      $int_keys | reduce --fold $it { |key, row|
-        mut value = ($row | get --ignore-errors $key)
+      $table | each { |it|
+        $int_keys | reduce --fold $it { |key, row|
+          mut value = ($row | get --ignore-errors $key)
 
-        if ($value | is-empty) {
-          $value = null
-        } else {
-          $value = ($value | into int)
+          if ($value | is-empty) {
+            $value = null
+          } else {
+            $value = ($value | into int)
+          }
+
+          $row | update $key $value
         }
-
-        $row | update $key $value
       }
     }
-  }
+  )
   let table = (
     $table | update party { get party | $in == `■` }
   )

@@ -141,7 +141,7 @@ let-env config = {
 
   hooks: {
     pre_prompt: [
-      {
+      { ||
         if (which direnv | is-empty) or (not ('.envrc' | path exists)) {
           return
         }

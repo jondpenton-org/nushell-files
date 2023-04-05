@@ -30,7 +30,7 @@ export def build-flags [
 export def external-command-exists [
   command_name: string
 ] {
-  which --all $command_name | any { get path | str starts-with / }
+  which --all $command_name | any { || get path | str starts-with / }
 }
 
 # Kills all nu shells
@@ -57,7 +57,7 @@ export def nu-reload [] {
 export def overlay-list [
   --filter: string@"nu-complete overlay-list filters" = `active`   # Filter what overlays are shown
 ] {
-  let active_overlays = overlay list
+  let active_overlays = (overlay list)
 
   if $filter == active {
     return $active_overlays

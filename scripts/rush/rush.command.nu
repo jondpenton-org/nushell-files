@@ -14,15 +14,17 @@ export def rush-add [
   --make-consistent (-m): bool    # If specified, other packages with this dependency will have their package.json files updated to use the same version of the dependency.
   --skip-update (-s): bool        # If specified, the "rush update" command will not be run after updating the package.json files.
 ] {
-  let flags = build-flags {
-    all: $all,
-    caret: $caret,
-    dev: $dev,
-    exact: $exact,
-    make-consistent: $make_consistent,
-    package: $package,
-    skip-update: $skip_update,
-  }
+  let flags = (
+    build-flags {
+      all: $all,
+      caret: $caret,
+      dev: $dev,
+      exact: $exact,
+      make-consistent: $make_consistent,
+      package: $package,
+      skip-update: $skip_update,
+    }
+  )
 
   rush --debug add ($flags)
 }
@@ -31,12 +33,14 @@ export def rush-build [
   --to (-t): string@"nu-complete rush projects"           # Builds to project and its dependencies
   --to-except (-T): string@"nu-complete rush projects"    # Builds project's dependencies
 ] {
-  let flags = build-flags {
-    parallelism: `max`,
-    to: $to,
-    to-except: $to_except,
-    verbose: true,
-  }
+  let flags = (
+    build-flags {
+      parallelism: `max`,
+      to: $to,
+      to-except: $to_except,
+      verbose: true,
+    }
+  )
 
   rush --debug build ($flags)
 }
@@ -45,10 +49,12 @@ export def rush-install [
   --max-install-attempts: int = 2   # Overrides the default maximum number of install attempts. The default value is 2.
   --purge (-p): bool                # Perform "rush purge" before starting the installation
 ] {
-  let flags = build-flags {
-    max-install-attempts: $max_install_attempts,
-    purge: $purge,
-  }
+  let flags = (
+    build-flags {
+      max-install-attempts: $max_install_attempts,
+      purge: $purge,
+    }
+  )
 
   rush --debug install ($flags)
 }
@@ -61,13 +67,15 @@ export def rush-update [
   --purge (-p): bool                      # Perform "rush purge" before starting the installation
   --recheck (-r): bool                    # If the shrinkwrap file appears to already satisfy the package.json files, then "rush update" will skip invoking the package manager at all. In certain situations this heuristic may be inaccurate. Use the "--recheck" flag to force the package manager to process the shrinkwrap file. This will also update your shrinkwrap file with Rush's fixups. (To minimize shrinkwrap churn, these fixups are normally performed only in the temporary folder.)
 ] {
-  let flags = build-flags {
-    full: $full,
-    ignore-hooks: $ignore_hooks,
-    max-install-attempts: $max_install_attempts,
-    purge: $purge,
-    recheck: $recheck,
-  }
+  let flags = (
+    build-flags {
+      full: $full,
+      ignore-hooks: $ignore_hooks,
+      max-install-attempts: $max_install_attempts,
+      purge: $purge,
+      recheck: $recheck,
+    }
+  )
 
   rush --debug update ($flags)
 }
@@ -75,9 +83,11 @@ export def rush-update [
 export def rush-update-autoinstaller [
   name: string@"nu-complete rush autoinstallers"    # Specifies the name of the autoinstaller, which must be one of the folders under common/autoinstallers.
 ] {
-  let flags = build-flags {
-    name: $name,
-  }
+  let flags = (
+    build-flags {
+      name: $name,
+    }
+  )
 
   rush update-autoinstaller ($flags)
 }

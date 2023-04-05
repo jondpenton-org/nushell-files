@@ -10,7 +10,7 @@ export def open-env [
     | where ($it !~ `^\w+=".*\$[A-Z].*"`) # Exclude lines like `PATH="<path>:$PATH"`
     | str replace --all `^(\w+)=([^'"]+)` `${1}='${2}'` # `PORT=3000` to `PORT='3000'`
     | str replace --all `^(\w+)="(.*)"` `${1}='${2}'` # `PORT="3000"` to `PORT='3000'`
-    | each { parse --regex `^(?P<key>\w+)='(?P<value>.*)'` }
+    | each { || parse --regex `^(?P<key>\w+)='(?P<value>.*)'` }
     | flatten
     | table-into-record
 }
@@ -75,7 +75,7 @@ export def with-envrc [
 ## Completions
 
 def "nu-complete open-env file" [] {
-  let git_root = git-root
+  let git_root = (git-root)
   let envs_relative_to_git_root = (
     do { cd $git_root; glob --depth 3 **/*.env }
       | where not ($it =~ example or (open-env $it | is-empty))
@@ -99,7 +99,7 @@ def "nu-complete open-env file" [] {
       let git_root_relative_to_pwd = (
         $pwd_relative_to_git_root
           | path split
-          | par-each { '..' }
+          | par-each { || '..' }
           | path join
       )
 
@@ -109,7 +109,7 @@ def "nu-complete open-env file" [] {
 }
 
 def "nu-complete open-envrc file" [] {
-  let git_root = git-root
+  let git_root = (git-root)
   let envrcs_relative_to_git_root = (
     do { cd $git_root; glob --depth 3 **/*.envrc }
       | where not ($it =~ example or (open-envrc $it | is-empty))
@@ -133,7 +133,7 @@ def "nu-complete open-envrc file" [] {
       let git_root_relative_to_pwd = (
         $pwd_relative_to_git_root
           | path split
-          | par-each { '..' }
+          | par-each { || '..' }
           | path join
       )
 
