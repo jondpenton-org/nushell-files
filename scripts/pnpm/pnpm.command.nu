@@ -58,13 +58,14 @@ export def pnpm-outdated [
       | str trim --char `│`
       | split list ($in | where $it starts-with `├─` | first)
       | each { |it, index|
-          if $index == 0 {
-            $it | first | str downcase
-          } else {
-            $it
-              | str replace `^(\s+│)+\s+` ``
-              | str trim
-              | str join
+          match $index {
+            0 => ($it.0 | str downcase),
+            _ => (
+              $it
+                | str replace `^(\s+│)+\s+` ``
+                | str trim
+                | str join
+            )
           }
         }
       | split column `│`
@@ -80,21 +81,19 @@ export def pnpm-outdated [
               }
         }
       | move dev --after package
-      | if ($severity | is-empty) {
-          $in
-        } else {
-          let old_in = $in
+      | when { || $severity | is-empty | not $in } { ||
+          let input = $in
           let check_parts = (
             (nu-complete pnpm severity)
               | par-each { |it, index|
-                  if $it == $severity {
-                    $index
+                  match $it {
+                    $severity => index
                   }
                 }
               | first
           )
 
-          $old_in
+          $input
             | filter { |it|
                 let current_parts = ($it | get current | split row .)
                 let latest_parts = ($it | get latest | split row .)
@@ -108,15 +107,15 @@ export def pnpm-outdated [
                       }
                 )
                 let assertions = (
-                  if $check_parts == 0 {
-                    [(($current_parts | first) != ($latest_parts | first))]
-                  } else if $check_parts == 1 {
-                    [
+                  match $check_parts {
+                    0 => [
+                      (($current_parts | first) != ($latest_parts | first))
+                    ],
+                    1 => [
                       (($current_parts | first) == ($latest_parts | first)),
                       (($current_parts | get 1) != ($latest_parts | get 1)),
-                    ]
-                  } else if $check_parts == 2 {
-                    [
+                    ],
+                    2 => [
                       (($current_parts | first) == ($latest_parts | first)),
                       (($current_parts | get 1) == ($latest_parts | get 1)),
                     ]

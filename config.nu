@@ -66,8 +66,8 @@ let-env config = {
     case_sensitive: false, # set to true to enable case-sensitive completions
     external: {
       completer: { |spans|
-        if not (which carapace | is-empty) {
-          carapace ($spans | first) nushell $spans | from json
+        match (which carapace | is-empty) {
+          false => { carapace ($spans | first) nushell $spans | from json }
         }
       },
 
@@ -142,7 +142,7 @@ let-env config = {
   hooks: {
     pre_prompt: [
       { ||
-        if (which direnv | is-empty) or (not ('.envrc' | path exists)) {
+        if (which direnv | is-empty) or ('.envrc' | path exists | not $in) {
           return
         }
 
@@ -152,10 +152,12 @@ let-env config = {
           return
         }
 
-        if 'PATH' in $direnv and (($direnv.PATH | describe) == `string`) {
-          $direnv.PATH = (
-            do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH | uniq
-          )
+        match ($direnv.PATH? | describe) {
+          `string` => {
+            $direnv.PATH = (
+              do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH | uniq
+            )
+          }
         }
 
         $direnv | load-env

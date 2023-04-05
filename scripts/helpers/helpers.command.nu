@@ -20,8 +20,10 @@ export def build-flags [
 
         if $type == bool and ($it | get value) {
           $formatted_key
-        } else if $type in [`float`, `string`, `int`] {
-          [$formatted_key, ($it | get value)]
+        } else {
+          match $type {
+            `float` | `int` | `string` => [$formatted_key, $it.value]
+          }
         }
       }
     | flatten
@@ -84,9 +86,7 @@ export def overlay-list [
   if $filter == inactive {
     $all_overlays
       | par-each { |it|
-          if not ($it in $active_overlays) {
-            $it
-          }
+          when { || $in in $active_overlays } null
         }
       | sort
   }
@@ -130,9 +130,8 @@ export def when [
     return $input
   }
 
-  if ($consequent | describe) == `closure` {
-    return ($input | do $consequent $input)
+  match ($consequent | describe) {
+    `closure` => ($input | do $consequent $input)
+    _ => $consequent
   }
-
-  $consequent
 }

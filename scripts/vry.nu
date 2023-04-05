@@ -22,11 +22,11 @@ export def vry-match-elo [] {
   1..$teams_num
     | par-each { |team_num|
         let team_ranks_total_rr = (
-          if $team_num == 1 {
-            $match_table | take 5
-          } else {
-            $match_table | skip 5
-          }
+          $match_table
+            | match $team_num {
+                1 => { take 5 }
+                _ => { skip 5 }
+              }
             | select rank rr peak_rank
             | par-each { |it|
                 let peak_rank = (
@@ -128,13 +128,15 @@ export def "from vry" [] {
 
       $table | each { |it|
         $int_keys | reduce --fold $it { |key, row|
-          mut value = ($row | get --ignore-errors $key)
-
-          if ($value | is-empty) {
-            $value = null
-          } else {
-            $value = ($value | into int)
-          }
+          let value = (
+            $row
+              | get --ignore-errors $key
+              | if ($in | is-empty) {
+                  null
+                } else {
+                  into int
+                }
+          )
 
           $row | update $key $value
         }
