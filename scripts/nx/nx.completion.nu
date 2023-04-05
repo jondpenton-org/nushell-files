@@ -9,13 +9,13 @@ export def "nu-complete nx all targets" [] {
 
       if ($workspace_path | path exists) {
         open $workspace_path
-          | get projects
+          | $in.projects
           | transpose project path
           | par-each { |it|
-              get path
+              $in.path
                 | path join project.json
                 | open $in
-                | get targets
+                | $in.targets
                 | columns
             }
       } else {
@@ -23,7 +23,7 @@ export def "nu-complete nx all targets" [] {
           git-root
             | path join nx.json
             | open $in
-            | get workspaceLayout
+            | $in.workspaceLayout
             | values
         )
 
@@ -34,11 +34,11 @@ export def "nu-complete nx all targets" [] {
                 | par-each { |search_folder|
                     git-root
                       | path join $search_folder $project project.json
-                      | when { path exists | not $in } null
+                      | when { || path exists | not $in } null
                   }
-                | first
+                | $in.0
                 | open $in
-                | get targets
+                | $in.targets
                 | columns
             }
       }
@@ -55,22 +55,22 @@ export def "nu-complete nx project targets" [] {
 
       if ($workspace_path | path exists) {
         open $workspace_path
-          | get projects
+          | $in.projects
           | transpose project path
           | par-each { |it|
-              get path
+              $in.path
                 | path join project.json
                 | open $in
-                | get targets
+                | $in.targets
                 | columns
-                | par-each { |target| $'($it | get project):($target)' }
+                | par-each { |target| $'($it.project):($target)' }
             }
       } else {
         let search_folders = (
           git-root
             | path join nx.json
             | open $in
-            | get workspaceLayout
+            | $in.workspaceLayout
             | values
         )
 
@@ -83,9 +83,9 @@ export def "nu-complete nx project targets" [] {
                       | path join $search_folder $project project.json
                       | when { path exists | not $in } null
                   }
-                | first
+                | $in.0
                 | open $in
-                | get targets
+                | $in.targets
                 | columns
                 | par-each { |target| $'($project):($target)' }
             }
@@ -103,7 +103,7 @@ export def "nu-complete nx projects" [] {
 
       if ($workspace_path | path exists) {
         open $workspace_path
-          | get projects
+          | $in.projects
           | columns
       } else {
         let projects_raw = (

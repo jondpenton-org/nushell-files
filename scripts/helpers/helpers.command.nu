@@ -15,10 +15,10 @@ export def build-flags [
   $flags
     | transpose key value
     | par-each { |it|
-        let formatted_key = $'--($it | get key)'
-        let type = ($it | get value | describe)
+        let formatted_key = $'--($it.key)'
+        let type = ($it.value | describe)
 
-        if $type == bool and ($it | get value) {
+        if $type == bool and $it.value {
           $formatted_key
         } else {
           match $type {
@@ -32,27 +32,26 @@ export def build-flags [
 export def external-command-exists [
   command_name: string
 ] {
-  which --all $command_name | any { || get path | str starts-with / }
+  which --all $command_name | any { || $in.path starts-with / }
 }
 
 # Kills all nu shells
 export def nu-kill-all [] {
   ps | par-each { |it|
-    get name
+    $in.name
       | path parse
-      | get stem
-      | if $in == nu {
-          kill --force ($it | get pid)
+      | if $in.stem == nu {
+          kill --force $it.pid
         }
   }
 }
 
 export def nu-reload [] {
   let nu_path = (
-    which nu | get path.0
+    which nu | $in.0.path
   )
 
-  exec $nu_path `--commands` $'cd ($env | get PWD | to json); ($nu_path) --login'
+  exec $nu_path `--commands` $'cd ($env.PWD | to json); ($nu_path) --login'
 }
 
 # List and filter all overlays
@@ -66,13 +65,12 @@ export def overlay-list [
   }
 
   let all_overlays = (
-    $env
-      | get NU_DIR
+    $env.NU_DIR
       | path join scripts
       | ls $in
       | par-each { |it|
-          if ($it | get type) == file and (($it | get name) ends-with .nu) {
-            get name
+          if $it.type == file and $it.name ends-with .nu {
+            $in.name
               | path basename
               | str replace --string .nu ``
           }
@@ -115,7 +113,7 @@ export def table-into-record [
 ] {
   select $key $value
     | transpose --header-row
-    | get --ignore-errors 0
+    | $in.0?
     | default {}
 }
 

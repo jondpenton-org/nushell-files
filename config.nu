@@ -66,8 +66,8 @@ let-env config = {
     case_sensitive: false, # set to true to enable case-sensitive completions
     external: {
       completer: { |spans|
-        match (which carapace | is-empty) {
-          false => { carapace ($spans | first) nushell $spans | from json }
+        if (which carapace | is-empty | not $in) {
+          carapace $spans.0 nushell $spans | from json
         }
       },
 
@@ -236,8 +236,8 @@ let-env config = {
       source: { |buffer, position|
         $nu.scope.commands
           | where command =~ $buffer
-          | each { |it|
-              { value: ($it | get command), description: ($it | get usage) }
+          | each { ||
+              select command usage | rename value description
             }
       }
     },
@@ -258,8 +258,8 @@ let-env config = {
         $nu.scope.vars
           | where name =~ $buffer
           | sort-by name
-          | each { |it|
-              { value: ($it | get name), description: ($it | get type) }
+          | each { ||
+              select name type | rename value description
             }
       }
     },
@@ -283,8 +283,8 @@ let-env config = {
       source: { |buffer, position|
         $nu.scope.commands
           | where command =~ $buffer
-          | each { |it|
-              { value: ($it | get command), description: ($it | get usage) }
+          | each { ||
+              select command usage | rename value description
             }
       }
     }

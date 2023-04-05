@@ -9,7 +9,7 @@ export def "math format" [
     error make {
       label: (
         metadata $input
-          | get span
+          | $in.span
           | merge {
               text: $'expected int, received ($input_type)',
             }

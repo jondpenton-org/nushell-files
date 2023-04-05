@@ -12,7 +12,7 @@ def "nu-complete ssh destination" [] {
     | where $it starts-with `Host `
     | each { || parse `Host {destination}` }
     | flatten
-    | get --ignore-errors destination
+    | $in.destination?
     | where not ($it | is-empty)
     | default []
 }

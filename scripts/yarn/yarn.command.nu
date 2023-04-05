@@ -26,6 +26,6 @@ export def yarn-outdated [
   }
 
   $table | par-each { |it|
-    $'($it | get name)@^($it | get latest)'
+    $'($it.name)@^($it.latest)'
   }
 }

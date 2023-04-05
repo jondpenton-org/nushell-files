@@ -1,6 +1,6 @@
 export def "nu-complete rush autoinstallers" [] {
   ls (git-root | path join `common/autoinstallers`)
-    | get name
+    | $in.name
     | path basename
 }
 
@@ -13,5 +13,5 @@ export def "nu-complete rush projects" [] {
     return []
   }
 
-  open $config_path | get projects.packageName
+  open $config_path | $in.projects.packageName
 }

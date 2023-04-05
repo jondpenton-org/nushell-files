@@ -56,7 +56,7 @@ export def pnpm-outdated [
       | skip 1
       | drop 1
       | str trim --char `│`
-      | split list ($in | where $it starts-with `├─` | first)
+      | split list ($in | where $it starts-with `├─` | $in.0)
       | each { |it, index|
           match $index {
             0 => ($it.0 | str downcase),
@@ -73,11 +73,11 @@ export def pnpm-outdated [
       | headers
       | par-each { ||
           when { || $in =~ dependents } { ||
-            update dependents { || get dependents | split row , }
+            update dependents { || $in.dependents | split row , }
           }
-            | insert dev { || get package | str ends-with ` (dev)` }
+            | insert dev { || $in.package | str ends-with ` (dev)` }
             | update package { ||
-                get package | str replace --string ` (dev)` ``
+                $in.package | str replace --string ` (dev)` ``
               }
         }
       | move dev --after package
@@ -90,16 +90,16 @@ export def pnpm-outdated [
                     $severity => index
                   }
                 }
-              | first
+              | $in.0
           )
 
           $input
             | filter { |it|
-                let current_parts = ($it | get current | split row .)
-                let latest_parts = ($it | get latest | split row .)
+                let current_parts = ($it.current | split row .)
+                let latest_parts = ($it.latest | split row .)
                 let check_parts = (
                   $check_parts
-                    | when { || ($current_parts | first) == `0` } { ||
+                    | when { || $current_parts.0 == `0` } { ||
                         $in + 1
                       }
                     | when { || $in > 2 } { ||
@@ -109,15 +109,15 @@ export def pnpm-outdated [
                 let assertions = (
                   match $check_parts {
                     0 => [
-                      (($current_parts | first) != ($latest_parts | first))
+                      ($current_parts.0 != $latest_parts.0)
                     ],
                     1 => [
-                      (($current_parts | first) == ($latest_parts | first)),
-                      (($current_parts | get 1) != ($latest_parts | get 1)),
+                      ($current_parts.0 == $latest_parts.0),
+                      ($current_parts.1 != $latest_parts.1),
                     ],
                     2 => [
-                      (($current_parts | first) == ($latest_parts | first)),
-                      (($current_parts | get 1) == ($latest_parts | get 1)),
+                      ($current_parts.0 == $latest_parts.0),
+                      ($current_parts.1 == $latest_parts.1),
                     ]
                   }
                 )
@@ -136,16 +136,16 @@ export def pnpm-outdated [
   $outdated_table
     | par-each { |it|
         let range = (
-          if ($it | get package) starts-with @types/ {
+          if $it.package starts-with @types/ {
             null
-          } else if ($it | get latest) starts-with `0` {
+          } else if $it.latest starts-with `0` {
             '~'
           } else {
             '^'
           }
         )
 
-        $'($it | get package)@($range)($it | get latest)'
+        $'($it.package)@($range)($it.latest)'
       }
     | uniq
     | default []

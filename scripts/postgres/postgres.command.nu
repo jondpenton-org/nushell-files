@@ -11,14 +11,14 @@ export def pg-restore [
   ls $'($file_prefix)-*.sql'
     | par-each { ||
         update modified { ||
-          get name
+          $in.name
             | parse --regex `(?P<time>\d+)`
-            | get time.0
+            | $in.time.0
             | into datetime
         }
       }
     | sort-by --reverse modified
-    | get name.0
+    | $in.name.0
     | open $in
     | docker exec -i demo-postgres psql -U postgres
 }

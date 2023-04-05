@@ -30,17 +30,17 @@ export def vry-match-elo [] {
             | select rank rr peak_rank
             | par-each { |it|
                 let peak_rank = (
-                  $it | get peak_rank | str replace `\s\(e\da\d\)` ``
+                  $it.peak_rank | str replace `\s\(e\da\d\)` ``
                 )
                 let rank_to_parse = (
-                  if ($it | get rank) != `Unranked` or $peak_rank == `Unranked` {
-                    ($it | get rank)
+                  if $it.rank != `Unranked` or $peak_rank == `Unranked` {
+                    $it.rank
                   } else {
                     $peak_rank
                   }
                 )
                 let rr = (
-                  $it | get rr | into int
+                  $it.rr | into int
                 )
 
                 if $rank_to_parse in [`Iron 1`, `Unranked`] {
@@ -49,7 +49,7 @@ export def vry-match-elo [] {
                   let rank_parts = (
                     $rank_to_parse | split row ` `
                   )
-                  let rank = ($rank_parts | first)
+                  let rank = $rank_parts.0
                   let rank_index = (
                     $ranks
                       | par-each { |it, index|
@@ -57,13 +57,13 @@ export def vry-match-elo [] {
                             $index
                           }
                         }
-                      | first
+                      | $in.0
                   )
                   let rank_base_rr = (
                     $rank_index * 300
                   )
                   let tier = (
-                    $rank_parts | get 1 | into int
+                    $rank_parts.1 | into int
                   )
 
                   $rank_base_rr + (($tier - 1) * 100) + $rr
@@ -131,9 +131,7 @@ export def "from vry" [] {
           let value = (
             $row
               | get --ignore-errors $key
-              | if ($in | is-empty) {
-                  null
-                } else {
+              | if ($in | is-empty | not $in) {
                   into int
                 }
           )
@@ -143,9 +141,6 @@ export def "from vry" [] {
       }
     }
   )
-  let table = (
-    $table | update party { || get party | $in == `■` }
-  )
 
-  $table
+  $table | update party { || $in.party == `■` }
 }

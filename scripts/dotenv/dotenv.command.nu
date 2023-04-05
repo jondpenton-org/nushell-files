@@ -32,7 +32,7 @@ export def open-envrc [
           } else if $it starts-with source_env {
             $it
               | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
-              | get name.0
+              | $in.name.0
               | path expand
               | open-envrc $in
           } else if $it starts-with dotenv {
@@ -41,7 +41,7 @@ export def open-envrc [
               | path join (
                   $it
                     | parse `dotenv {name}`
-                    | get name.0
+                    | $in.name.0
                 )
               | path expand
               | open-env $in
@@ -82,7 +82,7 @@ def "nu-complete open-env file" [] {
       | path relative-to $git_root
   )
   let pwd_relative_to_git_root = (
-    $env | get PWD | path relative-to $git_root
+    $env.PWD | path relative-to $git_root
   )
 
   $envs_relative_to_git_root | par-each { |it|
@@ -116,7 +116,7 @@ def "nu-complete open-envrc file" [] {
       | path relative-to $git_root
   )
   let pwd_relative_to_git_root = (
-    $env | get PWD | path relative-to $git_root
+    $env.PWD | path relative-to $git_root
   )
 
   $envrcs_relative_to_git_root | par-each { |it|

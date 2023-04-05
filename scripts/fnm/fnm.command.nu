@@ -7,7 +7,7 @@ export def fnm-alias-bin-path [
   let alias_dir = (
     ls $aliases_dir
       | where name ends-with $alias
-      | get --ignore-errors name.0
+      | $in.name.0?
   )
 
   if ($alias_dir | is-empty) {
@@ -23,7 +23,7 @@ export def fnm-dir [] {
     | where ('FNM_DIR' in $it)
     | each { || parse `export FNM_DIR="{path}"` }
     | flatten
-    | get path.0
+    | $in.path.0
 }
 
 export def node-versions-dir [] {
@@ -41,10 +41,9 @@ export def with-node [
       | path join installation/bin
   )
   let new_path = (
-    $env
-      | get PATH
+    $env.PATH
       | prepend $node_path
-      | do ($env | get ENV_CONVERSIONS.PATH.to_string) $in
+      | do $env.ENV_CONVERSIONS.PATH.to_string $in
   )
   let env_record = {
     PATH: $new_path
@@ -59,11 +58,11 @@ def "nu-complete fnm aliases" [] {
   fnm-dir
     | path join aliases
     | ls $in
-    | get name
+    | $in.name
     | path basename
     | sort
 }
 
 def "nu-complete with-node versions" [] {
-  ls (node-versions-dir) | get name | path basename
+  node-versions-dir | ls $in | $in.name | path basename
 }
