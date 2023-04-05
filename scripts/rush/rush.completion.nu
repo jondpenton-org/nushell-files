@@ -13,5 +13,5 @@ export def "nu-complete rush projects" [] {
     return []
   }
 
-  open $in | get projects.packageName
+  open $config_path | get projects.packageName
 }
