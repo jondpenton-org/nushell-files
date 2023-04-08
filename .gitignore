@@ -4,9 +4,11 @@
 # Nu
 /history.txt
 
-# Scripts
-/login.nu
+# Output Files
+*.json
+*.log
 
-# Testing
-/*.json
-/test.nu
+# Scripts
+/*.nu
+!/config.nu
+!/env.nu
