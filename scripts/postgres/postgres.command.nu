@@ -1,7 +1,7 @@
 export def pg-backup [
   file_prefix: string
 ] {
-  docker exec -t demo-postgres pg_dumpall -c -U postgres
+  ^docker exec -t demo-postgres pg_dumpall -c -U postgres
     | save $'($file_prefix)-(date now | into int).sql'
 }
 
@@ -20,5 +20,5 @@ export def pg-restore [
     | sort-by --reverse modified
     | $in.name.0
     | open $in
-    | docker exec -i demo-postgres psql -U postgres
+    | ^docker exec -i demo-postgres psql -U postgres
 }
