@@ -418,12 +418,13 @@ do {
 ### Aliases
 alias nu-config-update = do { cd $env.NU_DIR; git pull }
 
+## Starship
+source ~/.cache/starship/init.nu
+
 ## Modules
 overlay use dotenv.nu
 overlay use git.nu
 overlay use helpers.nu
 overlay use math.nu
 overlay use ssh.nu
-
-## Starship
-source ~/.cache/starship/init.nu
+overlay new session # Should be last overlay. If additional overlays used in `login.nu`, then add `overlay use session` after them
