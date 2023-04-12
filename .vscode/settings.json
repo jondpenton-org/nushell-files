@@ -19,6 +19,7 @@
     "postgres",
     "ssh",
     "mac",
-    "math"
+    "math",
+    "grex"
   ]
 }
