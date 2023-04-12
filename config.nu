@@ -422,6 +422,7 @@ alias nu-config-update = do { cd $env.NU_DIR; git pull }
 overlay use dotenv.nu
 overlay use git.nu
 overlay use helpers.nu
+overlay use math.nu
 overlay use ssh.nu
 
 ## Starship
