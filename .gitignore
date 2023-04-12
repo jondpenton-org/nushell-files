@@ -9,6 +9,7 @@
 *.log
 
 # Scripts
-/*.nu
+*.nu
 !/config.nu
 !/env.nu
+!/scripts/**/*.nu
