@@ -27,6 +27,7 @@ export def build-flags [
           `list<string>` => ($it.value | prepend $formatted_key)
         }
       }
+    | flatten
 }
 
 export def external-command-exists [
