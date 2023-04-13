@@ -1,4 +1,4 @@
 export alias reset-dns = do { ||
-  try { || sudo dscacheutil -flushcache }
+  try { sudo dscacheutil -flushcache }
   sudo killall -HUP mDNSResponder
 }

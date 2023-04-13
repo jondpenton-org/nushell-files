@@ -5,7 +5,7 @@ export alias nu-check-scripts = do { ||
           cd $it
 
           glob **/*.nu | par-each { |it|
-            try { ||
+            try {
               cd ($it | path dirname)
 
               nu-check --all --debug $it | null
