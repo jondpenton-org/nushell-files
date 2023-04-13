@@ -14,19 +14,19 @@ export def build-flags [
 ] {
   $flags
     | transpose key value
-    | par-each { |it|
+    | each { |it|
         let formatted_key = $'--($it.key)'
-        let type = ($it.value | describe)
 
-        if $type == bool and $it.value {
-          $formatted_key
-        } else {
-          match $type {
-            `float` | `int` | `string` => [$formatted_key, $it.value]
-          }
+        match ($it.value | describe) {
+          `bool` => {
+            if $it.value {
+              $formatted_key
+            }
+          },
+          `float` | `int` | `string` => [$formatted_key, $it.value],
+          `list<string>` => ($it.value | prepend $formatted_key)
         }
       }
-    | flatten
 }
 
 export def external-command-exists [
@@ -88,6 +88,20 @@ export def overlay-list [
         }
       | sort
   }
+}
+
+# Run a closure on each row of the input list in parallel, mapping to a new list with the results in order.
+export def par-map [
+  --threads (-t): int # the number of threads to use
+
+  closure: closure # the closure to run
+] {
+  enumerate
+    | par-each { |it|
+        update item ($it.item | do $closure $it.item)
+      }
+    | sort-by index
+    | $in.item
 }
 
 # Repeat block # of times
