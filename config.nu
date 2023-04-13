@@ -404,8 +404,9 @@ let-env config = {
 }
 
 ## Repository Updates
-do {
+do { ||
   cd $env.NU_DIR
+
   git fetch --quiet
 
   if 'Your branch is behind' in (git status) {
@@ -416,7 +417,7 @@ do {
 }
 
 ### Aliases
-alias nu-config-update = do { cd $env.NU_DIR; git pull }
+alias nu-config-update = do { || cd $env.NU_DIR; git pull }
 
 ## Starship
 source ~/.cache/starship/init.nu

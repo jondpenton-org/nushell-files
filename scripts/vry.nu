@@ -123,7 +123,7 @@ export def "from vry" [] {
         }
   )
   let table = (
-    do {
+    do { ||
       let int_keys = [rr, hs, level]
 
       $table | each { |it|

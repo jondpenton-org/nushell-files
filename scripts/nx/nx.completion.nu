@@ -4,7 +4,7 @@ export def "nu-complete nx output-style" [] {
 
 export def "nu-complete nx all targets" [] {
   let project_targets = (
-    do {
+    do { ||
       let workspace_path = (git-root | path join workspace.json)
 
       if ($workspace_path | path exists) {
@@ -50,7 +50,7 @@ export def "nu-complete nx all targets" [] {
 
 export def "nu-complete nx project targets" [] {
   let project_targets = (
-    do {
+    do { ||
       let workspace_path = (git-root | path join workspace.json)
 
       if ($workspace_path | path exists) {
@@ -58,7 +58,7 @@ export def "nu-complete nx project targets" [] {
           | $in.projects
           | transpose project path
           | par-each { |it|
-              $in.path
+              $it.path
                 | path join project.json
                 | open $in
                 | $in.targets
@@ -81,7 +81,7 @@ export def "nu-complete nx project targets" [] {
                 | par-each { |search_folder|
                     git-root
                       | path join $search_folder $project project.json
-                      | when { path exists | not $in } null
+                      | when { || path exists | not $in } null
                   }
                 | $in.0
                 | open $in
@@ -98,7 +98,7 @@ export def "nu-complete nx project targets" [] {
 
 export def "nu-complete nx projects" [] {
   let projects = (
-    do {
+    do { ||
       let workspace_path = (git-root | path join workspace.json)
 
       if ($workspace_path | path exists) {

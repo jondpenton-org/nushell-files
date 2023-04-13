@@ -1,11 +1,11 @@
-export alias nu-check-scripts = do {
+export alias nu-check-scripts = do { ||
   let failed_scripts = (
     $env.NU_LIB_DIRS
       | par-each { |it|
           cd $it
 
           glob **/*.nu | par-each { |it|
-            try {
+            try { ||
               cd ($it | path dirname)
 
               nu-check --all --debug $it | null

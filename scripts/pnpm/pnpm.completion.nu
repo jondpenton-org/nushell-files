@@ -5,7 +5,7 @@ export def "nu-complete pnpm log level" [] {
 }
 
 export def "nu-complete pnpm projects" [] {
-  do { cd (git-root); open pnpm-workspace.yaml }
+  do { || cd (git-root); open pnpm-workspace.yaml }
     | $in.packages
     | par-each { || path join package.json | glob --depth 3 $in }
     | flatten
