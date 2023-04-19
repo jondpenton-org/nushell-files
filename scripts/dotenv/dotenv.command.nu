@@ -3,8 +3,23 @@ use ../helpers.nu table-into-record
 
 # Converts .env file into record
 export def open-env [
-  file: path@"nu-complete open-env file"   # .env file
+  file?: path@"nu-complete open-env file" # .env file
 ] {
+  let file = (
+    $in
+      | when { |it|
+          ($it | is-empty) or (($it | describe) not-in [`path`, `string`])
+        } $file
+  )
+
+  if ($file | is-empty) {
+    error make {
+      msg: (
+        `either the file parameter or a path/string pipeline input must be provided`
+      ),
+    }
+  }
+
   open $file
     | lines
     | where ($it !~ `^\w+=".*\$[A-Z].*"`) # Exclude lines like `PATH="<path>:$PATH"`
@@ -17,8 +32,23 @@ export def open-env [
 
 # Converts .envrc file into record
 export def open-envrc [
-  file: path@"nu-complete open-envrc file"   # .envrc file
+  file?: path@"nu-complete open-envrc file" # .envrc file
 ] {
+  let file = (
+    $in
+      | when { |it|
+          ($it | is-empty) or (($it | describe) not-in [`path`, `string`])
+        } $file
+  )
+
+  if ($file | is-empty) {
+    error make {
+      msg: (
+        `either the file parameter or a path/string pipeline input must be provided`
+      ),
+    }
+  }
+
   open $file
     | lines
     | str replace --all --string `"` `'`
