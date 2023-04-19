@@ -67,7 +67,7 @@ export def open-envrc [
               | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
               | $in.name.0
               | path expand
-              | open-envrc $in
+              | open-envrc
           } else if $it starts-with dotenv {
             $file
               | path dirname
@@ -77,7 +77,7 @@ export def open-envrc [
                     | $in.name.0
                 )
               | path expand
-              | open-env $in
+              | open-env
           }
         )
 

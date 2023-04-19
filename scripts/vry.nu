@@ -119,7 +119,7 @@ export def "from vry" [] {
       | str trim # Clean cells
       | headers
       | filter { ||
-          values | any { || is-empty | not $in }
+          values | any { || not ($in | is-empty) }
         }
   )
   let table = (

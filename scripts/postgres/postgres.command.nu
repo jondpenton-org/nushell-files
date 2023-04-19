@@ -19,6 +19,6 @@ export def pg-restore [
       }
     | sort-by --reverse modified
     | $in.name.0
-    | open $in
+    | open
     | ^docker exec -i demo-postgres psql -U postgres
 }

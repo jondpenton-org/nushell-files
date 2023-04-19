@@ -41,9 +41,7 @@ export def with-node [
       | path join installation/bin
   )
   let new_path = (
-    $env.PATH
-      | prepend $node_path
-      | do $env.ENV_CONVERSIONS.PATH.to_string $in
+    do $env.ENV_CONVERSIONS.PATH.to_string ($env.PATH | prepend $node_path)
   )
   let env_record = {
     PATH: $new_path
@@ -55,14 +53,12 @@ export def with-node [
 ## Completions
 
 def "nu-complete fnm aliases" [] {
-  fnm-dir
-    | path join aliases
-    | ls $in
+  ls (fnm-dir | path join aliases)
     | $in.name
     | path basename
     | sort
 }
 
 def "nu-complete with-node versions" [] {
-  node-versions-dir | ls $in | $in.name | path basename
+  ls (node-versions-dir) | $in.name | path basename
 }

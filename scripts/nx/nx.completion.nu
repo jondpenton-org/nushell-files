@@ -14,7 +14,7 @@ export def "nu-complete nx all targets" [] {
           | par-each { |it|
               $in.path
                 | path join project.json
-                | open $in
+                | open
                 | $in.targets
                 | columns
             }
@@ -22,7 +22,7 @@ export def "nu-complete nx all targets" [] {
         let search_folders = (
           git-root
             | path join nx.json
-            | open $in
+            | open
             | $in.workspaceLayout
             | values
         )
@@ -34,10 +34,10 @@ export def "nu-complete nx all targets" [] {
                 | par-each { |search_folder|
                     git-root
                       | path join $search_folder $project project.json
-                      | when { || path exists | not $in } null
+                      | when { || not ($in | path exists) } null
                   }
                 | $in.0
-                | open $in
+                | open
                 | $in.targets
                 | columns
             }
@@ -60,7 +60,7 @@ export def "nu-complete nx project targets" [] {
           | par-each { |it|
               $it.path
                 | path join project.json
-                | open $in
+                | open
                 | $in.targets
                 | columns
                 | par-each { |target| $'($it.project):($target)' }
@@ -69,7 +69,7 @@ export def "nu-complete nx project targets" [] {
         let search_folders = (
           git-root
             | path join nx.json
-            | open $in
+            | open
             | $in.workspaceLayout
             | values
         )
@@ -81,10 +81,10 @@ export def "nu-complete nx project targets" [] {
                 | par-each { |search_folder|
                     git-root
                       | path join $search_folder $project project.json
-                      | when { || path exists | not $in } null
+                      | when { || not ($in | path exists) } null
                   }
                 | $in.0
-                | open $in
+                | open
                 | $in.targets
                 | columns
                 | par-each { |target| $'($project):($target)' }

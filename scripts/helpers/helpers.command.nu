@@ -41,7 +41,7 @@ export def nu-kill-all [] {
   ps | par-each { |it|
     $in.name
       | path parse
-      | if $in.stem == nu {
+      | if $in.stem == `nu` {
           kill --force $it.pid
         }
   }
@@ -66,9 +66,7 @@ export def overlay-list [
   }
 
   let all_overlays = (
-    $env.NU_DIR
-      | path join scripts
-      | ls $in
+    ls ($env.NU_DIR | path join scripts)
       | par-each { |it|
           if $it.type == file and $it.name ends-with .nu {
             $in.name
