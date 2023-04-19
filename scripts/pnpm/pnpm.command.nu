@@ -86,8 +86,8 @@ export def pnpm-outdated [
           let check_parts = (
             (nu-complete pnpm severity)
               | par-each { |it, index|
-                  match $it {
-                    $severity => index
+                  if $it == $severity {
+                    $index
                   }
                 }
               | $in.0

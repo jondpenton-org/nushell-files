@@ -152,12 +152,10 @@ let-env config = {
           return
         }
 
-        match ($direnv.PATH? | describe) {
-          `string` => {
-            $direnv.PATH = (
-              do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH | uniq
-            )
-          }
+        if ($direnv.PATH? | describe) == `string` {
+          $direnv.PATH = (
+            do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH | uniq
+          )
         }
 
         $direnv | load-env
