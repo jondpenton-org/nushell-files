@@ -1,5 +1,8 @@
 use ../git.nu git-root
-use ../helpers.nu table-into-record
+use ../helpers.nu [
+  table-into-record,
+  when,
+]
 
 # Converts .env file into record
 export def open-env [
@@ -15,7 +18,7 @@ export def open-env [
   if ($file | is-empty) {
     error make {
       msg: (
-        `either the file parameter or a path/string pipeline input must be provided`
+        'either the file parameter or a path/string pipeline input must be provided'
       ),
     }
   }
@@ -44,7 +47,7 @@ export def open-envrc [
   if ($file | is-empty) {
     error make {
       msg: (
-        `either the file parameter or a path/string pipeline input must be provided`
+        'either the file parameter or a path/string pipeline input must be provided'
       ),
     }
   }
