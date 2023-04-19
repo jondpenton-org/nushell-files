@@ -9,7 +9,7 @@ export def "nu-complete rush projects" [] {
     git-root | path join rush.json
   )
 
-  if ($config_path | path exists | not $in) {
+  if not ($config_path | path exists) {
     return []
   }
 

@@ -66,7 +66,7 @@ let-env config = {
     case_sensitive: false, # set to true to enable case-sensitive completions
     external: {
       completer: { |spans|
-        if (which carapace | is-empty | not $in) {
+        if not (which carapace | is-empty) {
           carapace $spans.0 nushell $spans | from json
         }
       },
@@ -142,7 +142,7 @@ let-env config = {
   hooks: {
     pre_prompt: [
       { ||
-        if (which direnv | is-empty) or ('.envrc' | path exists | not $in) {
+        if (which direnv | is-empty) or (not ('.envrc' | path exists)) {
           return
         }
 

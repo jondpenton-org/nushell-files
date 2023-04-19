@@ -81,7 +81,7 @@ export def pnpm-outdated [
               }
         }
       | move dev --after package
-      | when { || $severity | is-empty | not $in } { ||
+      | when { || not ($severity | is-empty) } { ||
           let input = $in
           let check_parts = (
             (nu-complete pnpm severity)

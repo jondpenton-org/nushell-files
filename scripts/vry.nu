@@ -131,7 +131,7 @@ export def "from vry" [] {
           let value = (
             $row
               | get --ignore-errors $key
-              | if ($in | is-empty | not $in) {
+              | if not ($in | is-empty) {
                   into int
                 }
           )
