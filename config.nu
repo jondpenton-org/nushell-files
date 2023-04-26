@@ -152,6 +152,8 @@ let-env config = {
           return
         }
 
+        use helpers.nu when
+
         $direnv
           | when { ($in.PATH? | describe) == `string` } {
               update PATH (
