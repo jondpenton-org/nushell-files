@@ -10,12 +10,12 @@ export def pg-restore [
 ] {
   ls $'($file_prefix)-*.sql'
     | par-each {
-        update modified {
+        update modified (
           $in.name
             | parse --regex `(?P<time>\d+)`
             | $in.time.0
             | into datetime
-        }
+        )
       }
     | sort-by --reverse modified
     | $in.name.0

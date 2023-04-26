@@ -73,12 +73,10 @@ export def pnpm-outdated [
       | headers
       | each {
           when { $in =~ dependents } {
-            update dependents { $in.dependents | split row , }
+            update dependents ($in.dependents | split row ,)
           }
-            | insert dev { $in.package | str ends-with ` (dev)` }
-            | update package {
-                $in.package | str replace --string ` (dev)` ``
-              }
+            | insert dev ($in.package | str ends-with ` (dev)`)
+            | update package ($in.package | str replace --string ` (dev)` ``)
         }
       | move dev --after package
       | when { not ($severity | is-empty) } {
