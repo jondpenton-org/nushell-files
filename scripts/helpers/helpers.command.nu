@@ -33,7 +33,7 @@ export def build-flags [
 export def external-command-exists [
   command_name: string
 ] {
-  which --all $command_name | any { || $in.path starts-with / }
+  which --all $command_name | any { $in.path starts-with / }
 }
 
 # Kills all nu shells
@@ -57,7 +57,7 @@ export def nu-reload [] {
 
 # List and filter all overlays
 export def overlay-list [
-  --filter: string@"nu-complete overlay-list filters" = `active`   # Filter what overlays are shown
+  --filter: string@'nu-complete overlay-list filters' = `active` # Filter what overlays are shown
 ] {
   let active_overlays = (overlay list)
 
@@ -67,13 +67,10 @@ export def overlay-list [
 
   let all_overlays = (
     ls ($env.NU_DIR | path join scripts)
-      | par-each { |it|
-          if $it.type == file and $it.name ends-with .nu {
-            $in.name
-              | path basename
-              | str replace --string .nu ``
-          }
-        }
+      | where type == file and name ends-with .nu
+      | $in.name
+      | path basename
+      | str replace --string .nu ``
   )
 
   if $filter == all {
@@ -82,9 +79,7 @@ export def overlay-list [
 
   if $filter == inactive {
     $all_overlays
-      | par-each { |it|
-          when { || $in in $active_overlays } null
-        }
+      | filter { $in not-in $active_overlays }
       | sort
   }
 }

@@ -141,24 +141,24 @@ let-env config = {
 
   hooks: {
     pre_prompt: [
-      { ||
+      {
         if (which direnv | is-empty) or (not ('.envrc' | path exists)) {
           return
         }
 
-        mut direnv = (direnv export json | from json)
+        mut direnv = (^direnv export json | from json)
 
         if ($direnv | is-empty) {
           return
         }
 
-        if ($direnv.PATH? | describe) == `string` {
-          $direnv.PATH = (
-            do $env.ENV_CONVERSIONS.PATH.from_string $direnv.PATH | uniq
-          )
-        }
-
-        $direnv | load-env
+        $direnv
+          | when { ($in.PATH? | describe) == `string` } {
+              update PATH (
+                do $env.ENV_CONVERSIONS.PATH.from_string $in.PATH | uniq
+              )
+            }
+          | load-env
       },
     ],
   },
@@ -233,10 +233,10 @@ let-env config = {
       },
       source: { |buffer, position|
         $nu.scope.commands
-          | where command =~ $buffer
-          | each { ||
-              select command usage | rename value description
-            }
+          | where name =~ $buffer
+          | select name usage
+          | rename value description
+          | sort-by value
       }
     },
     {
@@ -255,10 +255,9 @@ let-env config = {
       source: { |buffer, position|
         $nu.scope.vars
           | where name =~ $buffer
-          | sort-by name
-          | each { ||
-              select name type | rename value description
-            }
+          | select name type
+          | rename value description
+          | sort-by value
       }
     },
     {
@@ -280,10 +279,10 @@ let-env config = {
       },
       source: { |buffer, position|
         $nu.scope.commands
-          | where command =~ $buffer
-          | each { ||
-              select command usage | rename value description
-            }
+          | where name =~ $buffer
+          | select name usage
+          | rename value description
+          | sort-by value
       }
     }
   ],
@@ -402,12 +401,12 @@ let-env config = {
 }
 
 ## Repository Updates
-do { ||
+do {
   cd $env.NU_DIR
 
-  git fetch --quiet
+  ^git fetch --quiet
 
-  if 'Your branch is behind' in (git status) {
+  if 'Your branch is behind' in (^git status) {
     echo $'There is an update to the config. Run `nu-config-update` to update.(
       char newline
     )'
@@ -415,7 +414,7 @@ do { ||
 }
 
 ### Aliases
-alias nu-config-update = do { || cd $env.NU_DIR; git pull }
+alias nu-config-update = do { cd $env.NU_DIR; ^git pull }
 
 ## Starship
 source ~/.cache/starship/init.nu

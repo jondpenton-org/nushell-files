@@ -1,4 +1,4 @@
-export alias nu-check-scripts = do { ||
+export alias nu-check-scripts = do {
   let failed_scripts = (
     $env.NU_LIB_DIRS
       | par-each { |it|

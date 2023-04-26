@@ -28,7 +28,7 @@ export def open-env [
     | where ($it !~ `^\w+=".*\$[A-Z].*"`) # Exclude lines like `PATH="<path>:$PATH"`
     | str replace --all `^(\w+)=([^'"]+)` `${1}='${2}'` # `PORT=3000` to `PORT='3000'`
     | str replace --all `^(\w+)="(.*)"` `${1}='${2}'` # `PORT="3000"` to `PORT='3000'`
-    | each { || parse --regex `^(?P<key>\w+)='(?P<value>.*)'` }
+    | each { parse --regex `^(?P<key>\w+)='(?P<value>.*)'` }
     | flatten
     | table-into-record
 }
@@ -110,7 +110,7 @@ export def with-envrc [
 def "nu-complete open-env file" [] {
   let git_root = (git-root)
   let envs_relative_to_git_root = (
-    do { || cd $git_root; glob --depth 3 **/*.env }
+    do { cd $git_root; glob --depth 3 **/*.env }
       | where not ($it =~ example or (open-env $it | is-empty))
       | path relative-to $git_root
   )
@@ -118,7 +118,7 @@ def "nu-complete open-env file" [] {
     $env.PWD | path relative-to $git_root
   )
 
-  $envs_relative_to_git_root | par-each { |it|
+  $envs_relative_to_git_root | each { |it|
     if $it starts-with $pwd_relative_to_git_root {
       let dirs_diff_length = (
         $pwd_relative_to_git_root | path split | length
@@ -132,7 +132,7 @@ def "nu-complete open-env file" [] {
       let git_root_relative_to_pwd = (
         $pwd_relative_to_git_root
           | path split
-          | par-each { || '..' }
+          | each { '..' }
           | path join
       )
 
@@ -144,7 +144,7 @@ def "nu-complete open-env file" [] {
 def "nu-complete open-envrc file" [] {
   let git_root = (git-root)
   let envrcs_relative_to_git_root = (
-    do { || cd $git_root; glob --depth 3 **/*.envrc }
+    do { cd $git_root; glob --depth 3 **/*.envrc }
       | where not ($it =~ example or (open-envrc $it | is-empty))
       | path relative-to $git_root
   )
@@ -152,7 +152,7 @@ def "nu-complete open-envrc file" [] {
     $env.PWD | path relative-to $git_root
   )
 
-  $envrcs_relative_to_git_root | par-each { |it|
+  $envrcs_relative_to_git_root | each { |it|
     if $it starts-with $pwd_relative_to_git_root {
       let dirs_diff_length = (
         $pwd_relative_to_git_root | path split | length
@@ -166,7 +166,7 @@ def "nu-complete open-envrc file" [] {
       let git_root_relative_to_pwd = (
         $pwd_relative_to_git_root
           | path split
-          | par-each { || '..' }
+          | each { '..' }
           | path join
       )
 

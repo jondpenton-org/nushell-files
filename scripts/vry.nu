@@ -107,8 +107,9 @@ export def "from vry" [] {
       | lines
       | skip 1
       | drop 1
-      | each { |it, index| # Normalize column names
-          when { || $index == 0 } { ||
+      | enumerate
+      | each { |it| # Normalize column names
+          $it.item | when { $it.index == 0 } {
             str downcase | str replace --all `(\w)\s(\w)` `${1}_${2}`
           }
         }
@@ -118,29 +119,26 @@ export def "from vry" [] {
       | split column `│` # Parse rows
       | str trim # Clean cells
       | headers
-      | filter { ||
-          values | any { || not ($in | is-empty) }
+      | filter {
+          values | any { not ($in | is-empty) }
         }
   )
   let table = (
-    do { ||
-      let int_keys = [rr, hs, level]
+    do {
+      let int_keys = [`rr`, `hs`, `level`]
 
       $table | each { |it|
         $int_keys | reduce --fold $it { |key, row|
-          let value = (
-            $row
-              | get --ignore-errors $key
+          $row | update $key {
+            get --ignore-errors $key
               | if not ($in | is-empty) {
                   into int
                 }
-          )
-
-          $row | update $key $value
+          }
         }
       }
     }
   )
 
-  $table | update party { || $in.party == `■` }
+  $table | update party ($in.party == `■`)
 }

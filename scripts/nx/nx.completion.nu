@@ -1,10 +1,14 @@
+use ../git.nu [
+  git-root,
+]
+
 export def "nu-complete nx output-style" [] {
   [`compact`, `dynamic`, `static`, `stream`, `stream-without-prefixes`] | sort
 }
 
 export def "nu-complete nx all targets" [] {
   let project_targets = (
-    do { ||
+    do {
       let workspace_path = (git-root | path join workspace.json)
 
       if ($workspace_path | path exists) {
@@ -27,14 +31,14 @@ export def "nu-complete nx all targets" [] {
             | values
         )
 
-        pnpm exec nx show projects
+        ^pnpm exec nx show projects
           | lines
           | par-each { |project|
               $search_folders
-                | par-each { |search_folder|
+                | each { |search_folder|
                     git-root
                       | path join $search_folder $project project.json
-                      | when { || not ($in | path exists) } null
+                      | filter { path exists }
                   }
                 | $in.0
                 | open
@@ -50,7 +54,7 @@ export def "nu-complete nx all targets" [] {
 
 export def "nu-complete nx project targets" [] {
   let project_targets = (
-    do { ||
+    do {
       let workspace_path = (git-root | path join workspace.json)
 
       if ($workspace_path | path exists) {
@@ -63,7 +67,7 @@ export def "nu-complete nx project targets" [] {
                 | open
                 | $in.targets
                 | columns
-                | par-each { |target| $'($it.project):($target)' }
+                | each { |target| $'($it.project):($target)' }
             }
       } else {
         let search_folders = (
@@ -74,20 +78,20 @@ export def "nu-complete nx project targets" [] {
             | values
         )
 
-        pnpm exec nx show projects
+        ^pnpm exec nx show projects
           | lines
           | par-each { |project|
               $search_folders
-                | par-each { |search_folder|
+                | each { |search_folder|
                     git-root
                       | path join $search_folder $project project.json
-                      | when { || not ($in | path exists) } null
+                      | filter { path exists }
                   }
                 | $in.0
                 | open
                 | $in.targets
                 | columns
-                | par-each { |target| $'($project):($target)' }
+                | each { |target| $'($project):($target)' }
             }
       }
     }
@@ -98,7 +102,7 @@ export def "nu-complete nx project targets" [] {
 
 export def "nu-complete nx projects" [] {
   let projects = (
-    do { ||
+    do {
       let workspace_path = (git-root | path join workspace.json)
 
       if ($workspace_path | path exists) {
@@ -108,9 +112,9 @@ export def "nu-complete nx projects" [] {
       } else {
         let projects_raw = (
           if (git-root | path join pnpm-workspace.yaml | path exists) {
-            pnpm exec nx show projects
+            ^pnpm exec nx show projects
           } else {
-            nx show projects
+            ^nx show projects
           }
         )
 

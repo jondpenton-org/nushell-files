@@ -1,9 +1,140 @@
+use ../git.nu [
+  git-root,
+]
 use nx.completion.nu [
   `nu-complete nx all targets`,
   `nu-complete nx output-style`,
   `nu-complete nx project targets`,
   `nu-complete nx projects`,
 ]
+
+# TODO: Remove
+def "nu-complete nx all targets" [] {
+  let project_targets = (
+    do {
+      let workspace_path = (git-root | path join workspace.json)
+
+      if ($workspace_path | path exists) {
+        open $workspace_path
+          | $in.projects
+          | transpose project path
+          | par-each { |it|
+              $in.path
+                | path join project.json
+                | open
+                | $in.targets
+                | columns
+            }
+      } else {
+        let search_folders = (
+          git-root
+            | path join nx.json
+            | open
+            | $in.workspaceLayout
+            | values
+        )
+
+        ^pnpm exec nx show projects
+          | lines
+          | par-each { |project|
+              $search_folders
+                | each { |search_folder|
+                    git-root
+                      | path join $search_folder $project project.json
+                      | filter { path exists }
+                  }
+                | $in.0
+                | open
+                | $in.targets
+                | columns
+            }
+      }
+    }
+  )
+
+  $project_targets | uniq | sort
+}
+
+# TODO: Remove
+def "nu-complete nx output-style" [] {
+  [`compact`, `dynamic`, `static`, `stream`, `stream-without-prefixes`] | sort
+}
+
+# TODO: Remove
+def "nu-complete nx project targets" [] {
+  let project_targets = (
+    do {
+      let workspace_path = (git-root | path join workspace.json)
+
+      if ($workspace_path | path exists) {
+        open $workspace_path
+          | $in.projects
+          | transpose project path
+          | par-each { |it|
+              $it.path
+                | path join project.json
+                | open
+                | $in.targets
+                | columns
+                | each { |target| $'($it.project):($target)' }
+            }
+      } else {
+        let search_folders = (
+          git-root
+            | path join nx.json
+            | open
+            | $in.workspaceLayout
+            | values
+        )
+
+        ^pnpm exec nx show projects
+          | lines
+          | par-each { |project|
+              $search_folders
+                | each { |search_folder|
+                    git-root
+                      | path join $search_folder $project project.json
+                      | filter { path exists }
+                  }
+                | $in.0
+                | open
+                | $in.targets
+                | columns
+                | each { |target| $'($project):($target)' }
+            }
+      }
+    }
+  )
+
+  $project_targets | sort
+}
+
+# TODO: Remove
+def "nu-complete nx projects" [] {
+  let projects = (
+    do {
+      let workspace_path = (git-root | path join workspace.json)
+
+      if ($workspace_path | path exists) {
+        open $workspace_path
+          | $in.projects
+          | columns
+      } else {
+        let projects_raw = (
+          if (git-root | path join pnpm-workspace.yaml | path exists) {
+            ^pnpm exec nx show projects
+          } else {
+            ^nx show projects
+          }
+        )
+
+        $projects_raw | lines
+      }
+    }
+  )
+
+  $projects | sort
+}
 
 # Run a target for a project
 export extern "pnpm exec nx run" [

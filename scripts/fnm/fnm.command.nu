@@ -18,10 +18,10 @@ export def fnm-alias-bin-path [
 }
 
 export def fnm-dir [] {
-  fnm env --shell bash
+  ^fnm env --shell bash
     | lines
     | where ('FNM_DIR' in $it)
-    | each { || parse `export FNM_DIR="{path}"` }
+    | each { parse `export FNM_DIR="{path}"` }
     | flatten
     | $in.path.0
 }
