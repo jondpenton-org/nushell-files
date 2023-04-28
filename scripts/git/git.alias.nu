@@ -1,6 +1,6 @@
 export alias git-reset-hard = ^git reset --hard
 export alias git-reset-hard-origin = do {
-  git-reset-hard $'origin/(^git branch --show-current)'
+  git-reset-hard $"origin/(^git branch --show-current)"
 }
 
 export alias git-root = do {

@@ -15,7 +15,7 @@ export def build-flags [
   $flags
     | transpose key value
     | each { |it|
-        let formatted_key = $'--($it.key)'
+        let formatted_key = $"--($it.key)"
 
         match ($it.value | describe) {
           `bool` => {
@@ -52,7 +52,7 @@ export def nu-reload [] {
     which nu | $in.0.path
   )
 
-  exec $nu_path `--commands` $'cd ($env.PWD | to json); ($nu_path) --login'
+  exec $nu_path `--commands` $"cd ($env.PWD | to json); ($nu_path) --login"
 }
 
 # List and filter all overlays

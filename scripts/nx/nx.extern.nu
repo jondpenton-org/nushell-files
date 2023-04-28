@@ -76,7 +76,7 @@ def "nu-complete nx project targets" [] {
                 | open
                 | $in.targets
                 | columns
-                | each { |target| $'($it.project):($target)' }
+                | each { |target| $"($it.project):($target)" }
             }
       } else {
         let search_folders = (
@@ -100,7 +100,7 @@ def "nu-complete nx project targets" [] {
                 | open
                 | $in.targets
                 | columns
-                | each { |target| $'($project):($target)' }
+                | each { |target| $"($project):($target)" }
             }
       }
     }

@@ -130,7 +130,7 @@ export def pnpm-outdated [
   }
 
   $outdated_table
-    | each { $'($in.package)@^($in.latest)' }
+    | each { $"($in.package)@^($in.latest)" }
     | uniq
     | default []
     | sort

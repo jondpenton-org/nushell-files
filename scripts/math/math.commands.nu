@@ -11,10 +11,10 @@ export def "math format" [
         metadata $input
           | $in.span
           | merge {
-              text: $'expected int, received ($input_type)',
+              text: $"expected int, received ($input_type)",
             }
       ),
-      msg: $'Input type "($input_type)" not supported.',
+      msg: $"Input type \"($input_type)\" not supported.",
     }
   }
 

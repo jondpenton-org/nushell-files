@@ -2,10 +2,10 @@
 
 def create_left_prompt [] {
   if (is-admin) {
-    return $'(ansi red_bold)($env.PWD)'
+    return $"(ansi red_bold)($env.PWD)"
   }
 
-  $'(ansi green_bold)($env.PWD)'
+  $"(ansi green_bold)($env.PWD)"
 }
 
 def create_right_prompt [] {

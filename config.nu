@@ -409,9 +409,9 @@ do {
   ^git fetch --quiet
 
   if 'Your branch is behind' in (^git status) {
-    echo $'There is an update to the config. Run `nu-config-update` to update.(
+    echo $"There is an update to the config. Run `nu-config-update` to update.(
       char newline
-    )'
+    )"
   }
 }
 

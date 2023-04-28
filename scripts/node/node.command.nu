@@ -6,7 +6,7 @@ export def node-print-packages [
     | uniq
     | each { parse --regex `"(?P<package>.+)": "(?P<version>.+)",` }
     | flatten
-    | each { $'- ($in.package)@($in.version)' }
+    | each { $"- ($in.package)@($in.version)" }
     | sort
     | to md
 }

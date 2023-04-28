@@ -1,3 +1,5 @@
+use std `iter find`
+
 # Calculates ELO of match teams. $in should be the full VRY table.
 export def vry-match-elo [] {
   let match_table = (
@@ -52,12 +54,9 @@ export def vry-match-elo [] {
                   let rank = $rank_parts.0
                   let rank_index = (
                     $ranks
-                      | par-each { |it, index|
-                          if $it == $rank {
-                            $index
-                          }
-                        }
-                      | $in.0
+                      | enumerate
+                      | iter find { $in.item == $rank }
+                      | $in.index
                   )
                   let rank_base_rr = (
                     $rank_index * 300
@@ -94,7 +93,7 @@ export def vry-match-elo [] {
 
         {
           index: ($team_num - 1),
-          rank_tier: $'($rank) ($tier)',
+          rank_tier: $"($rank) ($tier)",
           rr: $rr,
         }
       }
