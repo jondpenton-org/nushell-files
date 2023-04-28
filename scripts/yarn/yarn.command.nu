@@ -6,9 +6,9 @@ use yarn.completion.nu [
 
 # View outdated dependencies
 export def yarn-outdated [
-  --print-latest (-l)                                             # Prints outdated dependencies as `<package>@^<wantedVersion>`
-  --severity (-s): string@"nu-complete yarn outdated severity"    # Filter results based on the severity of the update
-  --type (-t): string@"nu-complete yarn outdated type"            # Filter results based on the dependency type
+  --print-latest (-l) # Prints outdated dependencies as `<package>@^<wantedVersion>`
+  --severity (-s): string@'nu-complete yarn outdated severity' # Filter results based on the severity of the update
+  --type (-t): string@'nu-complete yarn outdated type' # Filter results based on the dependency type
 ] {
   let flags = (
     build-flags {
@@ -18,7 +18,7 @@ export def yarn-outdated [
     }
   )
   let table = (
-    yarn outdated $flags | from json
+    ^yarn outdated $flags | from json
   )
 
   if not $print_latest {

@@ -1,5 +1,5 @@
 export def fnm-alias-bin-path [
-  alias: string@"nu-complete fnm aliases"
+  alias: string@'nu-complete fnm aliases'
 ] {
   let aliases_dir = (
     fnm-dir | path join aliases
@@ -32,7 +32,7 @@ export def node-versions-dir [] {
 
 # Execute block with Node version
 export def with-node [
-  version: string@"nu-complete with-node versions",
+  version: string@'nu-complete with-node versions'
   block: closure
 ] {
   let node_path = (

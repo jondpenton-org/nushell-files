@@ -91,16 +91,16 @@ export def open-envrc [
 
 # Like `with-env`, but pass .env file instead of environment variable set
 export def with-dot-env [
-  file: path@"nu-complete open-env file"    # .env file
-  block: closure                              # Block ran with variables in passed file
+  file: path@'nu-complete open-env file' # .env file
+  block: closure # Block ran with variables in passed file
 ] {
   with-env (open-env $file) $block
 }
 
 # Like `with-env`, but pass .envrc file instead of environment variable set.
 export def with-envrc [
-  file: path@"nu-complete open-envrc file"   # .envrc file
-  block: closure                               # Block ran with variables in passed file
+  file: path@'nu-complete open-envrc file' # .envrc file
+  block: closure # Block ran with variables in passed file
 ] {
   with-env (open-envrc $file) $block
 }

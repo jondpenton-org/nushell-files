@@ -20,7 +20,7 @@ export def gpg-decrypt [
 export def gpg-encrypt [
   --verbose (-v)
 
-  recipient: string@"nu-complete gpg recipients"
+  recipient: string@'nu-complete gpg recipients'
 ] {
   let initial_in = $in
   let flags = (

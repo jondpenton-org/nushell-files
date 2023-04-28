@@ -1,16 +1,16 @@
-use helpers.completion.nu [`nu-complete overlay-list filters`]
+use helpers.completion.nu `nu-complete overlay-list filters`
 
 # Runs timeit number of $times and averages them together
 export def timeit-repeat [
-  times: int          # Number of times timeit is ran
-  closure: closure    # Closure passed to `timeit`
+  times: int # Number of times timeit is ran
+  closure: closure # Closure passed to `timeit`
 ] {
   repeat $times { timeit $closure } | math avg
 }
 
 # Builds list of flag strings to pass to command
 export def build-flags [
-  flags: record   # Record with key of flag to its value
+  flags: record # Record with key of flag to its value
 ] {
   $flags
     | transpose key value
@@ -100,7 +100,7 @@ export def par-map [
 
 # Repeat block # of times
 export def repeat [
-  times: int    # Times to repeat $block
+  times: int # Times to repeat $block
   block: closure
 ] {
   1..$times | each $block
@@ -108,9 +108,9 @@ export def repeat [
 
 # Sleep while condition true
 export def sleep-while [
-  condition: closure              # Condition to check
+  --interval: duration = 100ms # How often `condition` is checked
 
-  --interval: duration = 100ms    # How often `condition` is checked
+  condition: closure # Condition to check
 ] {
   while (do $condition) { sleep $interval }
 }
@@ -127,8 +127,8 @@ export def table-into-record [
 
 # When predicate evaluates to `true`, returns consequent or `do $consequent`
 export def when [
-  predicate: closure    # Closure that returns `bool`. Evaluated as a `do` closure with input passed as parameter and input.
-  consequent: any       # Any value; If closure, evaluated as a `do` closure with input passed as parameter and input.
+  predicate: closure # Closure that returns `bool`. Evaluated as a `do` closure with input passed as parameter and input.
+  consequent # If closure, evaluated as a `do` closure with input passed as parameter and input.
 ] {
   let input = $in
 
