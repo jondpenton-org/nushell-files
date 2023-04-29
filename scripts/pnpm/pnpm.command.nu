@@ -1,3 +1,4 @@
+use std `iter find`
 use ../helpers.nu build-flags
 use pnpm.completion.nu [
   `nu-complete pnpm log level`,
@@ -57,15 +58,15 @@ export def pnpm-outdated [
       | drop 1
       | str trim --char `│`
       | split list ($in | where $it starts-with `├─` | $in.0)
-      | each { |it, index|
-          match $index {
-            0 => ($it.0 | str downcase),
-            _ => (
-              $it
-                | str replace `^(\s+│)+\s+` ``
-                | str trim
-                | str join
-            )
+      | enumerate
+      | each { |it|
+          if $it.index == 0 {
+            $it.item.0 | str downcase
+          } else {
+            $it.item
+              | str replace `^(\s+│)+\s+` ``
+              | str trim
+              | str join
           }
         }
       | split column `│`
@@ -82,46 +83,42 @@ export def pnpm-outdated [
       | when { not ($severity | is-empty) } {
           let input = $in
           let check_parts = (
-            (nu-complete pnpm severity)
-              | each { |it, index|
-                  if $it == $severity {
-                    $index
-                  }
-                }
-              | $in.0
+            `nu-complete pnpm severity`
+              | enumerate
+              | iter find { $in.item == $severity }
+              | $in.0.index
           )
 
-          $input
-            | filter { |it|
-                let current_parts = ($it.current | split row .)
-                let latest_parts = ($it.latest | split row .)
-                let check_parts = (
-                  $check_parts
-                    | when { $current_parts.0 == `0` } {
-                        $in + 1
-                      }
-                    | when { $in > 2 } 2
-                )
-                let assertions = (
-                  match $check_parts {
-                    0 => [
-                      ($current_parts.0 != $latest_parts.0)
-                    ],
-                    1 => [
-                      ($current_parts.0 == $latest_parts.0),
-                      ($current_parts.1 != $latest_parts.1),
-                    ],
-                    2 => [
-                      ($current_parts.0 == $latest_parts.0),
-                      ($current_parts.1 == $latest_parts.1),
-                    ]
+          $input | filter { |it|
+            let current_parts = ($it.current | split row .)
+            let latest_parts = ($it.latest | split row .)
+            let check_parts = (
+              $check_parts
+                | when { $current_parts.0 == `0` } {
+                    $in + 1
                   }
-                )
-
-                $assertions
-                  | where not $it
-                  | is-empty
+                | when { $in > 2 } 2
+            )
+            let assertions = (
+              match $check_parts {
+                0 => [
+                  ($current_parts.0 != $latest_parts.0)
+                ],
+                1 => [
+                  ($current_parts.0 == $latest_parts.0),
+                  ($current_parts.1 != $latest_parts.1),
+                ],
+                2 => [
+                  ($current_parts.0 == $latest_parts.0),
+                  ($current_parts.1 == $latest_parts.1),
+                ]
               }
+            )
+
+            $assertions
+              | where not $it
+              | is-empty
+          }
         }
   )
 

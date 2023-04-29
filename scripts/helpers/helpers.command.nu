@@ -38,13 +38,11 @@ export def external-command-exists [
 
 # Kills all nu shells
 export def nu-kill-all [] {
-  ps | par-each { |it|
-    $in.name
-      | path parse
-      | if $in.stem == `nu` {
-          kill --force $it.pid
-        }
-  }
+  ps
+    | $in.name
+    | path parse
+    | where stem == `nu`
+    | par-each { kill --force $in.pid }
 }
 
 export def nu-reload [] {
@@ -91,9 +89,7 @@ export def par-map [
   closure: closure # the closure to run
 ] {
   enumerate
-    | par-each { |it|
-        update item ($it.item | do $closure $it.item)
-      }
+    | par-each { update item ($in.item | do $closure $in) }
     | sort-by index
     | $in.item
 }

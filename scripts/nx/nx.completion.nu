@@ -15,7 +15,7 @@ export def "nu-complete nx all targets" [] {
         open $workspace_path
           | $in.projects
           | transpose project path
-          | par-each { |it|
+          | par-each {
               $in.path
                 | path join project.json
                 | open
