@@ -39,10 +39,8 @@ export def external-command-exists [
 # Kills all nu shells
 export def nu-kill-all [] {
   ps
-    | $in.name
-    | path parse
-    | where stem == `nu`
-    | par-each { kill --force $in.pid }
+    | filter { $in.name | path parse | stem == `nu` }
+    | each { kill --force $in.pid }
 }
 
 export def nu-reload [] {

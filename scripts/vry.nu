@@ -22,7 +22,7 @@ export def vry-match-elo [] {
   )
 
   1..$teams_num
-    | par-each { |team_num|
+    | each { |team_num|
         let team_ranks_total_rr = (
           $match_table
             | match $team_num {
@@ -30,7 +30,7 @@ export def vry-match-elo [] {
                 _ => { skip 5 }
               }
             | select rank rr peak_rank
-            | par-each { |it|
+            | each { |it|
                 let peak_rank = (
                   $it.peak_rank | str replace `\s\(e\da\d\)` ``
                 )

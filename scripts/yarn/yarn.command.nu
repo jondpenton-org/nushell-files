@@ -17,13 +17,8 @@ export def yarn-outdated [
       type: $type,
     }
   )
-  let table = (
-    ^yarn outdated $flags | from json
-  )
 
-  if not $print_latest {
-    return $table
-  }
-
-  $table | par-each { $"($in.name)@^($in.latest)" }
+  ^yarn outdated $flags
+    | from json
+    | when { $print_latest } { each { $"($in.name)@^($in.latest)" } }
 }

@@ -1,3 +1,4 @@
+use std `iter find`
 use ../git.nu [
   git-root,
 ]
@@ -36,11 +37,9 @@ export def "nu-complete nx all targets" [] {
           | par-each { |project|
               $search_folders
                 | each { |search_folder|
-                    git-root
-                      | path join $search_folder $project project.json
-                      | filter { path exists }
+                    git-root | path join $search_folder $project project.json
                   }
-                | $in.0
+                | iter find { path exists }
                 | open
                 | $in.targets
                 | columns
