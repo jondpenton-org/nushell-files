@@ -139,5 +139,5 @@ export def "from vry" [] {
     }
   )
 
-  $table | update party ($in.party == `■`)
+  $table | update party { $in == `■` }
 }

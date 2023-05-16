@@ -87,7 +87,7 @@ export def par-map [
   closure: closure # the closure to run
 ] {
   enumerate
-    | par-each { update item ($in.item | do $closure $in) }
+    | par-each { update item { do $closure $in } }
     | sort-by index
     | $in.item
 }
