@@ -102,10 +102,12 @@ export def repeat [
 
 # Sleep while condition true
 export def sleep-while [
-  --interval: duration = 100ms # How often `condition` is checked
+  --interval: duration # How often `condition` is checked
 
   condition: closure # Condition to check
 ] {
+  let interval = ($interval | default 100ms)
+
   while (do $condition) { sleep $interval }
 }
 
