@@ -142,25 +142,27 @@ let-env config = {
   hooks: {
     pre_prompt: [
       {
-        if (which direnv | is-empty) or (not ('.envrc' | path exists)) {
+        if not ('.envrc' | path exists) {
           return
         }
 
-        mut direnv = (^direnv export json | from json)
+        try {
+          let direnv = (^direnv export json | from json)
 
-        if ($direnv | is-empty) {
-          return
-        }
+          if ($direnv | is-empty) {
+            return
+          }
 
-        use helpers.nu when
+          use helpers.nu when
 
-        $direnv
-          | when { ($in.PATH? | describe) == `string` } {
-              update PATH {
-                do $env.ENV_CONVERSIONS.PATH.from_string $in | uniq
+          $direnv
+            | when { ($in.PATH? | describe) == `string` } {
+                update PATH {
+                  do $env.ENV_CONVERSIONS.PATH.from_string $in | uniq
+                }
               }
-            }
-          | load-env
+            | load-env
+        }
       },
     ],
   },
@@ -409,7 +411,7 @@ do {
   ^git fetch --quiet
 
   if 'Your branch is behind' in (^git status) {
-    echo $"There is an update to the config. Run `nu-config-update` to update.(
+    print $"There is an update to the config. Run `nu-config-update` to update.(
       char newline
     )"
   }
