@@ -153,15 +153,7 @@ let-env config = {
             return
           }
 
-          use helpers.nu when
-
-          $direnv
-            | when { ($in.PATH? | describe) == `string` } {
-                update PATH {
-                  do $env.ENV_CONVERSIONS.PATH.from_string $in | uniq
-                }
-              }
-            | load-env
+          $direnv | load-env
         }
       },
     ],

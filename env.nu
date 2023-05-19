@@ -35,6 +35,7 @@ let-env ENV_CONVERSIONS = {
       $str
         | split row (char env_sep)
         | path expand --no-symlink
+        | uniq
     }
     to_string: { |list|
       $list
@@ -47,6 +48,7 @@ let-env ENV_CONVERSIONS = {
       $str
         | split row (char env_sep)
         | path expand --no-symlink
+        | uniq
     }
     to_string: { |list|
       $list
