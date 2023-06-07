@@ -1,4 +1,4 @@
-use std `iter find`
+use std iter
 use ../git.nu [
   git-root,
 ]

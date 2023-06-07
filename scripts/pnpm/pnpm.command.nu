@@ -1,4 +1,4 @@
-use std `iter find`
+use std iter
 use ../helpers.nu build-flags
 use pnpm.completion.nu [
   `nu-complete pnpm log level`,

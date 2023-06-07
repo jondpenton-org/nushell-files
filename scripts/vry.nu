@@ -1,4 +1,4 @@
-use std `iter find`
+use std iter
 
 # Calculates ELO of match teams. $in should be the full VRY table.
 export def vry-match-elo [] {
