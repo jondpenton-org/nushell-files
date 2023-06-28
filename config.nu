@@ -91,6 +91,10 @@ let-env config = {
     vi_insert: `block`, # block, underscore, line (block is the default)
     vi_normal: `underscore`, # block, underscore, line  (underscore is the default)
   },
+  datetime_format: {
+    normal: `%a, %d %b %Y %H:%M:%S %z`,
+    table: `%m/%d/%y %I:%M:%S%p`,
+  },
   filesize: {
     # b, kb, kib, mb, mib, gb, gib, tb, tib, pb, pib, eb, eib, zb, zib, auto
     format: `auto`,
@@ -228,7 +232,7 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu.scope.commands
+        scope commands
           | where name =~ $buffer
           | select name usage
           | rename value description
@@ -249,7 +253,7 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu.scope.vars
+        scope variables
           | where name =~ $buffer
           | select name type
           | rename value description
@@ -274,7 +278,7 @@ let-env config = {
         description_text: `yellow`
       },
       source: { |buffer, position|
-        $nu.scope.commands
+        scope commands
           | where name =~ $buffer
           | select name usage
           | rename value description
