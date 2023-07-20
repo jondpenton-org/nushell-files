@@ -13,3 +13,6 @@
 !/config.nu
 !/env.nu
 !/scripts/**/*.nu
+
+# VSCode
+!/.vscode/*
