@@ -62,6 +62,7 @@ export def overlay-list [
   }
 
   let all_overlays = (
+    # TODO: Use $env.NU_LIB_DIRS
     ls ($env.NU_DIR | path join scripts)
       | where type == file and name ends-with .nu
       | $in.name

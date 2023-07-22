@@ -1,7 +1,7 @@
 # Mac
 .DS_Store
 
-# Nu
+# Nushell
 /history.txt
 
 # Output Files
@@ -11,8 +11,10 @@
 # Scripts
 *.nu
 !/config.nu
+!/default_*.nu
 !/env.nu
-!/scripts/**/*.nu
+!/features/**
+!/scripts/**
 
 # VSCode
-!/.vscode/*
+!/.vscode/**

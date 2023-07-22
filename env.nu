@@ -1,28 +1,64 @@
 # Nushell Environment Config File
 
-def create_left_prompt [] {
-  if (is-admin) {
-    return $"(ansi red_bold)($env.PWD)"
-  }
-
-  $"(ansi green_bold)($env.PWD)"
-}
-
-def create_right_prompt [] {
-  [
-    (date now | date format `%m/%d/%Y %r`)
-  ] | str join
-}
-
 # Use nushell functions to define your right and left prompt
-let-env PROMPT_COMMAND = { create_left_prompt }
-let-env PROMPT_COMMAND_RIGHT = { create_right_prompt }
+let-env PROMPT_COMMAND = {
+  let home = (
+    $env.HOME?
+      | default $env.USERPROFILE?
+      | default ''
+  )
+  let dir = (
+    $env.PWD | str replace --string $home ~
+  )
+  let path_color = (
+    if (is-admin) {
+      ansi red_bold
+    } else {
+      ansi green_bold
+    }
+  )
+  let separator_color = (
+    if (is-admin) {
+      ansi light_red_bold
+    } else {
+      ansi light_green_bold
+    }
+  )
+  let path_segment = $"($path_color)($dir)"
+  let separator_segment = $"($separator_color)/($path_color)"
+
+  $path_segment | str replace --all --string (char path_sep) $separator_segment
+}
+
+let-env PROMPT_COMMAND_RIGHT = {
+  let time_segment_color = $"(ansi reset)(ansi magenta)"
+  let time_separator_color = $"(ansi reset)(ansi light_magenta_bold)"
+  let time_miridian_color = $"(ansi reset)(ansi light_magenta_underline)"
+  let time_segment = (
+    [
+      $time_segment_color,
+      (date now | date format '%m/%d/%Y %r'),
+    ]
+      | str join
+      | str replace --all '([/:])' $"($time_separator_color)${1}($time_segment_color)"
+      | str replace --all '([AP]M)' $"($time_miridian_color)${1}"
+  )
+  let last_exit_code_segment = (
+    if $env.LAST_EXIT_CODE != 0 {
+      $"(ansi reset)(ansi red_bold)($env.LAST_EXIT_CODE)"
+    } else {
+      ''
+    }
+  )
+
+  $"($last_exit_code_segment) ($time_segment)"
+}
 
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
-let-env PROMPT_INDICATOR = { '〉' }
+let-env PROMPT_INDICATOR = { '> ' }
 let-env PROMPT_INDICATOR_VI_INSERT = { ': ' }
-let-env PROMPT_INDICATOR_VI_NORMAL = { '〉' }
+let-env PROMPT_INDICATOR_VI_NORMAL = { '> ' }
 let-env PROMPT_MULTILINE_INDICATOR = { '::: ' }
 
 # Specifies how environment variables are:
@@ -36,49 +72,47 @@ let-env ENV_CONVERSIONS = {
         | split row (char env_sep)
         | path expand --no-symlink
         | uniq
-    }
+    },
     to_string: { |list|
       $list
         | path expand --no-symlink
         | str join (char env_sep)
-    }
-  }
+    },
+  },
   Path: {
     from_string: { |str|
       $str
         | split row (char env_sep)
         | path expand --no-symlink
         | uniq
-    }
+    },
     to_string: { |list|
       $list
         | path expand --no-symlink
         | str join (char env_sep)
-    }
-  }
+    },
+  },
 }
-
-let-env NU_DIR = (
-  $nu.config-path | path dirname
-)
 
 # Directories to search for scripts when calling source or use
 #
 # By default, <nushell-config-dir>/scripts is added
 let-env NU_LIB_DIRS = [
-  ($nu.config-path | path dirname | path join scripts)
+  $nu.default-config-dir,
+  ($nu.default-config-dir | path join scripts),
 ]
 
 # Directories to search for plugin binaries when calling register
 #
 # By default, <nushell-config-dir>/plugins is added
 let-env NU_PLUGIN_DIRS = [
-  ($nu.config-path | path dirname | path join plugins)
+  ($nu.default-config-dir | path join plugins),
 ]
 
-# To add entries to PATH (on Windows you might use Path), you can use the following pattern:
-# let-env PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
-
+# Features
 ## Starship
-# mkdir ~/.cache/starship
-# starship init nu | save --force ~/.cache/starship/init.nu
+try {
+  mkdir ~/.cache/starship
+  ^starship init nu | save --force ~/.cache/starship/init.nu
+}
+
