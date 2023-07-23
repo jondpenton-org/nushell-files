@@ -1,5 +1,5 @@
 use ../git.nu git-root
-use ../helpers.nu [
+use modules/helpers [
   table-into-record,
   when,
 ]

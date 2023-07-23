@@ -1,4 +1,4 @@
-export alias nu-check-scripts = do {
+export def main [] {
   let failed_scripts = (
     $env.NU_LIB_DIRS
       | par-each { |it|
@@ -21,7 +21,7 @@ export alias nu-check-scripts = do {
     return
   }
 
-  print `Failed scripts:`
+  print 'Failed scripts:'
 
   $failed_scripts | sort
 }

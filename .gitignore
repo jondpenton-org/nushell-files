@@ -14,6 +14,7 @@
 !/default_*.nu
 !/env.nu
 !/features/**
+!/modules/**
 !/scripts/**
 
 # VSCode
