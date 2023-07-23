@@ -561,7 +561,7 @@ alias nu-config-update = do { cd $nu.default-config-dir; ^git pull }
 # Modules
 overlay use --prefix std
 overlay use dotenv.nu
-overlay use git.nu
+overlay use modules/git
 overlay use modules/helpers
 overlay use math.nu
 overlay use ssh.nu

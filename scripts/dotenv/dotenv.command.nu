@@ -1,4 +1,4 @@
-use ../git.nu git-root
+use modules/git git-root
 use modules/helpers [
   table-into-record,
   when,
