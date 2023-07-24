@@ -10,6 +10,7 @@
 
 # Scripts
 *.nu
+!/completions/**
 !/config.nu
 !/default_*.nu
 !/env.nu
