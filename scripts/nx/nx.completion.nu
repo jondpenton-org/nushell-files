@@ -1,5 +1,5 @@
 use std iter
-use ../git.nu [
+use modules/git [
   git-root,
 ]
 

@@ -1,4 +1,4 @@
-use ../helpers.nu build-flags
+use modules/helpers build-flags
 use yarn.completion.nu [
   `nu-complete yarn outdated severity`,
   `nu-complete yarn outdated type`,

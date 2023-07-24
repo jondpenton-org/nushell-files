@@ -1,4 +1,4 @@
-use ../git.nu git-root
+use modules/git git-root
 
 export def "nu-complete pnpm log level" [] {
   [`debug`, `info`, `warn`, `error`]

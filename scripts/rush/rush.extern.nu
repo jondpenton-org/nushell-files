@@ -1,4 +1,4 @@
-use ../git.nu git-root
+use modules/git git-root
 use rush.completion.nu `nu-complete rush projects`
 
 # TODO: Remove

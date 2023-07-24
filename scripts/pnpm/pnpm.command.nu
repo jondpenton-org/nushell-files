@@ -1,5 +1,5 @@
 use std iter
-use ../helpers.nu build-flags
+use modules/helpers build-flags
 use pnpm.completion.nu [
   `nu-complete pnpm log level`,
   `nu-complete pnpm projects`,

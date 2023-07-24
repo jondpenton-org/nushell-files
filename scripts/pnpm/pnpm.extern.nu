@@ -1,4 +1,4 @@
-use ../git.nu git-root
+use modules/git git-root
 use pnpm.completion.nu [
   `nu-complete pnpm log level`,
   `nu-complete pnpm projects`,

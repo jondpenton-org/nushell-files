@@ -1,5 +1,5 @@
-use ../git.nu git-root
-use ../helpers.nu build-flags
+use modules/git git-root
+use modules/helpers build-flags
 use rush.completion.nu [
   `nu-complete rush autoinstallers`,
   `nu-complete rush projects`,
