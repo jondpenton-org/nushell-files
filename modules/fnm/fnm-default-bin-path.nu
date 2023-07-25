@@ -1,5 +1,5 @@
 use modules/fnm/fnm-alias-bin-path.nu
 
-export def fnm-default-bin-path [] {
+export def main [] {
   fnm-alias-bin-path nushell | default (fnm-alias-bin-path default)
 }

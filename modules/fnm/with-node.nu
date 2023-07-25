@@ -1,7 +1,7 @@
 use modules/fnm/node-versions-dir.nu
 
 # Execute block with Node version
-export def with-node [
+export def main [
   version: string@'nu-complete with-node versions'
   block: closure
 ] {
