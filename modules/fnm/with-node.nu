@@ -1,4 +1,3 @@
-use completions/with-node/versions.nu *
 use modules/fnm/node-versions-dir.nu
 
 # Execute block with Node version
@@ -17,4 +16,8 @@ export def with-node [
   }
 
   with-env $env_record $block
+}
+
+def 'nu-complete with-node versions' [] {
+  ls (node-versions-dir) | $in.name | path basename
 }

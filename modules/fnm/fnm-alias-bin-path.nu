@@ -1,4 +1,3 @@
-use completions/fnm/aliases.nu *
 use modules/fnm/fnm-dir.nu
 
 export def main [
@@ -17,4 +16,11 @@ export def main [
   }
 
   $alias_dir | path join bin
+}
+
+def 'nu-complete fnm aliases' [] {
+  ls (fnm-dir | path join aliases)
+    | $in.name
+    | path basename
+    | sort
 }
