@@ -1,4 +1,4 @@
-use completions/open-env/file.nu
+use completions/open-env/file.nu *
 use modules/git/git-root.nu
 use modules/helpers/table-into-record.nu
 use modules/helpers/when.nu
@@ -31,4 +31,3 @@ export def main [
     | flatten
     | table-into-record
 }
-

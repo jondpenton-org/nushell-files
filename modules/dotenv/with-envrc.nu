@@ -1,4 +1,4 @@
-use completions/open-envrc/file.nu
+use completions/open-envrc/file.nu *
 use modules/dotenv/open-envrc.nu
 
 # Like `with-env`, but pass .envrc file instead of environment variable set.

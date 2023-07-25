@@ -1,4 +1,4 @@
-use completions/open-env/file.nu
+use completions/open-env/file.nu *
 use modules/dotenv/open-env.nu
 
 # Like `with-env`, but pass .env file instead of environment variable set

@@ -1,4 +1,4 @@
-use completions/open-envrc/file.nu
+use completions/open-envrc/file.nu *
 use modules/dotenv/open-env.nu
 use modules/helpers/table-into-record.nu
 use modules/helpers/when.nu
