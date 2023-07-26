@@ -1,7 +1,5 @@
 export def main [] {
-  let nu_path = (
-    which nu | $in.0.path
+  exec $nu.current-exe '--commands' (
+    $"cd ($env.PWD | to json); ($nu.current-exe) --login"
   )
-
-  exec $nu_path '--commands' $"cd ($env.PWD | to json); ($nu_path) --login"
 }

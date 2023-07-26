@@ -9,8 +9,9 @@ export def main [
     return $input
   }
 
-  match ($consequent | describe) {
-    'closure' => ($input | do $consequent $input)
-    _ => $consequent
+  if ($consequent | describe) != 'closure' {
+    return $consequent
   }
+
+  $input | do $consequent $input
 }

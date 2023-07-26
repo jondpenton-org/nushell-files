@@ -5,7 +5,7 @@ export-env {
     }
 
     try {
-      let direnv = (^direnv export json | from json)
+      let direnv = ^direnv export json | from json
 
       if ($direnv | is-empty) {
         return
@@ -20,5 +20,5 @@ export-env {
     }
   }
 
-  let-env config = ($env.config | merge $config_direnv)
+  $env.config = ($env.config | merge $config_direnv)
 }

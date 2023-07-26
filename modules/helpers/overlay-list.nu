@@ -2,7 +2,7 @@
 export def main [
   --filter: string@'nu-complete overlay-list filters' = active # Filter what overlays are shown
 ] {
-  let active_overlays = (overlay list)
+  let active_overlays = overlay list
 
   if $filter == active {
     return $active_overlays

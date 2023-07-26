@@ -8,7 +8,7 @@ export def main [] {
             try {
               cd ($it | path dirname)
 
-              nu-check --all --debug $it | null
+              (nu-check --all --debug $it) | null
             } catch {
               $it
             }

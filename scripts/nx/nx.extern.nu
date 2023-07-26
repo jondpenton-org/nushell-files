@@ -13,7 +13,7 @@ use nx.completion.nu [
 def "nu-complete nx all targets" [] {
   let project_targets = (
     do {
-      let workspace_path = (git-root | path join workspace.json)
+      let workspace_path = git-root | path join workspace.json
 
       if ($workspace_path | path exists) {
         open $workspace_path
@@ -63,7 +63,7 @@ def "nu-complete nx output-style" [] {
 def "nu-complete nx project targets" [] {
   let project_targets = (
     do {
-      let workspace_path = (git-root | path join workspace.json)
+      let workspace_path = git-root | path join workspace.json
 
       if ($workspace_path | path exists) {
         open $workspace_path
@@ -110,7 +110,7 @@ def "nu-complete nx project targets" [] {
 def "nu-complete nx projects" [] {
   let projects = (
     do {
-      let workspace_path = (git-root | path join workspace.json)
+      let workspace_path = git-root | path join workspace.json
 
       if ($workspace_path | path exists) {
         open $workspace_path

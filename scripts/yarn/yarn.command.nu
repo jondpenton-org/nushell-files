@@ -20,5 +20,5 @@ export def yarn-outdated [
 
   ^yarn outdated $flags
     | from json
-    | when { $print_latest } { each { $"($in.name)@^($in.latest)" } }
+    | when { $print_latest } { format '{name}@^{latest}' }
 }

@@ -5,9 +5,7 @@ export def "nu-complete rush autoinstallers" [] {
 }
 
 export def "nu-complete rush projects" [] {
-  let config_path = (
-    git-root | path join rush.json
-  )
+  let config_path = git-root | path join rush.json
 
   if not ($config_path | path exists) {
     return []

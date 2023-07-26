@@ -3,9 +3,7 @@ use rush.completion.nu `nu-complete rush projects`
 
 # TODO: Remove
 def "nu-complete rush projects" [] {
-  let config_path = (
-    git-root | path join rush.json
-  )
+  let config_path = git-root | path join rush.json
 
   if not ($config_path | path exists) {
     return []

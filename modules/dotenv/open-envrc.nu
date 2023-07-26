@@ -8,10 +8,9 @@ export def main [
   file?: path@'nu-complete open-envrc file' # .envrc file
 ] {
   let file = (
-    $in
-      | when { |it|
-          ($it | is-empty) or (($it | describe) not-in [path, string])
-        } $file
+    $in | when { |it|
+      ($it | is-empty) or (($it | describe) not-in [path, string])
+    } $file
   )
 
   if ($file | is-empty) {

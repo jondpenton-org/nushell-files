@@ -4,9 +4,9 @@ overlay use features/starship.nu
 
 overlay new session
 
-let-env EDITOR = /opt/homebrew/bin/code
+$env.EDITOR = /opt/homebrew/bin/code
 
-let-env PATH = (
+$env.PATH = (
   $env.PATH
     | append /opt/homebrew/bin
     | append /nix/var/nix/profiles/default/bin

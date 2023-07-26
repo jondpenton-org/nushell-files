@@ -1,5 +1,6 @@
-use std iter
-use modules/helpers build-flags
+use modules/helpers/build-flags.nu
+use modules/helpers/when.nu
+use std
 use pnpm.completion.nu [
   `nu-complete pnpm log level`,
   `nu-complete pnpm projects`,
@@ -31,24 +32,24 @@ export def pnpm-outdated [
 ] {
   let flags = (
     build-flags {
-      aggregate-output: $aggregate_output
-      color: $color
-      compatible: $compatible
-      dev: $dev
-      dir: $dir
-      filter: $filter
-      global-dir: $global_dir
-      help: $help
-      loglevel: $loglevel
-      long: $long
-      no-color: $no_color
-      no-optional: $no_optional
-      no-table: $no_table
-      prod: $prod
-      recursive: $recursive
-      stream: $stream
-      use-stderr: $use_stderr
-      workspace-root: $workspace_root
+      aggregate-output: $aggregate_output,
+      color: $color,
+      compatible: $compatible,
+      dev: $dev,
+      dir: $dir,
+      filter: $filter,
+      global-dir: $global_dir,
+      help: $help,
+      loglevel: $loglevel,
+      long: $long,
+      no-color: $no_color,
+      no-optional: $no_optional,
+      no-table: $no_table,
+      prod: $prod,
+      recursive: $recursive,
+      stream: $stream,
+      'use-stderr': $use_stderr,
+      workspace-root: $workspace_root,
     }
   )
   let outdated_table = (
@@ -56,28 +57,28 @@ export def pnpm-outdated [
       | lines
       | skip 1
       | drop 1
-      | str trim --char `│`
-      | split list ($in | where $it starts-with `├─` | $in.0)
+      | str trim --char '│'
+      | split list ($in | where $it starts-with '├─' | $in.0)
       | enumerate
       | each { |it|
           if $it.index == 0 {
             $it.item.0 | str downcase
           } else {
             $it.item
-              | str replace `^(\s+│)+\s+` ``
+              | str replace `^(\s+│)+\s+` ''
               | str trim
               | str join
           }
         }
-      | split column `│`
+      | split column '│'
       | str trim
       | headers
       | each {
           when { $in =~ dependents } {
             update dependents { split row , }
           }
-            | insert dev ($in.package | str ends-with ` (dev)`)
-            | update package { str replace --string ` (dev)` `` }
+            | insert dev ($in.package | str ends-with ' (dev)')
+            | update package { str replace --string ' (dev)' '' }
         }
       | move dev --after package
       | when { not ($severity | is-empty) } {
@@ -85,18 +86,16 @@ export def pnpm-outdated [
           let check_parts = (
             `nu-complete pnpm severity`
               | enumerate
-              | iter find { $in.item == $severity }
+              | std iter find { $in.item == $severity }
               | $in.0.index
           )
 
           $input | filter { |it|
-            let current_parts = ($it.current | split row .)
-            let latest_parts = ($it.latest | split row .)
+            let current_parts = $it.current | split row .
+            let latest_parts = $it.latest | split row .
             let check_parts = (
               $check_parts
-                | when { $current_parts.0 == `0` } {
-                    $in + 1
-                  }
+                | when { $current_parts.0 == '0' } { $in + 1 }
                 | when { $in > 2 } 2
             )
             let assertions = (
@@ -127,7 +126,8 @@ export def pnpm-outdated [
   }
 
   $outdated_table
-    | each { $"($in.package)@^($in.latest)" }
+    | table
+    | format '{package}@^{latest}'
     | uniq
     | sort
 }

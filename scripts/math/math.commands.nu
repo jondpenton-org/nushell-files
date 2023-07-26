@@ -3,7 +3,7 @@ export def "math format" [
   --separator (-s): string = `,`
 ] {
   let input = $in
-  let input_type = ($input | describe)
+  let input_type = $input | describe
 
   if $input_type != `int` {
     error make {

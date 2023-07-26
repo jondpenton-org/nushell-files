@@ -8,11 +8,7 @@ export def main [
         let formatted_key = $"--($it.key)"
 
         match ($it.value | describe) {
-          'bool' => {
-            if $it.value {
-              $formatted_key
-            }
-          },
+          $type if ($type == 'bool' and $it.value) => $formatted_key,
           'float' | 'int' | 'string' => [$formatted_key, $it.value],
           'list<string>' => ($it.value | prepend $formatted_key)
         }

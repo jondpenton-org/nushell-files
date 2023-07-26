@@ -5,9 +5,7 @@ export def main [
   version: string@'nu-complete with-node versions'
   block: closure
 ] {
-  let node_path = (
-    node-versions-dir | path join $version installation/bin
-  )
+  let node_path = node-versions-dir | path join $version installation/bin
   let new_path = (
     do $env.ENV_CONVERSIONS.PATH.to_string ($env.PATH | prepend $node_path)
   )

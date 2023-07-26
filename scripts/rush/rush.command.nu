@@ -36,7 +36,7 @@ export def rush-build [
 ] {
   let flags = (
     build-flags {
-      parallelism: `max`,
+      parallelism: max,
       to: $to,
       to-except: $to_except,
       verbose: true,

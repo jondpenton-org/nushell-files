@@ -1,15 +1,9 @@
 # Nushell Environment Config File
 
 # Use nushell functions to define your right and left prompt
-let-env PROMPT_COMMAND = {
-  let home = (
-    $env.HOME?
-      | default $env.USERPROFILE?
-      | default ''
-  )
-  let dir = (
-    $env.PWD | str replace --string $home ~
-  )
+$env.PROMPT_COMMAND = {
+  let home = $env.HOME? | default $env.USERPROFILE? | default ''
+  let dir = $env.PWD | str replace --string $home ~
   let path_color = (
     if (is-admin) {
       ansi red_bold
@@ -30,14 +24,16 @@ let-env PROMPT_COMMAND = {
   $path_segment | str replace --all --string (char path_sep) $separator_segment
 }
 
-let-env PROMPT_COMMAND_RIGHT = {
+$env.PROMPT_COMMAND_RIGHT = {
   let time_segment_color = $"(ansi reset)(ansi magenta)"
-  let time_separator_color = $"(ansi reset)(ansi light_magenta_bold)"
-  let time_miridian_color = $"(ansi reset)(ansi light_magenta_underline)"
+  let time_separator_color = $"(ansi reset)(ansi green)"
+  let time_miridian_color = $"(ansi reset)(ansi magenta_underline)"
+
+  # create a right prompt in magenta with green separators and am/pm underlined
   let time_segment = (
     [
       $time_segment_color,
-      (date now | date format '%m/%d/%Y %r'),
+      (date now | date format '%Y/%m/%d %r'),
     ]
       | str join
       | str replace --all '([/:])' $"($time_separator_color)${1}($time_segment_color)"
@@ -56,16 +52,16 @@ let-env PROMPT_COMMAND_RIGHT = {
 
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
-let-env PROMPT_INDICATOR = { '> ' }
-let-env PROMPT_INDICATOR_VI_INSERT = { ': ' }
-let-env PROMPT_INDICATOR_VI_NORMAL = { '> ' }
-let-env PROMPT_MULTILINE_INDICATOR = { '::: ' }
+$env.PROMPT_INDICATOR = { ' > ' }
+$env.PROMPT_INDICATOR_VI_INSERT = { ' : ' }
+$env.PROMPT_INDICATOR_VI_NORMAL = { ' > ' }
+$env.PROMPT_MULTILINE_INDICATOR = { '::: ' }
 
 # Specifies how environment variables are:
 # - converted from a string to a value on Nushell startup (from_string)
 # - converted from a value back to a string when running external commands (to_string)
 # Note: The conversions happen *after* config.nu is loaded
-let-env ENV_CONVERSIONS = {
+$env.ENV_CONVERSIONS = {
   PATH: {
     from_string: { |str|
       $str
@@ -95,9 +91,7 @@ let-env ENV_CONVERSIONS = {
 }
 
 # Directories to search for scripts when calling source or use
-#
-# By default, <nushell-config-dir>/scripts is added
-let-env NU_LIB_DIRS = [
+$env.NU_LIB_DIRS = [
   $nu.default-config-dir,
   ($nu.default-config-dir | path join scripts),
 ]
@@ -105,7 +99,7 @@ let-env NU_LIB_DIRS = [
 # Directories to search for plugin binaries when calling register
 #
 # By default, <nushell-config-dir>/plugins is added
-let-env NU_PLUGIN_DIRS = [
+$env.NU_PLUGIN_DIRS = [
   ($nu.default-config-dir | path join plugins),
 ]
 
@@ -115,4 +109,3 @@ try {
   mkdir ~/.cache/starship
   ^starship init nu | save --force ~/.cache/starship/init.nu
 }
-

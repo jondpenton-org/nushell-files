@@ -4,7 +4,7 @@ export def main [
 
   condition: closure # Condition to check
 ] {
-  let interval = ($interval | default 100ms)
+  let interval = $interval | default 100ms
 
   while (do $condition) { sleep $interval }
 }
