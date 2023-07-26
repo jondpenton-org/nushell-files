@@ -833,7 +833,7 @@ overlay use completions
 overlay use modules/dotenv
 overlay use modules/git
 overlay use modules/helpers
-overlay use math.nu
+overlay use --prefix modules/math
 overlay use ssh.nu
 
 # Should be last overlay. If additional overlays used in `login.nu`, then add
