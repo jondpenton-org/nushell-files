@@ -6,7 +6,7 @@ use modules/helpers/when.nu
 # Converts .env file into record
 export def main [
   file?: path@'nu-complete open-env file' # .env file
-] {
+]: any -> record {
   let file = (
     $in | when { |it|
       ($it | is-empty) or (($it | describe) not-in [path, string])

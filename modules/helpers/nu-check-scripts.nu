@@ -1,4 +1,6 @@
-export def main [] {
+export def main [
+  # : any -> list<string>?
+]: nothing -> any {
   let failed_scripts = (
     $env.NU_LIB_DIRS
       | par-each { |it|

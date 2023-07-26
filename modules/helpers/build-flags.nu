@@ -1,7 +1,7 @@
 # Builds list of flag strings to pass to command
 export def main [
   flags: record # Record with key of flag to its value
-] {
+]: nothing -> list<string> {
   $flags
     | transpose key value
     | each { |it|

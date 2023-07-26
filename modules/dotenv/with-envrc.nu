@@ -5,6 +5,6 @@ use modules/dotenv/open-envrc.nu
 export def main [
   file: path@'nu-complete open-envrc file' # .envrc file
   closure: closure # Closure ran with environment variables from .envrc file
-] {
+]: any -> any {
   with-env (open-envrc $file) $closure
 }

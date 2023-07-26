@@ -6,7 +6,7 @@ use modules/helpers/when.nu
 # Converts .envrc file into record
 export def main [
   file?: path@'nu-complete open-envrc file' # .envrc file
-] {
+]: any -> record {
   let file = (
     $in | when { |it|
       ($it | is-empty) or (($it | describe) not-in [path, string])
@@ -36,7 +36,7 @@ export def main [
               | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
               | $in.name.0
               | path expand
-              | main
+              | main $in
           } else if $it starts-with dotenv {
             $file
               | path dirname

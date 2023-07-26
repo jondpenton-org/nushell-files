@@ -3,7 +3,7 @@ export def main [
   --threads (-t): int # the number of threads to use
 
   closure: closure # the closure to run
-] {
+]: list -> list {
   enumerate
     | par-each { update item { do $closure $in } }
     | sort-by index

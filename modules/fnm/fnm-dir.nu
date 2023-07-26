@@ -1,4 +1,4 @@
-export def main [] {
+export def main []: any -> string {
   ^fnm env --shell bash
     | lines
     | where ('FNM_DIR' in $it)

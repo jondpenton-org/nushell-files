@@ -84,7 +84,7 @@ export def "nu-complete nx project targets" [] {
                 | each { |search_folder|
                     git-root
                       | path join $search_folder $project project.json
-                      | filter { path exists }
+                      | path exists
                   }
                 | $in.0
                 | open

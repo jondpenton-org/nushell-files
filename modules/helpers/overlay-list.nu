@@ -1,7 +1,7 @@
 # List and filter all overlays
 export def main [
   --filter: string@'nu-complete overlay-list filters' = active # Filter what overlays are shown
-] {
+]: nothing -> list<string> {
   let active_overlays = overlay list
 
   if $filter == active {
@@ -28,6 +28,6 @@ export def main [
   }
 }
 
-def 'nu-complete overlay-list filters' [] {
+def 'nu-complete overlay-list filters' []: nothing -> list<string> {
   [active, all, inactive]
 }
