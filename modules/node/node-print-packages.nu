@@ -1,6 +1,6 @@
-export def node-print-packages [
+export def main [
   packages: string # Literal string (``) of upgraded packages from GitHub diff
-] {
+]: nothing -> string {
   $packages
     | lines
     | uniq
