@@ -20,6 +20,7 @@
     "ssh",
     "mac",
     "math",
-    "grex"
+    "grex",
+    "operations"
   ]
 }
