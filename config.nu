@@ -835,7 +835,7 @@ overlay use modules/git
 overlay use modules/helpers
 overlay use --prefix modules/math
 overlay use modules/operations
-overlay use ssh.nu
+overlay use scripts/ssh.nu
 
 # Should be last overlay. If additional overlays used in `login.nu`, then add
 # `overlay use session` after them
