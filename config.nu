@@ -214,7 +214,7 @@ $env.config = {
     # isolation, `false` disables it. `true` will allow the history to be
     # isolated to the current session using up/down arrows. `false` will allow
     # the history to be shared across all sessions.
-    isolation: true,
+    isolation: false,
     max_size: 100_000, # Session has to be reloaded for this to take effect
 
     # Enable to share history between multiple sessions, else you have to
