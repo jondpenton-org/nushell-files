@@ -1,7 +1,5 @@
-use std iter
-use modules/git [
-  git-root,
-]
+use modules/git/git-root.nu
+use std
 use nx.completion.nu [
   `nu-complete nx all targets`,
   `nu-complete nx output-style`,
@@ -42,7 +40,7 @@ def "nu-complete nx all targets" [] {
                 | each { |search_folder|
                     git-root | path join $search_folder $project project.json
                   }
-                | iter find { path exists }
+                | std iter find { path exists }
                 | open
                 | $in.targets
                 | columns
@@ -61,45 +59,43 @@ def "nu-complete nx output-style" [] {
 
 # TODO: Remove
 def "nu-complete nx project targets" [] {
+  let workspace_path = git-root | path join workspace.json
   let project_targets = (
-    do {
-      let workspace_path = git-root | path join workspace.json
+    if ($workspace_path | path exists) {
+      open $workspace_path
+        | $in.projects
+        | transpose project path
+        | par-each { |it|
+            $it.path
+              | path join project.json
+              | open
+              | $in.targets
+              | columns
+              | each { $"($it.project):($in)" }
+          }
+    } else {
+      let search_folders = (
+        git-root
+          | path join nx.json
+          | open
+          | $in.workspaceLayout
+          | values
+      )
 
-      if ($workspace_path | path exists) {
-        open $workspace_path
-          | $in.projects
-          | transpose project path
-          | par-each { |it|
-              $it.path
-                | path join project.json
-                | open
-                | $in.targets
-                | columns
-                | each { |target| $"($it.project):($target)" }
-            }
-      } else {
-        let search_folders = (
-          git-root
-            | path join nx.json
-            | open
-            | $in.workspaceLayout
-            | values
-        )
-
-        ^pnpm exec nx show projects
-          | lines
-          | par-each { |project|
-              $search_folders
-                | each { |search_folder|
-                    git-root | path join $search_folder $project project.json
-                  }
-                | iter find { path exists }
-                | open
-                | $in.targets
-                | columns
-                | each { |target| $"($project):($target)" }
-            }
-      }
+      ^pnpm exec nx show projects
+        | lines
+        | each { |project|
+            $search_folders
+              | each { |search_folder|
+                  git-root | path join $search_folder $project project.json
+                }
+              | std iter find { path exists }
+              | open
+              | $in.targets
+              | columns
+              | each { $"($project):($in)" }
+          }
+        | flatten
     }
   )
 
