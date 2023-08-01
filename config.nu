@@ -497,6 +497,7 @@ $env.config = {
       event: {
         until: [
           { send: historyhintwordcomplete },
+          { edit: movewordright },
         ],
       },
       keycode: right,
@@ -565,6 +566,7 @@ $env.config = {
       event: {
         until: [
           { send: historyhintcomplete },
+          { edit: movetolineend },
         ],
       },
       keycode: end,
@@ -576,6 +578,7 @@ $env.config = {
       event: {
         until: [
           { send: historyhintcomplete },
+          { edit: movetolineend },
         ],
       },
       keycode: char_e,
