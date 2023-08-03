@@ -7,7 +7,7 @@ overlay use features/starship.nu
 # overlay use modules/grex
 # overlay use modules/mac
 # overlay use modules/node
-# overlay use scripts/nx.nu
+# overlay use modules/nx
 # overlay use scripts/pivotal-story-branch.nu
 # overlay use scripts/pnpm.nu
 # overlay use scripts/postgres.nu
