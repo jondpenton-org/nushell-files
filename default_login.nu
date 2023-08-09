@@ -2,6 +2,7 @@ overlay use features/carapace.nu
 overlay use features/direnv.nu
 overlay use features/starship.nu
 
+# overlay use modules/ffmpeg
 # overlay use modules/fnm
 # overlay use modules/gpg
 # overlay use modules/grex
