@@ -24,8 +24,8 @@ export def main [
   open $file
     | lines
     | where ($it !~ `^\w+=".*\$[A-Z].*"`) # Exclude lines like `PATH="<path>:$PATH"`
-    | str replace --all `^(\w+)=([^'"]+)` `${1}='${2}'` # `PORT=3000` to `PORT='3000'`
-    | str replace --all `^(\w+)="(.*)"` `${1}='${2}'` # `PORT="3000"` to `PORT='3000'`
+    | str replace --all --regex `^(\w+)=([^'"]+)` `${1}='${2}'` # `PORT=3000` to `PORT='3000'`
+    | str replace --all --regex `^(\w+)="(.*)"` `${1}='${2}'` # `PORT="3000"` to `PORT='3000'`
     | each { parse --regex `^(?P<key>\w+)='(?P<value>.*)'` }
     | flatten
     | table-into-record

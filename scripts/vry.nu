@@ -82,11 +82,11 @@ export def "from vry" [] {
       | enumerate
       | each { |it| # Normalize column names
           $it.item | when { $it.index == 0 } {
-            str downcase | str replace --all `(\w)\s(\w)` '${1}_${2}'
+            str downcase | str replace --all --regex `(\w)\s(\w)` '${1}_${2}'
           }
         }
       | where ('━' not-in $it) # Remove header/players divider
-      | str replace --all --string '┃' '│' # Clean rows
+      | str replace --all '┃' '│' # Clean rows
       | str trim --char '│'
       | split column '│' # Parse rows
       | str trim # Clean cells

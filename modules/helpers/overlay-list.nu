@@ -14,7 +14,7 @@ export def main [
       | where type == file and name ends-with .nu
       | $in.name
       | path basename
-      | str replace --string .nu ''
+      | str replace .nu ''
   )
 
   if $filter == 'all' {

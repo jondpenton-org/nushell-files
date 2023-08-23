@@ -78,7 +78,7 @@ export def pnpm-outdated [
             update dependents { split row , }
           }
             | insert dev ($in.package | str ends-with ' (dev)')
-            | update package { str replace --string ' (dev)' '' }
+            | update package { str replace ' (dev)' '' }
         }
       | move dev --after package
       | when { not ($severity | is-empty) } {

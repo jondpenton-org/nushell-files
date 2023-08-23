@@ -3,7 +3,7 @@
 # Use nushell functions to define your right and left prompt
 $env.PROMPT_COMMAND = {
   let home = $env.HOME? | default $env.USERPROFILE? | default ''
-  let dir = $env.PWD | str replace --string $home ~
+  let dir = $env.PWD | str replace $home ~
   let path_color = (
     if (is-admin) {
       ansi red_bold
@@ -21,7 +21,7 @@ $env.PROMPT_COMMAND = {
   let path_segment = $"($path_color)($dir)"
   let separator_segment = $"($separator_color)/($path_color)"
 
-  $path_segment | str replace --all --string (char path_sep) $separator_segment
+  $path_segment | str replace --all (char path_sep) $separator_segment
 }
 
 $env.PROMPT_COMMAND_RIGHT = {
@@ -33,11 +33,11 @@ $env.PROMPT_COMMAND_RIGHT = {
   let time_segment = (
     [
       $time_segment_color,
-      (date now | date format '%Y/%m/%d %r'),
+      (date now | format date '%Y/%m/%d %r'),
     ]
       | str join
-      | str replace --all '([/:])' $"($time_separator_color)${1}($time_segment_color)"
-      | str replace --all '([AP]M)' $"($time_miridian_color)${1}"
+      | str replace --all --regex '([/:])' $"($time_separator_color)${1}($time_segment_color)"
+      | str replace --all --regex '([AP]M)' $"($time_miridian_color)${1}"
   )
   let last_exit_code_segment = (
     if $env.LAST_EXIT_CODE != 0 {

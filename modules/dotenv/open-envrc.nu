@@ -23,8 +23,8 @@ export def main [
 
   open $file
     | lines
-    | str replace --all --string `"` `'`
-    | str replace --all `=([\w\d]+)` `='${1}'`
+    | str replace --all `"` `'`
+    | str replace --all --regex `=([\w\d]+)` `='${1}'`
     | reduce --fold {} { |it, acc|
         let variables = (
           if $it starts-with export {
