@@ -4,6 +4,7 @@ overlay use features/starship.nu
 
 # overlay use modules/ffmpeg
 # overlay use modules/fnm
+# overlay use modules/ghq
 # overlay use modules/gpg
 # overlay use modules/grex
 # overlay use modules/mac
