@@ -1,3 +1,3 @@
-export def main []: nothing -> any {
+export def main []: any -> any {
   ^git reset --hard $"origin/(^git branch --show-current)"
 }

@@ -20,7 +20,7 @@ export def main [
   $alias_dir | path join bin
 }
 
-def 'nu-complete fnm aliases' []: nothing -> list<string> {
+def 'nu-complete fnm aliases' []: any -> list<string> {
   ls (fnm-dir | path join aliases)
     | $in.name
     | path basename

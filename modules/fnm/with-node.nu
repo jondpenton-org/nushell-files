@@ -16,6 +16,6 @@ export def main [
   with-env $env_record $block
 }
 
-def 'nu-complete with-node versions' []: nothing -> list<string> {
+def 'nu-complete with-node versions' []: any -> list<string> {
   ls (node-versions-dir) | $in.name | path basename
 }

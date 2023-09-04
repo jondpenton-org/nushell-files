@@ -1,3 +1,5 @@
+use modules/git/git-root.nu
+
 export def 'nu-complete nx projects' [] {
   let workspace_path = git-root | path join workspace.json
   let projects = (

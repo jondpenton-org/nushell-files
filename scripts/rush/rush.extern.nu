@@ -1,15 +1,15 @@
-use modules/git git-root
-use rush.completion.nu `nu-complete rush projects`
+use modules/git/git-root.nu
+use scripts/rush/rush.completion.nu 'nu-complete rush projects'
 
 # TODO: Remove
-def "nu-complete rush projects" [] {
+def 'nu-complete rush projects' [] {
   let config_path = git-root | path join rush.json
 
   if not ($config_path | path exists) {
     return []
   }
 
-  open $config_path | $in.projects.packageName
+  (open $config_path).projects.packageName
 }
 
 export extern "rush add" [

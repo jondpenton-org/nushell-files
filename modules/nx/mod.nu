@@ -1,1 +1,1 @@
-export alias pnx = pnpm exec nx
+export alias pnx = ^pnpm exec nx

@@ -1,6 +1,6 @@
 export def main [
   packages: string # Literal string (``) of upgraded packages from GitHub diff
-]: nothing -> string {
+]: any -> string {
   $packages
     | lines
     | uniq

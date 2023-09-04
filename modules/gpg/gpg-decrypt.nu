@@ -4,7 +4,7 @@ use modules/helpers/build-flags.nu
 export def main [
   --verbose (-v)
 ]: string -> any {
-  $in | ^gpg (
+  ^gpg (
     build-flags {
       decrypt: true,
       quiet: (not $verbose),

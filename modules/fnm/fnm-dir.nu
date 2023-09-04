@@ -4,5 +4,5 @@ export def main []: any -> string {
     | where ('FNM_DIR' in $it)
     | each { parse `export FNM_DIR="{path}"` }
     | flatten
-    | $in.path.0
+    | $in.0.path
 }

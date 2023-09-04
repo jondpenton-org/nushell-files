@@ -5,8 +5,8 @@ export def main [
   --verbose (-v)
 
   recipient: string@'nu-complete gpg recipients'
-]: string -> any {
-  $in | ^gpg (
+]: string -> string {
+  ^gpg (
     build-flags {
       armor: true,
       encrypt: true,
@@ -17,8 +17,8 @@ export def main [
 }
 
 def 'nu-complete gpg recipients' [
-  # : nothing -> table<value: string, description: string>
-]: nothing -> table {
+  # : any -> table<value: string, description: string>
+]: any -> table {
   ^gpg --keyid-format long --list-secret-keys
     | parse --regex `sec.*/(?P<recipient>[\w\d]+).*\n.*\nuid.*<(?P<email>.*)>`
     | rename value description

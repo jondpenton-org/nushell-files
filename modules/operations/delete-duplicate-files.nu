@@ -2,7 +2,7 @@
 # files to keep.
 export def main [
   files: list<path>
-]: any -> nothing {
+]: any -> any {
   $files
     | filter { path type | $in == 'file' }
     | group-by { open --raw | hash sha256 }
