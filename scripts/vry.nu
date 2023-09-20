@@ -87,7 +87,7 @@ export def "from vry" [] {
         }
       | where ('━' not-in $it) # Remove header/players divider
       | str replace --all '┃' '│' # Clean rows
-      | str trim --char '│'
+      | each { str trim --char '│' }
       | split column '│' # Parse rows
       | str trim # Clean cells
       | headers

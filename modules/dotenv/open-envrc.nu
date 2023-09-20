@@ -5,23 +5,9 @@ use std
 
 # Converts .envrc file into record
 export def main [
-  file?: path@'nu-complete open-envrc file' # .envrc file
-
-  # (path | string)? -> record
+  file: path@'nu-complete open-envrc file' # .envrc file
 ]: any -> record {
-  let file = (
-    [$file, $in] | std iter find { |it|
-      not ($it | is-empty) and (($it | describe) in [path, string])
-    }
-  )
-
-  if ($file | is-empty) {
-    error make {
-      msg: (
-        'either the file parameter or a path/string pipeline input must be provided'
-      ),
-    }
-  }
+  # (path | string)? -> record
 
   open $file
     | lines
@@ -38,7 +24,7 @@ export def main [
               | parse --regex `^source_env(?:_if_exists)?\s+(?P<name>.*)`
               | $in.name.0
               | path expand
-              | main $in
+              | open-envrc $in
           } else if $it starts-with dotenv {
             $file
               | path dirname
@@ -48,7 +34,7 @@ export def main [
                     | $in.name.0
                 )
               | path expand
-              | open-env
+              | open-env $in
           }
         )
 

@@ -4,23 +4,9 @@ use std
 
 # Converts .env file into record
 export def main [
-  file?: path@'nu-complete open-env file' # .env file
-
-  # (path | string)? -> record
+  file: path@'nu-complete open-env file' # .env file
 ]: any -> record {
-  let file = (
-    [$file, $in] | std iter find { |it|
-      not ($it | is-empty) and (($it | describe) in [path, string])
-    }
-  )
-
-  if ($file | is-empty) {
-    error make {
-      msg: (
-        'either the file parameter or a path/string pipeline input must be provided'
-      ),
-    }
-  }
+  # (path | string)? -> record
 
   open $file
     | lines

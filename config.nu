@@ -192,9 +192,6 @@ $env.config = {
       selected_row: {},
       split_line: { fg: '#404040' },
     },
-    try: {
-      border_color: { fg: white },
-    },
   },
   filesize: {
     # `b`, `kb`, `kib`, `mb`, `mib`, `gb`, `gib`, `tb`, `tib`, `pb`, `pib`,
