@@ -84,7 +84,7 @@ export def pnpm-outdated [
       | when { not ($severity | is-empty) } {
           let input = $in
           let check_parts = (
-            `nu-complete pnpm severity`
+            nu-complete pnpm severity
               | enumerate
               | std iter find { $in.item == $severity }
               | $in.0.index
