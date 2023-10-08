@@ -1,8 +1,7 @@
-use modules/git/git-root.nu
 use std
 
 export def 'nu-complete nx project targets' [] {
-  let workspace_path = git-root | path join workspace.json
+  let workspace_path = ^git-root | path join workspace.json
   let project_targets = (
     if ($workspace_path | path exists) {
       open $workspace_path
@@ -18,7 +17,7 @@ export def 'nu-complete nx project targets' [] {
           }
     } else {
       let search_folders = (
-        git-root
+        ^git-root
           | path join nx.json
           | open
           | $in.workspaceLayout
@@ -30,7 +29,7 @@ export def 'nu-complete nx project targets' [] {
         | each { |project|
             $search_folders
               | each { |search_folder|
-                  git-root | path join $search_folder $project project.json
+                  ^git-root | path join $search_folder $project project.json
                 }
               | std iter find { path exists }
               | open

@@ -1,8 +1,6 @@
-use modules/git/git-root.nu
-
 # Requires: `open-envrc`
 export def 'nu-complete open-envrc file' []: any -> list<string> {
-  let git_root = git-root
+  let git_root = ^git-root
   let envrcs_relative_to_git_root = (
     do { cd $git_root; glob --depth 3 **/*.envrc }
       | where not ($it =~ 'example' or (open-envrc $it | is-empty))

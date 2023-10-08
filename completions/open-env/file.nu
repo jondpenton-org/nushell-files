@@ -1,8 +1,6 @@
-use modules/git/git-root.nu
-
 # Requires: `open-env`
 export def 'nu-complete open-env file' []: any -> list<string> {
-  let git_root = git-root
+  let git_root = ^git-root
   let envs_relative_to_git_root = (
     do { cd $git_root; glob --depth 3 **/*.env }
       | where not ($it =~ example or (open-env $it | is-empty))
