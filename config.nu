@@ -109,14 +109,6 @@ let dark_theme = {
 $env.config = {
   bracketed_paste: true, # Enable bracketed paste, currently useless on windows
 
-  # Command that will be used to edit the current line buffer with `CTRL+O`,
-  # if unset fallback to `$env.EDITOR` and `$env.VISUAL`
-  # buffer_editor: emacs,
-  cd: {
-    # Allows `cd s/o/f` to expand to `cd some/other/folder`
-    abbreviations: true,
-  },
-
   # If you want a light theme, replace `$dark_theme` to `$light_theme`
   color_config: $dark_theme,
   completions: {
